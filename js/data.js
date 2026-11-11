@@ -888,7 +888,8 @@ const CONSUMIVEIS = [
   ['Cristal de Mana', 'Material de Refino. Vale 20% do preço base do Rank em Ouro.'],
   ['Núcleo de Chefe', 'Coração cristalizado de um Chefe. Usado para Ascender itens ou criar equipamentos.'],
   ['Pó de Purificação', 'Remove uma maldição ou o estado Rachado de um item.'],
-  ['Pergaminho de Selo', 'Revela todos os Selos ocultos de um item (não os desbloqueia).']
+  ['Pergaminho de Selo', 'Revela todos os Selos ocultos de um item (não os desbloqueia).'],
+  ['Chave de Instância', 'Abre uma Instância do Sistema privada do Rank da chave (uma masmorra só para o grupo, com recompensas normais).']
 ];
 
 const PRECO_BASE = { E: 50, D: 200, C: 800, B: 3000, A: 12000, S: 50000 };
@@ -967,3 +968,58 @@ const BESTIARIO = [
   { n: 'Arauto Demoníaco', r: 'A', L: 24, cat: 'Elite', tr: 'Voo. Chamas infernais ignoram RD de fogo. Ao morrer, explode (6d10, raio 6 m).' },
   { n: 'Dragão Ancião', r: 'S', L: 30, cat: 'Chefe', tr: 'Tamanho Colossal. Sopro (cone 30 m, 15d10). Presença: Resistência PRE ou Amedrontado. Ações Lendárias: 1 ação extra no fim do turno de cada inimigo.' }
 ];
+
+/* ---------------------------------------------------------
+   EFEITOS AUTOMÁTICOS NA FICHA
+   Só efeitos permanentes e sem condição entram aqui.
+   Chaves: FOR AGI VIT INT PER PRE · pv pm · def esq · atk atkCaC atkDist
+   dano danoCaC danoDist · rd desl ini · res (todas) · res.VIT … · cd
+   per.<Perícia> · desarmado (dado do ataque desarmado)
+   --------------------------------------------------------- */
+const EFEITOS_HAB = {
+  lam1: nv => ({ atkCaC: nv }),
+  pun1: nv => ({ desarmado: ['1d6', '1d8', '1d10', '2d6', '2d8'][nv - 1] }),
+  vul1: nv => ({ 'per.Furtividade': 2 * nv }),
+  dis1: nv => ({ atkDist: nv }),
+  dis4: nv => ({ 'per.Percepção': 2 * nv }),
+  bas1: nv => ({ rd: nv, pv: nv >= 5 ? 10 : 0 }),
+  bas6: (nv, p) => ({ pv: nv * (Number(p.nivel) || 1) }),
+  sen3: nv => ({ ini: 2 * nv }),
+  pun7: nv => ({ rd: 4 + 2 * (nv - 1) }),
+  aur2: nv => ({ pm: 5 * nv }),
+  aur5: nv => ({ pv: 5 * nv, pm: 5 * nv, res: nv })
+};
+const EFEITOS_DESP = {
+  d01: nv => ({ rd: 2 + (nv - 1) }),
+  d03: nv => ({ 'per.Percepção': 2 + (nv - 1), 'per.Sentir Mana': 2 + (nv - 1) }),
+  d04: nv => ({ desl: 3 + 1.5 * (nv - 1), ini: 2 + (nv - 1) }),
+  d08: nv => ({ atkDist: nv }),
+  d17: nv => ({ 'per.Intimidação': 2 + (nv - 1) }),
+  d29: () => ({ rd: 3 })
+};
+
+/* ---------------------------------------------------------
+   TÍTULOS DO SISTEMA — conquistados por feitos; equipa-se 1 por vez
+   --------------------------------------------------------- */
+const TITULOS = [
+  { id: 't01', n: 'Sobrevivente', cond: 'Chegar a 0 PV ou menos e sair vivo do Portal.', txt: '+2 em Resistências de VIT.', ef: { 'res.VIT': 2 } },
+  { id: 't02', n: 'Primeiro a Entrar', cond: 'Ser o primeiro a atravessar 10 Portais.', txt: '+2 em Iniciativa.', ef: { ini: 2 } },
+  { id: 't03', n: 'Muralha', cond: 'Defender com sucesso 20 ataques em uma única aventura.', txt: '+1 em Defender.', ef: { def: 1 } },
+  { id: 't04', n: 'Sombra Silenciosa', cond: 'Concluir um Portal inteiro sem ser detectado por nenhum monstro.', txt: '+3 em Furtividade.', ef: { 'per.Furtividade': 3 } },
+  { id: 't05', n: 'Destruidor de Chefes', cond: 'Desferir o golpe final em 5 Chefes.', txt: '+1 em todos os ataques.', ef: { atk: 1 } },
+  { id: 't06', n: 'Salvador', cond: 'Salvar civis durante uma Ruptura de Masmorra.', txt: '+3 em Persuasão.', ef: { 'per.Persuasão': 3 } },
+  { id: 't07', n: 'Incansável', cond: 'Cumprir 30 Missões Diárias seguidas.', txt: '+10 PV máximos.', ef: { pv: 10 } },
+  { id: 't08', n: 'Erudito da Mana', cond: 'Usar Análise ou Conhecimento em 20 tipos de criatura diferentes.', txt: '+10 PM máximos.', ef: { pm: 10 } },
+  { id: 't09', n: 'Conquistador do Portal Vermelho', cond: 'Sair vivo de um Portal Vermelho.', txt: '+1 em todas as Resistências.', ef: { res: 1 } },
+  { id: 't10', n: 'Matador de Gigantes', cond: 'Derrotar uma criatura 5 ou mais níveis acima do seu.', txt: '+2 de dano em todos os ataques.', ef: { dano: 2 } },
+  { id: 't11', n: 'Lâmina Veloz', cond: 'Derrotar 3 inimigos em uma única rodada.', txt: '+1,5 m de Deslocamento.', ef: { desl: 1.5 } },
+  { id: 't12', n: 'Olhos do Caçador', cond: 'Encontrar 5 passagens ou tesouros secretos em Portais.', txt: '+3 em Percepção.', ef: { 'per.Percepção': 3 } }
+];
+
+/* Encontros por dificuldade (grupo de 4, nível N) */
+const ENCONTROS = {
+  'Fácil':   [['Lacaio', 0, 6]],
+  'Médio':   [['Soldado', 0, 3], ['Lacaio', 0, 4]],
+  'Difícil': [['Elite', 1, 1], ['Soldado', 0, 3]],
+  'Chefe':   [['Chefe', 2, 1], ['Elite', 0, 2]]
+};

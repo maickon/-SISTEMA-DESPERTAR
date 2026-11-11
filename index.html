@@ -2,7 +2,9 @@
 <html lang="pt-BR">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#070b14">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%23070b14'/%3E%3Cpath d='M16 4l3 9h9l-7 5 3 9-8-6-8 6 3-9-7-5h9z' fill='%233da5ff'/%3E%3C/svg%3E">
 <title>DESPERTAR — RPG de Caçadores</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -14,15 +16,16 @@
   <div class="marca"><span class="marca-sis">[ SISTEMA ]</span> DESPERTAR</div>
   <nav class="abas" role="tablist">
     <button class="aba ativa" data-aba="livro">Livro</button>
-    <button class="aba" data-aba="arvores">Árvores</button>
-    <button class="aba" data-aba="sorteios">Sorteios</button>
     <button class="aba" data-aba="ficha">Ficha</button>
+    <button class="aba" data-aba="arvores">Árvores</button>
+    <button class="aba" data-aba="sorteios">Mestre</button>
   </nav>
-  <button class="btn btn-sec" id="btn-imprimir-livro" title="Imprimir ou salvar o livro em PDF">⎙ Livro em PDF</button>
+  <button class="btn btn-sec mini" id="btn-imprimir-livro" title="Imprimir ou salvar o livro em PDF">⎙ PDF</button>
 </header>
 
 <!-- ===================================================== LIVRO -->
 <section id="aba-livro" class="painel ativo">
+  <button class="btn mini sumario-toggle" id="sumario-toggle">☰ Sumário</button>
   <aside class="sumario" id="sumario"></aside>
   <article class="livro" id="livro">
 
@@ -34,325 +37,520 @@
     </div>
 
     <!-- ===================== CAP 1 -->
+    <section class="cap" id="c-rapido">
+      <h2><span class="num">1</span> O Jogo em 5 Minutos</h2>
+      <div class="resumo">
+        <div class="resumo-t">Em resumo</div>
+        <ul>
+          <li>Vocês jogam com <strong>Caçadores</strong> que entram em <strong>Portais</strong> para matar monstros. Todos começaram como <strong>Rank E</strong>, os mais fracos.</li>
+          <li>Só os personagens dos jogadores recebem o <strong>Sistema</strong>, uma janela que dá <strong>níveis</strong>. Os outros Caçadores nunca melhoram; vocês melhoram.</li>
+          <li>Tudo se resolve com <strong>1d20 + bônus</strong>. Em combate, quem ataca rola e quem é atacado <strong>também rola</strong> para se defender.</li>
+          <li>Não há classes. Cada personagem recebe um <strong>Despertar</strong> sorteado e monta o resto escolhendo <strong>Habilidades</strong> em 10 árvores.</li>
+        </ul>
+      </div>
+
+      <h3>O ciclo de uma aventura</h3>
+      <ol class="passos">
+        <li><b>Um Portal aparece.</b> A Associação mede o Rank. Uma guilda (ou o grupo) fica com o direito de limpá-lo.</li>
+        <li><b>Preparação.</b> Comprar poções, consertar equipamento, reunir informações, recrutar carregadores.</li>
+        <li><b>A masmorra.</b> Exploração, monstros, armadilhas, um descanso curto se der.</li>
+        <li><b>O Chefe.</b> A luta principal. Quando ele morre, o Portal começa a fechar.</li>
+        <li><b>Recompensa.</b> XP, Ouro, itens, Títulos. Talvez uma notificação do Sistema: <em>"Nível aumentado!"</em></li>
+      </ol>
+
+      <h3>Guia de conversão para quem joga D&amp;D 3.5</h3>
+      <p>Se você conhece D&amp;D 3.5, já sabe jogar 80% de DESPERTAR. A tabela mostra o que muda.</p>
+      <div class="tabela-wrap"><table class="tabela conv">
+        <thead><tr><th>No D&amp;D 3.5</th><th>Em DESPERTAR</th><th>O que muda</th></tr></thead>
+        <tbody>
+          <tr><td>STR, DEX, CON, INT, WIS, CHA</td><td>FOR, AGI, VIT, INT, PER, PRE</td><td>Mesmos valores e mesma fórmula de modificador. INT também dá Mana.</td></tr>
+          <tr><td>Classes e raças</td><td>Não existem</td><td>Você monta o personagem com Despertar + Habilidades.</td></tr>
+          <tr><td>Bônus Base de Ataque</td><td>Nível</td><td>Todos atacam como um guerreiro: bônus = nível inteiro.</td></tr>
+          <tr><td>Ataques iterativos (+6/+1)</td><td>Ações Principais extras</td><td>+1 ação a cada 5 níveis, <b>sem</b> penalidade, intercaladas com os outros.</td></tr>
+          <tr><td>Classe de Armadura (CA)</td><td>Reação rolada</td><td>O alvo rola 1d20 + Nível + mod para <b>Defender</b> (FOR) ou <b>Esquivar</b> (AGI). Empate favorece quem defende.</td></tr>
+          <tr><td>CA surpresa (flat-footed)</td><td>Defesa Passiva</td><td>10 + armadura, quando o alvo não percebe o ataque.</td></tr>
+          <tr><td>Fortitude / Reflexos / Vontade</td><td>Resistência (de um atributo)</td><td>1d20 + Nível + mod do atributo pedido. Todas crescem como "save bom".</td></tr>
+          <tr><td>Ação padrão</td><td>Ação Principal</td><td>Atacar, usar um poder, beber poção.</td></tr>
+          <tr><td>Ação de movimento</td><td>Ação de Movimento</td><td>Igual.</td></tr>
+          <tr><td>Ação de rodada completa</td><td>Ação Especial</td><td>Ocupa o turno inteiro: técnicas fortes, Corrida.</td></tr>
+          <tr><td>Ação imediata</td><td>Reação</td><td>Sem limite por rodada, mas cada uma após a primeira dá −2 cumulativo.</td></tr>
+          <tr><td>Magias e espaços de magia</td><td>Habilidades + Pontos de Mana</td><td>Funciona como os <b>pontos de poder</b> do psiônico: cada uso gasta PM.</td></tr>
+          <tr><td>Talentos</td><td>Habilidades Passivas</td><td>Compradas com Pontos de Habilidade (PH) e evoluem do nível 1 ao 5.</td></tr>
+          <tr><td>CD de magia (10 + nível da magia + mod)</td><td>CD de poder</td><td>10 + Nível do personagem + mod.</td></tr>
+          <tr><td>Crítico (ameaça + confirmação)</td><td>20 natural</td><td>Sem confirmação. Só os <b>dados</b> dobram; os modificadores não.</td></tr>
+          <tr><td>Morte em −10 PV</td><td>Morte em −PV máximos</td><td>Quem tem 80 PV só morre em −80.</td></tr>
+          <tr><td>Dados de vida</td><td>PV fixos</td><td>10 + VIT no 1º nível; +5 + VIT a cada nível.</td></tr>
+          <tr><td>Graduações de perícia</td><td>Grau de perícia</td><td>4 pontos no 1º nível e +2 por nível. Máximo: 2 + metade do nível. Sem perícias de classe.</td></tr>
+          <tr><td>Arma +1 a +5, flamejante, afiada</td><td>Refino +1 a +10, Rank, afixos</td><td>Itens bons crescem junto com você (Sincronia e Ascensão).</td></tr>
+          <tr><td>Nível de Desafio (ND)</td><td>Nível da ameaça + Rank do Portal</td><td>Portal Rank C ≈ ND 10–14.</td></tr>
+          <tr><td>Redução de Dano (RD)</td><td>RD</td><td>Igual, mas vale contra qualquer dano físico, sem "/mágico".</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Os dados que você vai usar</h3>
+      <p>d20 para quase tudo; d4, d6, d8, d10 e d12 para dano; d100 para tabelas de sorteio. A aba <strong>Ficha</strong> deste site faz as contas e rola por você: clique em qualquer valor (Defender, uma Resistência, uma perícia, um ataque) para rolar.</p>
+    </section>
+
+    <!-- ===================== CAP 2 -->
     <section class="cap" id="c-mundo">
-      <h2><span class="num">1</span> O Mundo dos Portais</h2>
+      <h2><span class="num">2</span> O Mundo dos Portais</h2>
       <p>Num dia comum, fendas azuladas se abriram no ar sobre cidades do mundo inteiro. Chamaram-nas de <strong>Portais</strong>. Do outro lado havia <strong>masmorras</strong>: cavernas, fortalezas e florestas impossíveis, cheias de monstros que nenhuma arma convencional conseguia ferir.</p>
       <p>Junto com os Portais, algumas pessoas <strong>despertaram</strong>. Ganharam força, velocidade ou poderes sobrenaturais e passaram a ser chamadas de <strong>Caçadores</strong>. Desde então, Caçadores entram nos Portais, matam o Chefe da masmorra, fecham a fenda e trazem para fora <strong>cristais de mana</strong>, a nova fonte de energia do mundo.</p>
 
-      <h3>Ranks</h3>
-      <p>A <strong>Associação de Caçadores</strong> mede a mana de cada desperto e lhe dá um Rank, de <strong>E</strong> (o mais fraco) a <strong>S</strong> (raríssimo; poucos países têm mais que um punhado). Portais também recebem Rank conforme a mana que emitem. Na regra geral do mundo, o Rank de um Caçador <em>não muda</em>: quem despertou E continua E pelo resto da vida.</p>
-      <table class="tabela">
-        <thead><tr><th>Rank</th><th>Reputação</th><th>Níveis (Jogadores)</th></tr></thead>
-        <tbody>
-          <tr><td><span class="rk rk-E">E</span></td><td>Pouco mais forte que um humano comum. Muitos morrem em Portais simples.</td><td>1–4</td></tr>
-          <tr><td><span class="rk rk-D">D</span></td><td>Caçadores de trabalho. Fazem raides de baixo risco.</td><td>5–9</td></tr>
-          <tr><td><span class="rk rk-C">C</span></td><td>Profissionais respeitados; formam a espinha das guildas médias.</td><td>10–14</td></tr>
-          <tr><td><span class="rk rk-B">B</span></td><td>Elite das guildas. Lideram raides.</td><td>15–19</td></tr>
-          <tr><td><span class="rk rk-A">A</span></td><td>Poucos por país. Disputados por todas as grandes guildas.</td><td>20–24</td></tr>
-          <tr><td><span class="rk rk-S">S</span></td><td>Força militar viva. Seus movimentos têm peso político.</td><td>25–30+</td></tr>
-        </tbody>
-      </table>
+      <h3>O Despertar</h3>
+      <p>Ninguém escolhe despertar. Acontece de repente: febre alta, desmaio, às vezes dias inconsciente. Quem acorda sente a mana pela primeira vez e vai à <strong>Associação de Caçadores</strong> para ser medido. Uma em cada várias centenas de pessoas desperta, e a maioria desperta fraca.</p>
+      <p>Há relatos raríssimos de <strong>Segundo Despertar</strong>: alguém que já era Caçador desperta de novo, mais forte. A Associação trata esses casos como milagres, e eles atraem olhares de guildas, governos e gente pior.</p>
 
-      <h3>Guildas, Associação e economia</h3>
-      <p><strong>Guildas</strong> são empresas de Caçadores. Compram o direito de limpar Portais, vendem os cristais e materiais, recrutam talentos e às vezes disputam território com violência. A <strong>Associação</strong> fiscaliza, mede Ranks, distribui Portais e pune abusos. Fora dos Portais, Caçadores são celebridades, soldados, mercenários e, às vezes, criminosos.</p>
+      <h3>Ranks</h3>
+      <p>A Associação mede a mana de cada desperto e lhe dá um Rank, de <strong>E</strong> (o mais fraco) a <strong>S</strong>. Portais também recebem Rank pela mana que emitem. Na regra geral do mundo, o Rank de um Caçador <em>não muda</em>: quem despertou E continua E pelo resto da vida.</p>
+      <div class="tabela-wrap"><table class="tabela">
+        <thead><tr><th>Rank</th><th>Reputação</th><th>Níveis</th></tr></thead>
+        <tbody>
+          <tr><td><span class="rk rk-E">E</span></td><td>Pouco mais forte que um humano comum. Desprezados, mal pagos, morrem em Portais simples. Muitos trabalham como carregadores.</td><td>1–4</td></tr>
+          <tr><td><span class="rk rk-D">D</span></td><td>Caçadores de trabalho. Fazem raides de baixo risco e vivem dele.</td><td>5–9</td></tr>
+          <tr><td><span class="rk rk-C">C</span></td><td>Profissionais respeitados; formam a espinha das guildas médias.</td><td>10–14</td></tr>
+          <tr><td><span class="rk rk-B">B</span></td><td>Elite das guildas. Lideram raides e ganham fortunas.</td><td>15–19</td></tr>
+          <tr><td><span class="rk rk-A">A</span></td><td>Poucos por país. Disputados pelas grandes guildas com contratos milionários.</td><td>20–24</td></tr>
+          <tr><td><span class="rk rk-S">S</span></td><td>Força militar viva. Um país conta seus Rank S como conta armas estratégicas.</td><td>25–30+</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>A vida de um Portal</h3>
+      <ol class="passos">
+        <li><b>Abertura.</b> O Portal surge (num beco, num shopping, no meio de uma avenida). Sensores e testemunhas avisam a Associação.</li>
+        <li><b>Medição.</b> Uma equipe mede a mana e define o Rank. Medições erradas acontecem, e matam.</li>
+        <li><b>Atribuição.</b> Portais pequenos vão para quem pedir primeiro; os grandes vão a leilão entre guildas. Portais Rank A e S viram operações conjuntas, às vezes com o governo.</li>
+        <li><b>Prazo.</b> Um Portal que ninguém limpa se rompe em cerca de <b>7 dias</b> (o Mestre pode variar).</li>
+        <li><b>Raide.</b> Um grupo entra, limpa a masmorra e mata o Chefe.</li>
+        <li><b>Fechamento.</b> Morto o Chefe, o Portal se fecha em cerca de <b>1 hora</b>. Os <b>coletores</b> correm para minerar cristais e recolher materiais antes disso.</li>
+      </ol>
 
       <h3>Os perigos</h3>
       <ul>
-        <li><strong>Ruptura de Masmorra:</strong> um Portal que ninguém fecha a tempo se rompe e libera seus monstros no mundo.</li>
-        <li><strong>Portal Vermelho:</strong> a entrada se fecha atrás do grupo e o tempo corre diferente lá dentro. Só se sai derrotando o Chefe.</li>
-        <li><strong>Masmorra Dupla:</strong> uma segunda masmorra escondida dentro da primeira, muito mais perigosa do que o Rank medido indicava.</li>
+        <li><strong>Ruptura de Masmorra:</strong> o Portal não foi fechado a tempo e os monstros saem para o mundo. Rupturas de Rank alto destroem bairros; já houve uma ilha inteira perdida para os monstros.</li>
+        <li><strong>Portal Vermelho:</strong> a entrada se fecha atrás do grupo e o tempo corre diferente lá dentro. Só se sai vivo matando o Chefe.</li>
+        <li><strong>Masmorra Dupla:</strong> uma segunda masmorra escondida dentro da primeira, muito mais perigosa do que a medição indicava. Costuma ter regras próprias, como estátuas que obedecem a mandamentos, salas que punem quem foge ou portas que só abrem com sacrifício.</li>
+        <li><strong>Outros Caçadores:</strong> dentro de um Portal não há polícia. Caçadores renegados matam colegas para ficar com o saque, e "acidentes" acontecem.</li>
       </ul>
+
+      <h3>Guildas, Associação e economia</h3>
+      <p><strong>Guildas</strong> são empresas de Caçadores. Compram Portais, vendem cristais e materiais, recrutam talentos com contratos e disputam território. As grandes guildas têm prédios inteiros, equipes médicas, ferreiros e lobby político. Guildas pequenas sobrevivem de Portais E e D.</p>
+      <p>A <strong>Associação</strong> mede Ranks, emite a <strong>Licença de Caçador</strong>, distribui Portais e investiga crimes de Caçadores, contando com um departamento de fiscalização formado por Caçadores fortes.</p>
+      <p><strong>A economia da mana:</strong> cristais de mana alimentam usinas e indústrias. Materiais de monstros (couro, presas, ossos, núcleos) viram armas e armaduras nas mãos de <strong>artesãos despertos</strong>. Existem lojas de equipamento para Caçadores, leilões de itens raros e um mercado negro.</p>
+
+      <h3>Funções num raide</h3>
+      <p>Não existem classes, mas todo raide precisa destas <strong>funções</strong>, e cada Jogador decide quais cobre com suas habilidades:</p>
+      <div class="grade-3">
+        <div class="caixa"><h4>Tanque</h4><p>Segura a linha de frente e atrai os ataques. Árvores Bastião e Punho.</p></div>
+        <div class="caixa"><h4>Atacante</h4><p>Dano corpo a corpo. Lâmina, Punho, Aura.</p></div>
+        <div class="caixa"><h4>Mago / Atirador</h4><p>Dano à distância e em área. Elementos, Disparo.</p></div>
+        <div class="caixa"><h4>Curandeiro</h4><p>Mantém todos vivos. Restauração. Os mais valorizados do mundo.</p></div>
+        <div class="caixa"><h4>Batedor</h4><p>Reconhecimento, armadilhas, golpes letais. Vulto, Sentidos.</p></div>
+        <div class="caixa"><h4>Invocador</h4><p>Luta por meio de criaturas. Domínio.</p></div>
+      </div>
 
       <h3>O Sistema</h3>
       <div class="janela">
         <div class="janela-t">[ NOTIFICAÇÃO ]</div>
         <p>Você cumpriu as condições secretas.<br>Você foi escolhido como <strong>Jogador</strong>.<br>Deseja aceitar? <span class="sim">[ SIM ]</span></p>
       </div>
-      <p>Os personagens deste jogo são <strong>Portadores do Sistema</strong>. Por motivos que ninguém conhece, cada um deles viu, num momento extremo, uma janela azul que só ele enxergava. Desde então, o Sistema lhes dá <strong>níveis, pontos de status, missões e recompensas</strong>.</p>
-      <p>É isso que separa os personagens de todos os outros Caçadores: <strong>eles podem crescer</strong>. Todos começam oficialmente como Rank E, os mais fracos dos fracos. Os outros Caçadores ficam onde estão; os Jogadores sobem de nível. Como esse crescimento vai ser explicado à Associação, às guildas e ao mundo é parte da história de cada mesa.</p>
+      <p>Os personagens deste jogo são <strong>Portadores do Sistema</strong>. Num momento extremo, à beira da morte dentro de um Portal, cada um viu uma janela azul que só ele enxerga. Desde então, o Sistema lhe dá:</p>
+      <ul>
+        <li><strong>Janela de Status:</strong> nível, atributos e habilidades visíveis como num jogo.</li>
+        <li><strong>Níveis:</strong> matar monstros e concluir Portais traz experiência. Quem tem o Sistema fica mais forte; os outros não.</li>
+        <li><strong>Missões:</strong> diárias, de emergência e ocultas, com recompensas e punições.</li>
+        <li><strong>Inventário do Sistema:</strong> um espaço dimensional que guarda até 20 itens (ou pilhas de consumíveis) e que só o Portador acessa, como Ação Livre.</li>
+        <li><strong>Loja do Sistema:</strong> compra e venda de itens com Ouro, de qualquer lugar.</li>
+        <li><strong>Títulos:</strong> reconhecimentos por feitos que dão pequenos bônus.</li>
+      </ul>
+      <p>Ninguém sabe quem criou o Sistema nem por quê. Outros Portadores podem existir. O Mestre decide o mistério, que é um dos motores da campanha.</p>
+      <p>O que separa os personagens de todos os outros Caçadores é que <strong>eles podem crescer</strong>. Todos começam oficialmente como Rank E. Explicar esse crescimento à Associação, às guildas e ao mundo (ou escondê-lo) faz parte da história.</p>
 
       <h3>Princípios do jogo</h3>
       <ul>
-        <li><strong>Sem classes e sem raças.</strong> Todos os Jogadores começam com as mesmas regras. As diferenças vêm do que o Sistema sorteia e do que cada jogador escolhe e busca durante o jogo.</li>
-        <li><strong>O mais fraco pode se tornar o mais forte.</strong> O sorteio inicial importa, mas não decide o destino. As escolhas decidem.</li>
-        <li><strong>Crescer é o objetivo.</strong> Subir de nível precisa ser palpável: números maiores e, sobretudo, <em>coisas novas que se tornam possíveis</em>.</li>
-        <li><strong>Portais são perigosos.</strong> Combates são rápidos e letais. Fugir, preparar-se e escolher bem o Portal faz parte do jogo.</li>
+        <li><strong>Sem classes e sem raças.</strong> As diferenças vêm do sorteio e das escolhas.</li>
+        <li><strong>O mais fraco pode se tornar o mais forte.</strong> O sorteio inicial importa, mas não decide o destino.</li>
+        <li><strong>Crescer é o objetivo.</strong> Cada nível traz números maiores e, sobretudo, coisas novas que se tornam possíveis.</li>
+        <li><strong>Portais são perigosos.</strong> Combates são rápidos e letais. Fugir e escolher bem o Portal faz parte do jogo.</li>
       </ul>
-
-      <h3>O que você precisa</h3>
-      <p>Dados de 4, 6, 8, 10, 12 e 20 faces (ou a aba <em>Sorteios</em> deste site), uma ficha (aba <em>Ficha</em>) e um Mestre, que interpreta o mundo, os Portais e os monstros.</p>
     </section>
 
-    <!-- ===================== CAP 2 -->
+    <!-- ===================== CAP 3 -->
     <section class="cap" id="c-criacao">
-      <h2><span class="num">2</span> Criando seu Caçador</h2>
-      <p>Siga os passos abaixo. A aba <strong>Sorteios</strong> faz todas as rolagens e envia o resultado direto para a sua <strong>Ficha</strong>.</p>
+      <h2><span class="num">3</span> Criando seu Caçador</h2>
+      <div class="resumo">
+        <div class="resumo-t">Em resumo: 8 passos, uns 15 minutos</div>
+        <p>Conceito → Atributos (sorteio) → Despertar (sorteio) → Avaliação do Sistema (sorteio + escolha) → gastar PH → Perícias → valores derivados → equipamento.</p>
+        <p>Na aba <strong>Ficha</strong>, os botões <b>🎲 Atributos</b>, <b>✦ Despertar</b> e <b>◈ Avaliação</b> fazem os sorteios e aplicam o resultado direto na ficha.</p>
+      </div>
 
       <h3>Passo 1 — Quem você era</h3>
-      <p>Antes de despertar, você era uma pessoa comum. Defina nome, idade, ocupação e um <strong>Motivo</strong>: por que você continua entrando em Portais? (Dívidas, uma família doente, vingança, curiosidade, fama…) O Motivo não tem efeito mecânico, mas o Mestre vai usá-lo.</p>
+      <p>Antes de despertar, você era uma pessoa comum. Defina nome, idade, ocupação e um <strong>Motivo</strong>: por que você continua entrando em Portais? (Dívidas, um parente no hospital, vingança, fama, curiosidade sobre o Sistema…) O Motivo não tem efeito mecânico, mas o Mestre vai usá-lo.</p>
 
       <h3>Passo 2 — Potencial e Atributos</h3>
-      <p>Role <strong>1d6</strong> para descobrir seu <strong>Potencial</strong>. Ele define o valor base de todos os seis atributos e uma compensação: quem começa mais fraco recebe mais do Sistema.</p>
-      <table class="tabela">
+      <p>Role <strong>1d6</strong> para descobrir seu <strong>Potencial</strong>. Ele define o valor base dos seis atributos e uma compensação: quem começa mais fraco recebe mais do Sistema.</p>
+      <div class="tabela-wrap"><table class="tabela">
         <thead><tr><th>1d6</th><th>Potencial</th><th>Valor base</th><th>Compensação</th></tr></thead>
         <tbody>
           <tr><td>1–2</td><td>Fraco</td><td>6</td><td>+6 Pontos de Status e +2 PH</td></tr>
           <tr><td>3–4</td><td>Normal</td><td>8</td><td>+3 Pontos de Status e +1 PH</td></tr>
           <tr><td>5–6</td><td>Forte</td><td>10</td><td>—</td></tr>
         </tbody>
-      </table>
-      <p>Depois, role <strong>2d6 para cada atributo</strong>, na ordem, e some ao valor base. Pontos de Status da compensação podem ser distribuídos livremente.</p>
-      <p class="opcional"><strong>Opcional — Método Padrão:</strong> se a mesa preferir igualdade total, todos usam base 8, sem compensação, e distribuem os valores 7, 7, 6, 6, 5, 4 entre os atributos.</p>
+      </table></div>
+      <p>Depois, role <strong>2d6 para cada atributo</strong>, na ordem, e some ao valor base. <strong>Pontos de Status</strong> são pontos livres que você soma a qualquer atributo, 1 por 1.</p>
+      <div class="dnd"><div class="dnd-t">📘 Vindo do D&amp;D 3.5</div><p>No lugar de 4d6 descartando o menor, é base + 2d6, em ordem. Os resultados ficam entre 8 e 22, parecidos com os do 3.5. A diferença é que aqui atributos <b>sobem muito</b>: cerca de 3,5 pontos por nível. Um Caçador Rank S tem FOR 40 ou mais.</p></div>
+      <p class="opcional"><strong>Opcional — Método Padrão:</strong> todos usam base 8, sem compensação, e distribuem 7, 7, 6, 6, 5 e 4 (o equivalente ao <em>point buy</em>).</p>
 
       <h3>Passo 3 — Despertar</h3>
-      <p>Role <strong>1d100</strong> na tabela de <a href="#c-despertares">Despertares</a>. O resultado é sua <strong>Habilidade Única</strong>, o poder com que o Sistema o marcou. Despertares mais raros são mais impressionantes, mas os comuns vêm com compensação: <strong>Comum</strong> +2 PH e +4 Pontos de Status; <strong>Raro</strong> +1 PH e +2 Pontos de Status.</p>
-      <p>Cada Despertar tem duas <strong>árvores afins</strong>. Habilidades dessas árvores custam 1 PH a menos para adquirir (mínimo 1).</p>
-      <p class="opcional"><strong>Opcional — Escolha Guiada:</strong> role 2× e fique com qualquer um dos resultados; ou o Mestre permite escolher livremente um Despertar Comum ou Raro.</p>
+      <p>Role <strong>1d100</strong> na tabela de <a href="#c-despertares">Despertares</a>. O resultado é sua <strong>Habilidade Única</strong>, o poder com que o Sistema o marcou, e ela evolui com você.</p>
+      <ul>
+        <li><strong>Raridade:</strong> Comum, Raro, Épico, Lendário ou Anomalia. Os comuns vêm com compensação: <b>Comum</b> +2 PH e +4 Pontos de Status; <b>Raro</b> +1 PH e +2 Pontos de Status.</li>
+        <li><strong>Afinidade:</strong> cada Despertar indica duas árvores. Habilidades dessas árvores custam 1 PH a menos para adquirir (mínimo 1).</li>
+      </ul>
+      <p class="opcional"><strong>Opcional — Escolha Guiada:</strong> role 2× e fique com o resultado que preferir; ou o Mestre permite escolher livremente um Despertar Comum ou Raro.</p>
 
       <h3>Passo 4 — Avaliação Inicial do Sistema</h3>
-      <p>O Sistema sorteia <strong>3 habilidades de Rank E</strong> (de quaisquer árvores). Você escolhe uma e a recebe gratuitamente no nível 1. Ignore requisitos de atributo nesta escolha.</p>
+      <p>O Sistema sorteia <strong>3 habilidades de Rank E</strong> de quaisquer árvores. Escolha uma: você a recebe de graça no nível 1, mesmo sem cumprir o requisito de atributo.</p>
 
-      <h3>Passo 5 — Pontos de Habilidade</h3>
-      <p>Você tem <strong>3 Pontos de Habilidade (PH)</strong>, mais as compensações, para adquirir ou evoluir habilidades de Rank E. Veja <a href="#c-habilidades">Habilidades Especiais</a>. PH não gastos podem ser guardados.</p>
+      <h3>Passo 5 — Pontos de Habilidade (PH)</h3>
+      <p>Você começa com <strong>3 PH</strong>, mais as compensações. Gaste em habilidades de Rank E: adquirir custa 1 PH; levar ao nível 2 custa 2 PH. PH não gastos ficam guardados.</p>
 
       <h3>Passo 6 — Perícias</h3>
-      <p>Distribua <strong>4 pontos</strong> entre as perícias. No nível 1, nenhuma perícia pode ter grau maior que 2.</p>
+      <p>Distribua <strong>4 pontos de perícia</strong>. No nível 1, nenhuma perícia passa de grau 2.</p>
 
       <h3>Passo 7 — Valores derivados</h3>
-      <table class="tabela">
+      <div class="tabela-wrap"><table class="tabela">
         <tbody>
           <tr><th>Pontos de Vida (PV)</th><td>10 + mod VIT</td></tr>
           <tr><th>Pontos de Mana (PM)</th><td>10 + mod INT</td></tr>
-          <tr><th>Deslocamento</th><td>9 m + metade do mod AGI (arredondado para baixo; mínimo 1 m)</td></tr>
-          <tr><th>Ações Principais</th><td>1 + Nível ÷ 5 (arredondado para baixo)</td></tr>
+          <tr><th>Deslocamento</th><td>9 m + metade do mod AGI (mínimo 1 m)</td></tr>
+          <tr><th>Ações Principais</th><td>1 + Nível ÷ 5 (para baixo)</td></tr>
+          <tr><th>Iniciativa</th><td>1d20 + mod AGI</td></tr>
           <tr><th>Ataque</th><td>1d20 + Nível + mod do atributo da arma</td></tr>
           <tr><th>Defender</th><td>1d20 + Nível + mod FOR + armadura + escudo</td></tr>
           <tr><th>Esquivar</th><td>1d20 + Nível + mod AGI − penalidade de armadura</td></tr>
           <tr><th>Resistência</th><td>1d20 + Nível + mod do atributo pedido</td></tr>
-          <tr><th>CD dos seus poderes</th><td>10 + Nível + mod do atributo-chave da habilidade</td></tr>
+          <tr><th>CD dos seus poderes</th><td>10 + Nível + mod do atributo-chave</td></tr>
         </tbody>
-      </table>
+      </table></div>
 
       <h3>Passo 8 — Equipamento inicial</h3>
       <p>Licença de Caçador Rank E, uma arma Comum Rank E à escolha, Traje de Combate (armadura leve), 2 Poções de Cura Rank E e 100 de Ouro.</p>
 
       <div class="exemplo">
-        <div class="exemplo-t">Exemplo de criação</div>
-        <p>Rafa rola 3 no Potencial: <strong>Normal</strong> (base 8, +3 Status e +1 PH). Nos 2d6 tira FOR 8+7=15, AGI 8+10=18, VIT 8+6=14, INT 8+5=13, PER 8+9=17, PRE 8+4=12, e põe os 3 pontos de compensação em AGI, que vai a 21.</p>
-        <p>No d100 tira 85: <strong>Passo Espacial</strong> (Épico, afinidades Vulto e Sentidos). Na Avaliação do Sistema saem Cura, Mira Firme e Golpe Furtivo; fica com <strong>Golpe Furtivo</strong> de graça. Com 4 PH (3 + 1), compra Passos Silenciosos (1 PH, afim: mínimo 1), Detectar Mana (1 PH, afim) e leva Golpe Furtivo ao nível 2 (2 PH).</p>
+        <div class="exemplo-t">Exemplo completo</div>
+        <p><b>Atributos.</b> Rafa rola 3 no Potencial: Normal (base 8, +3 Status e +1 PH). Nos 2d6 tira FOR 15, AGI 18, VIT 14, INT 13, PER 17, PRE 12, e põe os 3 Pontos de Status em AGI, que vai a 21 (+5).</p>
+        <p><b>Despertar.</b> No d100 tira 85: <b>Passo Espacial</b> (Épico, afinidades Vulto e Sentidos), que permite se teletransportar.</p>
+        <p><b>Avaliação.</b> Saem Cura, Mira Firme e Golpe Furtivo. Rafa escolhe <b>Golpe Furtivo</b>, de graça.</p>
+        <p><b>PH.</b> Com 4 PH (3 + 1), compra Passos Silenciosos (1), Detectar Mana (1) e leva Golpe Furtivo ao nível 2 (2).</p>
+        <p><b>Derivados.</b> PV 12 (10 + VIT +2), PM 11, Deslocamento 11 m, Esquivar 1d20 + 6, Ataque com adaga 1d20 + 6.</p>
       </div>
     </section>
 
-    <!-- ===================== CAP 3 -->
+    <!-- ===================== CAP 4 -->
     <section class="cap" id="c-atributos">
-      <h2><span class="num">3</span> Atributos e Perícias</h2>
-      <p>São seis atributos, os mesmos que a Janela de Status mostra a todo Portador do Sistema. Eles <strong>não definem uma classe</strong>: representam aptidões e mudam a forma como habilidades e poderes funcionam.</p>
+      <h2><span class="num">4</span> Atributos e Perícias</h2>
+      <p>São seis atributos, os mesmos que a Janela de Status mostra. Eles <strong>não definem uma classe</strong>: indicam aptidões e mudam a forma como habilidades funcionam.</p>
       <div id="cat-atributos" class="grade-2"></div>
 
       <h3>Modificador</h3>
       <p class="formula">Modificador = (Atributo − 10) ÷ 2, arredondado para baixo</p>
-      <table class="tabela compacta">
+      <div class="tabela-wrap"><table class="tabela compacta">
         <thead><tr><th>Valor</th><th>1</th><th>2–3</th><th>4–5</th><th>6–7</th><th>8–9</th><th>10–11</th><th>12–13</th><th>14–15</th><th>16–17</th><th>18–19</th><th>20–21</th><th>…</th></tr></thead>
         <tbody><tr><th>Mod</th><td>−5</td><td>−4</td><td>−3</td><td>−2</td><td>−1</td><td>+0</td><td>+1</td><td>+2</td><td>+3</td><td>+4</td><td>+5</td><td>+1 a cada 2</td></tr></tbody>
-      </table>
-      <p>Não existe limite máximo de atributo. Um Caçador Rank S pode ter Força 60 (+25).</p>
+      </table></div>
+      <p>Não existe limite máximo. FOR 60 dá +25.</p>
 
       <h3>Perícias</h3>
-      <p>Perícias são o que o personagem <strong>aprendeu</strong>. Cada uma tem um <strong>grau</strong> que vai de 0 para cima, e o grau é somado ao teste.</p>
-      <p class="formula">Teste de Perícia = 1d20 + mod do atributo + grau da perícia</p>
-      <p>O atributo listado é o padrão, mas o Mestre pode trocá-lo conforme a forma da ação. Para intimidar alguém esmagando uma parede de concreto, por exemplo, ele pode pedir <em>FOR + Intimidação</em>.</p>
-      <p><strong>Grau máximo:</strong> 2 + metade do seu Nível. <strong>Pontos:</strong> 4 na criação e +2 a cada nível.</p>
+      <p>Perícias são o que o personagem <strong>aprendeu</strong>. Cada uma tem um <strong>grau</strong>, de 0 para cima.</p>
+      <p class="formula">Teste de Perícia = 1d20 + mod do atributo + grau</p>
+      <ul>
+        <li><strong>Pontos:</strong> 4 no 1º nível e +2 a cada nível. Cada ponto sobe 1 grau.</li>
+        <li><strong>Grau máximo:</strong> 2 + metade do seu Nível.</li>
+        <li><strong>Atributo flexível:</strong> o atributo listado é o padrão, mas o Mestre pode trocá-lo pela forma da ação. Intimidar alguém esmagando uma parede pode ser <em>FOR + Intimidação</em>.</li>
+        <li><strong>Sem treino:</strong> qualquer um pode tentar qualquer perícia com grau 0.</li>
+      </ul>
+      <div class="dnd"><div class="dnd-t">📘 Vindo do D&amp;D 3.5</div><p>É o sistema de graduações, simplificado: sem perícias de classe ou cruzadas e com menos pontos, porque a lista é menor (15 perícias). Ouvir e Observar viraram <b>Percepção</b>; Esconder-se e Furtividade viraram <b>Furtividade</b>; Sentir Motivação virou <b>Intuição</b>. <b>Sentir Mana</b> é nova: detecta e mede mana (o Rank de um monstro, a força de um Portal).</p></div>
       <div id="cat-pericias" class="lista-pericias"></div>
     </section>
 
-    <!-- ===================== CAP 4 -->
+    <!-- ===================== CAP 5 -->
     <section class="cap" id="c-testes">
-      <h2><span class="num">4</span> Testes</h2>
+      <h2><span class="num">5</span> Testes</h2>
+      <div class="resumo">
+        <div class="resumo-t">Em resumo</div>
+        <p><b>Teste:</b> 1d20 + mod + bônus ≥ CD. <b>Resistência:</b> 1d20 + Nível + mod ≥ CD do poder. <b>Oposto:</b> os dois rolam; empate fica com quem defende.</p>
+      </div>
       <p>Quando o resultado de uma ação é incerto, o Mestre define uma <strong>Dificuldade (CD)</strong> e o jogador rola:</p>
-      <p class="formula">1d20 + modificador + bônus ≥ CD → sucesso</p>
-      <table class="tabela">
-        <thead><tr><th>CD</th><th>Dificuldade</th></tr></thead>
+      <p class="formula">1d20 + modificador do atributo + grau da perícia (se houver) ≥ CD → sucesso</p>
+      <div class="tabela-wrap"><table class="tabela">
+        <thead><tr><th>CD</th><th>Dificuldade</th><th>Exemplo</th></tr></thead>
         <tbody>
-          <tr><td>5</td><td>Muito fácil</td></tr><tr><td>10</td><td>Fácil</td></tr><tr><td>15</td><td>Moderada</td></tr>
-          <tr><td>20</td><td>Difícil</td></tr><tr><td>25</td><td>Muito difícil</td></tr><tr><td>30</td><td>Extrema</td></tr><tr><td>35+</td><td>Extraordinária</td></tr>
+          <tr><td>5</td><td>Muito fácil</td><td>Subir uma escada de corda.</td></tr>
+          <tr><td>10</td><td>Fácil</td><td>Ouvir passos num corredor silencioso.</td></tr>
+          <tr><td>15</td><td>Moderada</td><td>Arrombar uma porta de madeira reforçada.</td></tr>
+          <tr><td>20</td><td>Difícil</td><td>Saltar entre dois prédios.</td></tr>
+          <tr><td>25</td><td>Muito difícil</td><td>Achar uma passagem secreta feita por magia.</td></tr>
+          <tr><td>30</td><td>Extrema</td><td>Escalar uma parede lisa de gelo sob tempestade.</td></tr>
+          <tr><td>35+</td><td>Extraordinária</td><td>Segurar um caminhão em movimento.</td></tr>
         </tbody>
-      </table>
+      </table></div>
 
       <h3>Escala de Rank</h3>
-      <p>Em tarefas que envolvem mana, monstros ou Portais, some à CD o modificador de Rank da fonte do desafio. Uma porta selada por um Chefe Rank A não é uma porta comum.</p>
-      <table class="tabela compacta">
+      <p>Quando a tarefa envolve mana, monstros ou Portais, some à CD o bônus do Rank da fonte. Uma porta selada por um Chefe Rank A não é uma porta comum.</p>
+      <div class="tabela-wrap"><table class="tabela compacta">
         <thead><tr><th>Rank</th><th>E</th><th>D</th><th>C</th><th>B</th><th>A</th><th>S</th></tr></thead>
         <tbody><tr><th>CD +</th><td>+0</td><td>+5</td><td>+10</td><td>+15</td><td>+20</td><td>+30</td></tr></tbody>
-      </table>
-
-      <h3>Testes opostos</h3>
-      <p>Quando dois personagens disputam diretamente, os dois rolam e vence o maior resultado. Em empate, vence quem defende (ou quem tem o maior modificador).</p>
+      </table></div>
 
       <h3>Resistências</h3>
-      <p>Quando um poder, veneno ou efeito atinge um personagem, ele faz uma <strong>Resistência</strong>, que soma o Nível porque a resistência sobrenatural cresce com o poder do Caçador:</p>
-      <p class="formula">Resistência = 1d20 + Nível + mod do atributo indicado ≥ CD do poder</p>
-      <p class="formula">CD do poder = 10 + Nível do usuário + mod do atributo-chave</p>
+      <p>Quando um poder, veneno ou efeito atinge o personagem, ele rola uma <strong>Resistência</strong> do atributo indicado:</p>
+      <p class="formula">Resistência = 1d20 + Nível + mod do atributo ≥ CD do poder</p>
+      <p class="formula">CD do poder = 10 + Nível de quem usa + mod do atributo-chave</p>
+      <div class="dnd"><div class="dnd-t">📘 Vindo do D&amp;D 3.5</div><p>Em vez de três testes de resistência, a Resistência usa qualquer atributo: <b>VIT</b> ≈ Fortitude (veneno, atordoar), <b>AGI</b> ≈ Reflexos (escapar de prisões, áreas), <b>PRE</b> ≈ Vontade (medo, controle), e também <b>FOR</b> (ser empurrado, derrubado) e <b>INT/PER</b> (ilusões). Somar o Nível inteiro faz todas crescerem como um "save bom".</p></div>
+
+      <h3>Testes opostos</h3>
+      <p>Quando dois personagens disputam diretamente (agarrar, esconder-se de alguém que procura), os dois rolam e vence o maior. Em empate, vence quem defende.</p>
 
       <h3>Resultados naturais</h3>
-      <p>Um <strong>20 natural</strong> é um sucesso excepcional (o Mestre acrescenta um benefício). Um <strong>1 natural</strong> é uma falha excepcional. Em ataques, veja <a href="#c-combate">Combate</a>.</p>
+      <p>Um <strong>20 natural</strong> é um sucesso excepcional: o Mestre acrescenta um benefício. Um <strong>1 natural</strong> é uma falha excepcional. Em testes fora de combate, isso não transforma o impossível em possível.</p>
 
-      <h3>Ajuda</h3>
-      <p>Um aliado pode ajudar num teste se for capaz de contribuir: ele rola o mesmo teste contra CD 10 e, se passar, o ajudado recebe +2.</p>
-    </section>
-
-    <!-- ===================== CAP 5 -->
-    <section class="cap" id="c-combate">
-      <h2><span class="num">5</span> Combate</h2>
-
-      <h3>Iniciativa e rodadas</h3>
-      <p>Cada participante rola <strong>1d20 + mod AGI</strong>. Age-se do maior para o menor. Em empate, age primeiro o maior mod AGI; se continuar empatado, rolam de novo. Uma <strong>rodada</strong> representa cerca de 6 segundos, e cada participante tem um turno por rodada.</p>
-      <p><strong>Surpresa:</strong> quem é pego desprevenido fica Surpreso na primeira rodada: não age nem reage.</p>
-
-      <h3>Ações do turno</h3>
-      <table class="tabela">
-        <tbody>
-          <tr><th>Ações Principais</th><td>1 + Nível ÷ 5. Atacar, usar a maioria das habilidades, usar itens.</td></tr>
-          <tr><th>Ação de Movimento</th><td>1 por rodada. Mover-se até o seu Deslocamento, levantar-se, sacar uma arma.</td></tr>
-          <tr><th>Ação Especial</th><td>Ocupa o turno <strong>inteiro</strong>: quem a usa não faz Ações Principais nem de Movimento nesse turno. Usada para técnicas poderosas e para a Corrida.</td></tr>
-          <tr><th>Ações Livres</th><td>Falar brevemente, soltar um objeto, ativar alguns poderes. O Mestre limita o bom senso.</td></tr>
-          <tr><th>Reações</th><td>Fora do seu turno: Defender ou Esquivar de cada ataque que você perceba, ou usar habilidades de Reação.</td></tr>
-        </tbody>
-      </table>
-
-      <h3>Ações Principais intercaladas</h3>
-      <p>Quem tem mais de uma Ação Principal <strong>não as gasta todas de uma vez</strong>. Todos fazem a primeira Ação Principal em ordem de iniciativa, depois todos que têm uma segunda fazem a segunda, e assim por diante. Ação de Movimento, Ações Livres e Ações Especiais acontecem na primeira passagem.</p>
-      <div class="exemplo"><p>A (Nível 10, 3 ações) e B (Nível 5, 2 ações), com A na frente na iniciativa: A → B → A → B → A.</p></div>
-
-      <h3>Ataque e Reação</h3>
-      <p class="formula">Ataque = 1d20 + Nível + mod do atributo da arma (FOR para corpo a corpo, AGI para distância, salvo indicação)</p>
-      <p>Se o alvo <strong>percebe</strong> o ataque, ele escolhe uma Reação e rola contra o resultado do ataque:</p>
-      <ul>
-        <li><strong>Defender:</strong> 1d20 + Nível + mod FOR + bônus de armadura + escudo. Você bloqueia, apara ou aguenta o golpe.</li>
-        <li><strong>Esquivar:</strong> 1d20 + Nível + mod AGI + bônus de Esquiva − penalidade de armadura. Você sai da trajetória do ataque.</li>
-      </ul>
-      <p>Se a Reação for <strong>igual ou maior</strong> que o ataque, o golpe não causa dano. Se for menor, o ataque acerta.</p>
-      <p><strong>Alvo que não percebe:</strong> sem Reação. O ataque acerta se superar a <strong>Defesa Passiva</strong> = 10 + bônus de armadura.</p>
-      <p><strong>Pressão:</strong> não há limite de Reações por rodada, mas cada Reação depois da primeira, na mesma rodada, sofre <strong>−2 cumulativo</strong>. A penalidade some no início do seu turno. Ser cercado é perigoso.</p>
-      <p><strong>Resultados naturais:</strong> um 20 natural no ataque é um <strong>Acerto Crítico</strong> e só pode ser evitado por um 20 natural na Reação. Um 1 natural na Reação é falha automática.</p>
-      <p class="opcional"><strong>Regra de agilidade para o Mestre:</strong> Lacaios não rolam Reação. Eles usam uma <strong>Defesa Fixa</strong> = 10 + bônus de Reação. Assim o Mestre rola só para os inimigos que importam.</p>
-
-      <h3>Dano</h3>
-      <p class="formula">Dano = dado da arma ou habilidade + mod do atributo + metade do Nível</p>
-      <p><strong>Crítico:</strong> todos os dados de dano são rolados duas vezes; os modificadores não. <strong>Redução de Dano (RD):</strong> subtraia a RD de cada acerto (mínimo 0).</p>
-      <p><strong>Ataque desarmado:</strong> 1d4 + mod FOR + metade do Nível.</p>
-
-      <h3>Movimento</h3>
-      <p><strong>Deslocamento</strong> = 9 m + metade do mod AGI. A <strong>Corrida</strong> é uma Ação Especial: você se move 4× o seu Deslocamento.</p>
-      <p><strong>Área ameaçada:</strong> quem pode atacar corpo a corpo ameaça a área ao alcance da arma (normalmente 1,5 m). <em>Entrar</em> nela não provoca nada. <em>Sair</em> dela, andando ou correndo, provoca um <strong>Ataque de Oportunidade</strong>: o inimigo faz um ataque imediato, que não gasta ações dele.</p>
-
-      <h3>Manobras</h3>
-      <table class="tabela">
-        <tbody>
-          <tr><th>Agarrar</th><td>Ação Principal. Teste oposto de Atletismo. Se vencer, o alvo fica Agarrado.</td></tr>
-          <tr><th>Derrubar / Empurrar</th><td>Ação Principal. Teste oposto (Atletismo contra Atletismo ou Acrobacia). Derruba ou empurra 1,5 m (+1,5 m a cada 5 pontos de diferença).</td></tr>
-          <tr><th>Desarmar</th><td>Ação Principal. Ataque contra Reação com −4. Se acertar, a arma cai.</td></tr>
-          <tr><th>Preparar</th><td>Ação Principal. Defina um gatilho; quando ele ocorrer, você usa a ação como Reação.</td></tr>
-          <tr><th>Defesa Total</th><td>Ação Principal. +4 em todas as Reações até o seu próximo turno.</td></tr>
-        </tbody>
-      </table>
+      <h3>Ajuda e tentar de novo</h3>
+      <p><strong>Ajuda:</strong> um aliado capaz de contribuir rola o mesmo teste contra CD 10; se passar, você recebe +2. <strong>Escolher 10 / Escolher 20:</strong> funcionam como no D&amp;D 3.5, fora de combate e sem pressão.</p>
     </section>
 
     <!-- ===================== CAP 6 -->
+    <section class="cap" id="c-combate">
+      <h2><span class="num">6</span> Combate</h2>
+      <div class="resumo">
+        <div class="resumo-t">Em resumo</div>
+        <ol>
+          <li>Todos rolam <b>Iniciativa</b> (1d20 + AGI).</li>
+          <li>No turno: <b>Ação de Movimento</b> + <b>Ações Principais</b> (ou uma <b>Ação Especial</b>, que gasta o turno inteiro).</li>
+          <li>Para atacar: <b>1d20 + Nível + mod</b>. O alvo rola <b>Defender</b> ou <b>Esquivar</b>. Se o alvo tirar igual ou mais, o ataque não causa dano.</li>
+          <li>Se acertar, o dano é <b>dado da arma + mod + metade do Nível</b>, menos a RD do alvo.</li>
+        </ol>
+      </div>
+
+      <h3>Iniciativa e surpresa</h3>
+      <p>Cada participante rola <strong>1d20 + mod AGI</strong> e age do maior para o menor. Em empate, age primeiro quem tem o maior mod AGI. Uma <strong>rodada</strong> dura cerca de 6 segundos. Quem é pego desprevenido fica <strong>Surpreso</strong> na primeira rodada: não age nem reage.</p>
+
+      <h3>Ações do turno</h3>
+      <div class="tabela-wrap"><table class="tabela">
+        <thead><tr><th>Ação</th><th>Quantas</th><th>Para quê</th><th>No 3.5</th></tr></thead>
+        <tbody>
+          <tr><th>Principal</th><td>1 + Nível ÷ 5</td><td>Atacar, usar a maioria das habilidades, beber poção, manobras.</td><td>Padrão</td></tr>
+          <tr><th>Movimento</th><td>1</td><td>Andar até o Deslocamento, levantar-se, sacar arma.</td><td>Movimento</td></tr>
+          <tr><th>Especial</th><td>Ocupa o turno inteiro</td><td>Técnicas poderosas e a Corrida (4× o Deslocamento).</td><td>Rodada completa</td></tr>
+          <tr><th>Livre</th><td>À vontade</td><td>Falar, soltar objeto, ativar certas habilidades.</td><td>Livre</td></tr>
+          <tr><th>Reação</th><td>Sem limite (com Pressão)</td><td>Defender/Esquivar cada ataque que você perceba; habilidades de Reação.</td><td>Imediata</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3>Mais de uma Ação Principal: as passadas</h3>
+      <p>Quem tem 2 ou mais Ações Principais <strong>não as usa todas de uma vez</strong>. A rodada acontece em <strong>passadas</strong>:</p>
+      <ol>
+        <li><b>1ª passada:</b> todos, em ordem de iniciativa, fazem seu turno normal: Movimento + 1ª Ação Principal (ou a Ação Especial).</li>
+        <li><b>2ª passada:</b> quem tem 2+ ações faz a 2ª, de novo em ordem de iniciativa.</li>
+        <li>E assim por diante. A Ação de Movimento pode ser usada em qualquer uma das suas passadas.</li>
+      </ol>
+      <div class="exemplo"><div class="exemplo-t">Exemplo</div><p>A (Nível 10, 3 ações), B (Nível 5, 2 ações) e um Lacaio (1 ação), nessa ordem de iniciativa: A → B → Lacaio → A → B → A.</p></div>
+      <div class="dnd"><div class="dnd-t">📘 Vindo do D&amp;D 3.5</div><p>É o substituto dos ataques iterativos, mas cada ação extra vale uma ação padrão inteira: pode ser um ataque ou um poder, sem −5 acumulado. Em troca, você não despeja tudo de uma vez, e o inimigo pode reagir entre suas ações.</p></div>
+
+      <h3>Ataque e Reação: o coração do combate</h3>
+      <p class="formula">Ataque = 1d20 + Nível + mod do atributo da arma</p>
+      <p>O atacante rola e anuncia o total. Se o alvo <strong>percebe</strong> o ataque, escolhe uma Reação e rola contra esse total:</p>
+      <div class="grade-2">
+        <div class="caixa"><h4>Defender</h4><p class="formula" style="font-size:15px">1d20 + Nível + mod FOR + armadura + escudo</p><p>Bloquear, aparar, aguentar. Melhor com armadura pesada e escudo.</p></div>
+        <div class="caixa"><h4>Esquivar</h4><p class="formula" style="font-size:15px">1d20 + Nível + mod AGI − penalidade</p><p>Sair da trajetória. Armaduras médias e pesadas atrapalham.</p></div>
+      </div>
+      <ul>
+        <li><strong>Reação ≥ ataque:</strong> o golpe não causa dano. <strong>Reação &lt; ataque:</strong> acertou.</li>
+        <li><strong>Não percebeu o ataque</strong> (invisível, surpresa, pelas costas sem som): sem Reação. O ataque acerta se superar a <strong>Defesa Passiva</strong> = 10 + bônus de armadura.</li>
+        <li><strong>Pressão:</strong> cada Reação depois da primeira, na mesma rodada, sofre <strong>−2 cumulativo</strong> (−2, −4, −6…). Zera no início do seu turno. Por isso ser cercado é perigoso.</li>
+        <li><strong>20 natural no ataque:</strong> Acerto Crítico, que só um 20 natural na Reação evita. <strong>1 natural na Reação:</strong> falha automática.</li>
+      </ul>
+      <div class="dnd"><div class="dnd-t">📘 Vindo do D&amp;D 3.5</div><p>Pense na CA como um número que o alvo <b>rola</b>, em vez de ser fixo: CA = 1d20 + Nível + mod. É o que faz os duelos de anime funcionarem, com um Caçador mais forte desviando de tudo enquanto os fracos são atingidos sempre. Para agilizar, <b>Lacaios usam Defesa Fixa</b> = 10 + bônus de Reação, exatamente como uma CA do 3.5.</p></div>
+
+      <div class="exemplo">
+        <div class="exemplo-t">Exemplo de um ataque</div>
+        <p>Jin (Nível 5, FOR 16 → +3, espada 1d8) ataca um Orc. Rola 12: <b>12 + 5 + 3 = 20</b>.</p>
+        <p>O Orc escolhe Esquivar: rola 9 + 6 = <b>15</b>. 15 &lt; 20: acertou.</p>
+        <p>Dano: 1d8 (6) + 3 (FOR) + 2 (metade do nível) = <b>11</b>. O Orc tem RD 1 e sofre <b>10</b>.</p>
+        <p>Um segundo Caçador ataca o mesmo Orc na mesma rodada: agora a Reação dele tem −2 de Pressão.</p>
+      </div>
+
+      <h3>Dano e crítico</h3>
+      <p class="formula">Dano = dado da arma ou habilidade + mod do atributo + metade do Nível − RD do alvo</p>
+      <ul>
+        <li><strong>Crítico:</strong> role todos os <em>dados</em> duas vezes; os modificadores não dobram. 1d8 + 6 vira 2d8 + 6.</li>
+        <li><strong>Desarmado:</strong> 1d4 + mod FOR + metade do Nível.</li>
+        <li><strong>RD (Redução de Dano):</strong> subtraia de cada acerto; o mínimo é 0.</li>
+      </ul>
+
+      <h3>Poderes: ataque ou resistência</h3>
+      <p>Habilidades ofensivas funcionam de um destes dois jeitos, e a descrição diz qual:</p>
+      <ul>
+        <li><strong>"Rolagem de ataque"</strong>: como um ataque com arma. O alvo reage com Defender ou Esquivar. No 3.5, equivale a uma magia de toque ou um raio.</li>
+        <li><strong>"Resistência (atributo)"</strong>: o alvo rola Resistência contra a sua CD, sem Reação. No 3.5, equivale a uma magia com teste de resistência.</li>
+      </ul>
+      <p><strong>Ataques em área:</strong> role um único ataque e compare com a Reação de cada alvo. Contra ataques em área, uma Reação bem-sucedida <strong>reduz o dano à metade</strong> em vez de zerar (como "Reflexos reduz à metade"), a menos que o poder diga outra coisa.</p>
+
+      <h3>Movimento e Ataque de Oportunidade</h3>
+      <p><strong>Deslocamento</strong> = 9 m + metade do mod AGI. <strong>Corrida</strong> (Ação Especial) = 4× o Deslocamento.</p>
+      <p>Quem pode atacar corpo a corpo ameaça a área ao alcance da arma (normalmente 1,5 m). Provocam <strong>Ataque de Oportunidade</strong> (um ataque imediato e gratuito do inimigo):</p>
+      <ul>
+        <li><strong>Sair</strong> da área ameaçada, andando ou correndo. Entrar não provoca.</li>
+        <li>Fazer um <strong>ataque à distância</strong> ou usar um <strong>poder à distância</strong> estando adjacente a um inimigo.</li>
+      </ul>
+      <div class="dnd"><div class="dnd-t">📘 Vindo do D&amp;D 3.5</div><p>Não existe passo de 1,5 m, e beber poção ou levantar-se não provoca. Cada inimigo pode fazer um Ataque de Oportunidade por criatura que o provocar, por rodada.</p></div>
+
+      <h3>Situações comuns</h3>
+      <div class="tabela-wrap"><table class="tabela">
+        <tbody>
+          <tr><th>Flanquear</th><td>Você e um aliado em lados opostos do alvo: +2 no ataque corpo a corpo.</td></tr>
+          <tr><th>Terreno elevado</th><td>+1 no ataque corpo a corpo.</td></tr>
+          <tr><th>Cobertura parcial</th><td>+2 nas Reações e na Defesa Passiva contra ataques à distância.</td></tr>
+          <tr><th>Cobertura total</th><td>Não pode ser alvo direto.</td></tr>
+          <tr><th>Agarrar</th><td>Ação Principal. Teste oposto de Atletismo; se vencer, o alvo fica Agarrado.</td></tr>
+          <tr><th>Derrubar / Empurrar</th><td>Ação Principal. Teste oposto (Atletismo contra Atletismo ou Acrobacia). Derruba ou empurra 1,5 m, +1,5 m a cada 5 de diferença.</td></tr>
+          <tr><th>Desarmar</th><td>Ação Principal. Ataque com −4 contra a Reação do alvo; se acertar, a arma cai.</td></tr>
+          <tr><th>Preparar ação</th><td>Ação Principal. Defina um gatilho; quando ele acontecer, você age como Reação.</td></tr>
+          <tr><th>Defesa Total</th><td>Ação Principal. +4 em todas as Reações até o seu próximo turno.</td></tr>
+          <tr><th>Fugir</th><td>Corrida para longe; os inimigos ao lado fazem Ataque de Oportunidade.</td></tr>
+        </tbody>
+      </table></div>
+    </section>
+
+    <!-- ===================== CAP 7 -->
     <section class="cap" id="c-vida">
-      <h2><span class="num">6</span> Vida, Mana e Condições</h2>
+      <h2><span class="num">7</span> Vida, Mana, Descanso e Condições</h2>
 
-      <h3>Pontos de Vida</h3>
-      <p>No nível 1: <strong>10 + mod VIT</strong>. A cada nível: <strong>+5 + mod VIT</strong> (mínimo +1).</p>
-      <p>Com <strong>0 PV ou menos</strong> o personagem fica <strong>Incapacitado</strong>. Os PV podem ficar negativos. O personagem <strong>morre</strong> quando os PV negativos igualam ou superam os seus PV máximos: quem tem 80 PV máximos morre em −80.</p>
-      <p><strong>Morte instantânea:</strong> desintegração, decapitação ou um efeito que diga isso explicitamente matam na hora, seja qual for o PV.</p>
+      <h3>Pontos de Vida (PV)</h3>
+      <ul>
+        <li><strong>1º nível:</strong> 10 + mod VIT. <strong>A cada nível:</strong> +5 + mod VIT (mínimo +1).</li>
+        <li><strong>0 PV ou menos:</strong> você fica <strong>Incapacitado</strong>: consciente, mas sem agir. Os PV podem ficar negativos.</li>
+        <li><strong>Morte:</strong> quando os PV negativos igualam os seus PV máximos (80 PV máx. → morte em −80).</li>
+        <li><strong>Morte instantânea:</strong> desintegração, decapitação ou um efeito que diga isso explicitamente.</li>
+      </ul>
 
-      <h3>Pontos de Mana</h3>
-      <p>No nível 1: <strong>10 + mod INT</strong>. A cada nível: <strong>+4 + mod INT</strong> (mínimo +1). Habilidades ativas gastam PM.</p>
-      <p><strong>Exaustão de Mana:</strong> sem PM suficientes, você ainda pode usar uma habilidade pagando o <strong>dobro do custo em PV</strong>. Depois disso fica Exausto.</p>
+      <h3>Pontos de Mana (PM)</h3>
+      <ul>
+        <li><strong>1º nível:</strong> 10 + mod INT. <strong>A cada nível:</strong> +4 + mod INT (mínimo +1).</li>
+        <li>Cada habilidade ativa diz quantos PM gasta.</li>
+        <li><strong>Exaustão de Mana:</strong> sem PM suficientes, você pode pagar o <strong>dobro do custo em PV</strong> e depois fica Exausto.</li>
+      </ul>
+      <div class="dnd"><div class="dnd-t">📘 Vindo do D&amp;D 3.5</div><p>PV fixos equivalem à média de um d10 com bônus, e o "−10 para morrer" virou "−PV máximos", porque Caçadores aguentam ferimentos absurdos como no anime. PM funcionam como os pontos de poder do <i>Expanded Psionics Handbook</i>: um único reservatório para todas as habilidades.</p></div>
 
       <h3>Descanso</h3>
       <ul>
         <li><strong>Descanso curto</strong> (1 hora, até 2 por dia): recupera 1/4 dos PV e dos PM máximos.</li>
         <li><strong>Descanso longo</strong> (8 horas): recupera todos os PV e PM e remove Exausto.</li>
-        <li>Personagens Incapacitados não se recuperam com descanso curto até serem estabilizados (Medicina CD 15 ou qualquer cura).</li>
+        <li>Quem está Incapacitado só se recupera depois de estabilizado (Medicina CD 15 ou qualquer cura).</li>
       </ul>
 
       <h3>Condições</h3>
       <div id="cat-condicoes" class="lista-cond"></div>
     </section>
 
-    <!-- ===================== CAP 7 -->
+    <!-- ===================== CAP 8 -->
     <section class="cap" id="c-evolucao">
-      <h2><span class="num">7</span> Evolução: Nível, Rank e o Sistema</h2>
-
+      <h2><span class="num">8</span> Evolução: Nível, Rank e o Sistema</h2>
       <div class="janela">
         <div class="janela-t">[ NOTIFICAÇÃO ]</div>
         <p>Nível aumentado! &nbsp; Você recebeu Pontos de Status.</p>
       </div>
+      <div class="resumo">
+        <div class="resumo-t">Em resumo</div>
+        <p>XP do Portal → subir de nível → <b>1d6 Status + 1d6 PH + 2 perícia + PV + PM</b>. A cada 5 níveis: novo <b>Rank</b>, <b>+1 Ação Principal</b>, Avaliação do Sistema e +1 nível grátis no Despertar.</p>
+      </div>
 
-      <h3>Experiência</h3>
-      <p>Para passar do Nível <em>N</em> para o <em>N+1</em>, são necessários <strong>N × 10 XP</strong>. A XP vem sobretudo de Portais concluídos:</p>
+      <h3>Experiência (XP)</h3>
+      <p>Do Nível <em>N</em> para o <em>N+1</em> são necessários <strong>N × 10 XP</strong> (do 1 ao 2: 10 XP; do 9 ao 10: 90 XP). A XP vem sobretudo de Portais concluídos:</p>
       <p class="formula">XP do Portal = 5 × nível do Chefe × multiplicador do tipo de Portal</p>
-      <p>Cada Jogador que participou recebe a XP inteira. Portais de Rank inferior ao do grupo rendem metade por Rank de diferença. O Mestre pode dar XP extra (de 5 a 20) por missões, descobertas e feitos.</p>
+      <ul>
+        <li>Cada Jogador que participou recebe a XP <strong>inteira</strong> (não se divide).</li>
+        <li>Portais de Rank inferior ao do grupo rendem metade da XP por Rank de diferença.</li>
+        <li>O Mestre pode dar de 5 a 20 XP extras por missões, descobertas e boas ideias.</li>
+      </ul>
+      <p>Na prática, o grupo sobe cerca de 1 nível a cada 2 Portais do próprio Rank.</p>
       <p class="opcional"><strong>Opcional — Marcos:</strong> em vez de XP, o grupo sobe 1 nível a cada 2 aventuras concluídas.</p>
 
       <h3>Ao subir de nível</h3>
-      <ul>
-        <li><strong>1d6 Pontos de Status</strong>: distribua livremente entre os atributos.</li>
-        <li><strong>1d6 Pontos de Habilidade (PH)</strong>: para adquirir e evoluir Habilidades Especiais e seu Despertar.</li>
-        <li><strong>+2 Pontos de Perícia</strong>.</li>
-        <li><strong>PV</strong> +5 + mod VIT e <strong>PM</strong> +4 + mod INT (mínimo +1 cada).</li>
-      </ul>
+      <div class="tabela-wrap"><table class="tabela">
+        <tbody>
+          <tr><th>Pontos de Status</th><td>1d6, distribuídos livremente entre os atributos.</td></tr>
+          <tr><th>Pontos de Habilidade</th><td>1d6 PH, para habilidades e Despertar.</td></tr>
+          <tr><th>Perícias</th><td>+2 pontos.</td></tr>
+          <tr><th>PV e PM</th><td>PV +5 + mod VIT; PM +4 + mod INT (mínimo +1 cada).</td></tr>
+          <tr><th>Automático</th><td>Ataque, Reações, Resistências e CDs sobem +1 (são baseados no Nível); o dano sobe a cada 2 níveis.</td></tr>
+        </tbody>
+      </table></div>
       <p><strong>Bênção do Sistema:</strong> se tirar 1 no d6 de Status ou de PH, role de novo uma vez e fique com o segundo resultado.</p>
 
-      <h3>Subir de Rank</h3>
-      <p>Nos níveis <strong>5, 10, 15, 20 e 25</strong> o Jogador sobe de Rank (D, C, B, A, S). Isso libera as habilidades do novo Rank e traz:</p>
+      <h3>Subir de Rank (níveis 5, 10, 15, 20, 25)</h3>
       <ul>
-        <li><strong>Avaliação do Sistema:</strong> o Sistema sorteia 3 habilidades do novo Rank; você escolhe uma e a recebe de graça no nível 1. Requisitos de atributo e de pré-requisito são ignorados nessa escolha; o de nível, não.</li>
-        <li><strong>Evolução do Despertar:</strong> +1 nível gratuito no seu Despertar.</li>
-        <li><strong>+1 Ação Principal</strong> (pela fórmula 1 + Nível ÷ 5).</li>
+        <li><strong>Novo Rank</strong> de habilidades liberado (D, C, B, A, S).</li>
+        <li><strong>+1 Ação Principal.</strong></li>
+        <li><strong>Avaliação do Sistema:</strong> 3 habilidades sorteadas do novo Rank; uma, à sua escolha, é sua de graça. Os requisitos de atributo e de pré-requisito são ignorados nessa escolha; o de nível, não.</li>
+        <li><strong>Evolução do Despertar:</strong> +1 nível grátis no seu Despertar.</li>
       </ul>
-      <p>O Rank <em>oficial</em> da Associação não muda sozinho. Para ser reavaliado, o personagem precisa se expor e pedir uma nova medição, coisa que pode chamar atenção indesejada.</p>
+      <p>O Rank <em>oficial</em> da Associação não muda sozinho. Para mudá-lo, o personagem precisa pedir uma nova medição, o que chama atenção, como num Segundo Despertar.</p>
 
       <h3>Provação de Ascensão (opcional)</h3>
-      <p>Para passar do nível 19 ao 20 (Rank A) e do 29 ao 30, o Sistema exige uma <strong>Provação</strong>: uma Instância do Sistema solo ou em grupo, desenhada pelo Mestre, contra um Chefe 3 níveis acima. Até vencer, a XP acumula mas o nível não sobe.</p>
+      <p>Para passar do nível 19 ao 20 e do 29 ao 30, o Sistema exige uma <strong>Provação</strong>: uma Instância especial contra um Chefe 3 níveis acima. Até vencer, a XP acumula mas o nível não sobe.</p>
 
-      <h3>Missões Diárias e Zona de Penalidade</h3>
+      <h3>Missões do Sistema</h3>
       <div class="janela">
         <div class="janela-t">[ MISSÃO DIÁRIA ] Preparação para se tornar forte</div>
         <p>Flexões 100 · Abdominais 100 · Agachamentos 100 · Corrida 10 km<br><small>Aviso: falhar resultará em penalidade.</small></p>
       </div>
-      <p>O Sistema pode passar missões diárias de treino. Cumpri-las por <strong>7 dias seguidos</strong> (no tempo da ficção) dá <strong>+1 Ponto de Status</strong>. Falhar em uma missão manda o Jogador para a <strong>Zona de Penalidade</strong>: uma Instância curta e hostil para sobreviver, sem XP, que o Mestre usa como gancho de aventura.</p>
-      <p>Para Jogadores com Despertar <em>Anomalia</em>, a Missão Diária é obrigatória.</p>
+      <ul>
+        <li><strong>Missão Diária:</strong> treino físico. Cumpri-la por 7 dias seguidos (no tempo da ficção) dá <strong>+1 Ponto de Status</strong>. Falhar manda o Jogador para a <strong>Zona de Penalidade</strong>: uma Instância curta e hostil, sem XP, só para sobreviver. É obrigatória para Despertares Anomalia e opcional para os demais.</li>
+        <li><strong>Missão de Emergência:</strong> surge sem aviso ("Elimine os inimigos em 10 minutos"). Recompensa alta; falhar tem consequência séria.</li>
+        <li><strong>Missão Oculta:</strong> uma condição secreta que o Mestre conhece ("Poupe o monstro que se rendeu"). Cumprida por acaso, rende recompensas únicas.</li>
+      </ul>
 
-      <h3>Missões e a Loja do Sistema</h3>
-      <p>O Sistema também oferece <strong>Missões</strong> com recompensas: Ouro, itens, Pergaminhos de Habilidade, PH extras. A <strong>Loja do Sistema</strong> vende consumíveis e itens Comuns e Incomuns até o Rank do Jogador, pelos preços da tabela de <a href="#c-itens">Equipamentos</a>.</p>
+      <h3>Títulos</h3>
+      <p>Feitos marcantes rendem <strong>Títulos</strong> do Sistema. Você pode ter vários, mas só <strong>um equipado</strong> por vez, e só troca fora de combate. O Mestre pode criar outros.</p>
+      <div id="cat-titulos"></div>
+
+      <h3>Loja e Inventário do Sistema</h3>
+      <p>A <strong>Loja do Sistema</strong> vende consumíveis e itens Comuns e Incomuns até o Rank do Jogador, pelos preços de <a href="#c-itens">Equipamentos</a>, e compra itens por metade do preço. O <strong>Inventário</strong> guarda 20 itens (pilhas de consumíveis contam como 1) num espaço que só o Portador acessa, como Ação Livre.</p>
     </section>
 
-    <!-- ===================== CAP 8 -->
+    <!-- ===================== CAP 9 -->
     <section class="cap" id="c-habilidades">
-      <h2><span class="num">8</span> Habilidades Especiais</h2>
-      <p>As Habilidades Especiais são poderes e técnicas acima do que um humano consegue fazer. São organizadas em <strong>10 Árvores</strong> e qualquer Jogador pode aprender de qualquer árvore. <strong>Árvores não são classes</strong>: o normal é combinar duas, três ou mais.</p>
+      <h2><span class="num">9</span> Habilidades Especiais</h2>
+      <div class="resumo">
+        <div class="resumo-t">Em resumo</div>
+        <p>10 árvores, todas abertas a todos. Cada habilidade tem Rank (E a S) e nível (1 a 5). <b>Adquirir</b> custa 1–6 PH conforme o Rank; <b>levar ao nível n</b> custa n PH.</p>
+      </div>
+      <p>As Habilidades Especiais são poderes e técnicas acima do humano. <strong>Árvores não são classes</strong>: o normal é combinar duas ou três.</p>
+      <div class="dnd"><div class="dnd-t">📘 Vindo do D&amp;D 3.5</div><p>Junte talentos e magias numa coisa só. As Passivas funcionam como talentos que crescem; as Ativas, como magias pagas com PM. Os pré-requisitos funcionam como as cadeias de talentos (Ataque Poderoso → Trespassar). Em vez de escolher uma magia nova por nível, você <b>aprofunda</b> as que já tem.</p></div>
 
       <h3>Como se obtém uma habilidade</h3>
       <ol>
         <li><strong>Comprando com PH</strong>, cumprindo os requisitos.</li>
-        <li><strong>Avaliação do Sistema</strong> (criação e cada subida de Rank): 3 sorteadas, 1 escolhida, de graça.</li>
-        <li><strong>Pergaminhos de Habilidade</strong> encontrados em Portais: uma habilidade sorteada do Rank do pergaminho, sem custo de aquisição.</li>
-        <li><strong>Recompensas de Missão</strong> e mestres que ensinam técnicas na ficção, a critério do Mestre.</li>
+        <li><strong>Avaliação do Sistema</strong> (na criação e a cada novo Rank): 3 sorteadas, 1 escolhida, de graça.</li>
+        <li><strong>Pergaminhos de Habilidade</strong> encontrados em Portais: ensinam uma habilidade sem custo de aquisição.</li>
+        <li><strong>Missões e mestres</strong> que ensinam técnicas na ficção, a critério do Mestre.</li>
       </ol>
 
-      <h3>Requisitos</h3>
-      <table class="tabela">
-        <thead><tr><th>Rank da habilidade</th><th>Nível mínimo</th><th>Atributo mínimo</th><th>Custo de aquisição</th></tr></thead>
+      <h3>Requisitos e custo</h3>
+      <div class="tabela-wrap"><table class="tabela">
+        <thead><tr><th>Rank</th><th>Nível mínimo</th><th>Atributo mínimo</th><th>Adquirir</th></tr></thead>
         <tbody id="tab-req-rank"></tbody>
-      </table>
-      <p>Além disso, cada habilidade indica o <strong>atributo de requisito</strong> (quando aparece "FOR/AGI", serve qualquer um dos dois) e seus <strong>pré-requisitos</strong>: outras habilidades num nível mínimo.</p>
-      <p><strong>Afinidade:</strong> habilidades das duas árvores afins do seu Despertar custam 1 PH a menos para adquirir (mínimo 1).</p>
-
-      <h3>Níveis de habilidade</h3>
-      <p>Toda habilidade vai do <strong>nível 1 ao 5</strong>. Levar uma habilidade ao nível <em>n</em> custa <strong>n PH</strong>: o nível 2 custa 2, o 3 custa 3, o 4 custa 4 e o 5 custa 5. Uma habilidade que vai do zero ao nível 5 custa a aquisição + 14 PH.</p>
-      <p>Cada ficha de habilidade mostra o efeito no nível 1, o que melhora <strong>por nível</strong> e dois <strong>marcos</strong> (níveis 3 e 5) que destravam <em>possibilidades novas</em>, não só números maiores.</p>
+      </table></div>
+      <ul>
+        <li><strong>Atributo de requisito:</strong> cada habilidade diz qual. "FOR/AGI" significa qualquer um dos dois.</li>
+        <li><strong>Pré-requisitos:</strong> outras habilidades num nível mínimo ("Domínio de Armas nv2").</li>
+        <li><strong>Afinidade:</strong> habilidades das árvores afins ao seu Despertar custam 1 PH a menos para adquirir (mínimo 1).</li>
+      </ul>
+      <div class="tabela-wrap"><table class="tabela compacta">
+        <thead><tr><th>Evoluir para</th><th>nv2</th><th>nv3</th><th>nv4</th><th>nv5</th><th>Total 1→5</th></tr></thead>
+        <tbody><tr><th>Custo</th><td>2 PH</td><td>3 PH</td><td>4 PH</td><td>5 PH</td><td>14 PH + aquisição</td></tr></tbody>
+      </table></div>
 
       <h3>Como ler uma habilidade</h3>
       <div class="hab-exemplo">
@@ -365,47 +563,48 @@
           <p><b>Nível 3 / Nível 5:</b> marcos que acrescentam regras novas.</p>
         </div>
       </div>
-
-      <h3>Tipos e ativação</h3>
       <ul>
-        <li><strong>Passiva:</strong> sempre ativa, sem ação.</li>
-        <li><strong>Ativa:</strong> exige a ação indicada (Principal, Movimento, Especial, Livre ou Reação) e normalmente gasta PM.</li>
-        <li><strong>Frequência:</strong> algumas habilidades têm limite (1× por combate, 1× por dia). Um "combate" termina quando não há inimigos ativos por 1 minuto.</li>
+        <li><strong>Passiva:</strong> sempre ativa. Quando ela muda um número da ficha, o site já soma.</li>
+        <li><strong>Ativa:</strong> exige a ação indicada e normalmente gasta PM.</li>
+        <li><strong>Frequência:</strong> "1× por combate" volta quando não há inimigos por 1 minuto; "1× por dia" volta com o descanso longo.</li>
+        <li><strong>Acúmulo:</strong> efeitos diferentes se somam; a mesma habilidade não se soma com ela mesma.</li>
       </ul>
 
-      <h3>Acúmulo</h3>
-      <p>Efeitos diferentes se somam. <strong>Bônus iguais de fontes iguais não se acumulam</strong>: duas habilidades que dão "+X em Defender" se somam, mas usar a mesma habilidade duas vezes não dobra o bônus. Em caso de dúvida, vale o maior.</p>
-
       <h3>O Despertar</h3>
-      <p>Seu Despertar é uma Habilidade Única. Começa no nível 1 e evolui com PH (nível <em>n</em> custa <em>n</em> PH), além do +1 gratuito a cada subida de Rank. Ao atingir o <strong>nível 5</strong> e o <strong>Nível de personagem 20</strong>, o Despertar libera sua <strong>Forma Evoluída</strong>, um poder de outra escala. O Mestre pode exigir um acontecimento marcante na história para isso.</p>
-    </section>
-
-    <!-- ===================== CAP 9 -->
-    <section class="cap" id="c-despertares">
-      <h2><span class="num">9</span> Despertares</h2>
-      <p>Role 1d100. A raridade aparece na cor do cartão. As compensações por raridade estão no <a href="#c-criacao">Passo 3</a>.</p>
-      <div id="cat-despertares"></div>
+      <p>Seu Despertar é uma Habilidade Única. Começa no nível 1 e evolui com PH (nível <em>n</em> custa <em>n</em> PH), além do nível grátis a cada novo Rank. No <strong>nível 5 do Despertar</strong> e a partir do <strong>Nível 20 do personagem</strong>, ele libera a <strong>Forma Evoluída</strong>, um poder de outra escala. O Mestre pode exigir um momento marcante da história para isso.</p>
     </section>
 
     <!-- ===================== CAP 10 -->
-    <section class="cap" id="c-arvores">
-      <h2><span class="num">10</span> Árvores de Habilidade</h2>
-      <p>Catálogo completo. Na aba <strong>Árvores</strong> você navega por elas de forma visual e compra habilidades direto para a sua ficha.</p>
-      <div id="cat-habilidades"></div>
+    <section class="cap" id="c-despertares">
+      <h2><span class="num">10</span> Despertares</h2>
+      <p>Role 1d100. A cor do cartão indica a raridade. As compensações estão no <a href="#c-criacao">Passo 3</a>.</p>
+      <div id="cat-despertares"></div>
     </section>
 
     <!-- ===================== CAP 11 -->
+    <section class="cap" id="c-arvores">
+      <h2><span class="num">11</span> Árvores de Habilidade</h2>
+      <p>Catálogo completo. Na aba <strong>Árvores</strong>, elas aparecem em forma de mapa e podem ser compradas direto para a ficha.</p>
+      <div id="cat-habilidades"></div>
+    </section>
+
+    <!-- ===================== CAP 12 -->
     <section class="cap" id="c-itens">
-      <h2><span class="num">11</span> Equipamentos</h2>
-      <p>No começo da jornada, equipamento faz enorme diferença. Com o tempo, o poder do próprio Caçador supera o de armas comuns. Itens <strong>Raros ou melhores</strong>, porém, crescem junto com o portador.</p>
+      <h2><span class="num">12</span> Equipamentos</h2>
+      <div class="resumo">
+        <div class="resumo-t">Em resumo</div>
+        <p>Todo item tem <b>Rank</b> (bônus fixo), <b>Raridade</b> (quantos afixos e Selos ocultos) e pode evoluir com <b>Refino</b> (+1 a +10), <b>Sincronia</b> (desperta Selos) e <b>Ascensão</b> (sobe de Rank).</p>
+      </div>
+      <p>No começo, equipamento faz enorme diferença. Com o tempo, o poder do próprio Caçador supera o de armas comuns; itens <strong>Raros ou melhores</strong>, porém, crescem junto com ele.</p>
+      <div class="dnd"><div class="dnd-t">📘 Vindo do D&amp;D 3.5</div><p>O Refino é o bônus de melhoria (+1 a +10 em vez de +1 a +5). Os afixos são as propriedades especiais (Flamejante, Afiada…). As Relíquias são os artefatos inteligentes, com Vontade em vez de Ego. A grande novidade é a <b>Sincronia</b>: o item revela poderes ocultos conforme você o usa contra Chefes.</p></div>
 
       <h3>Armas</h3>
       <div id="cat-armas"></div>
-      <p><strong>Leve:</strong> pode ser usada com a outra mão ocupada, em espaços apertados e com a habilidade Lâminas Gêmeas. <strong>Duas mãos:</strong> impede o uso de escudo e de uma segunda arma.</p>
+      <p><strong>Leve:</strong> pode ser usada com a outra mão ocupada e com Lâminas Gêmeas. <strong>Duas mãos:</strong> impede o uso de escudo e de uma segunda arma.</p>
 
       <h3>Armaduras e escudos</h3>
-      <table class="tabela">
-        <thead><tr><th>Armadura</th><th>Tipo</th><th>Bônus em Defender</th><th>Esquivar</th></tr></thead>
+      <div class="tabela-wrap"><table class="tabela">
+        <thead><tr><th>Armadura</th><th>Tipo</th><th>Defender</th><th>Esquivar</th></tr></thead>
         <tbody>
           <tr><td>Sem armadura</td><td>—</td><td>+0</td><td>—</td></tr>
           <tr><td>Traje de Combate</td><td>Leve</td><td>+1</td><td>—</td></tr>
@@ -413,128 +612,160 @@
           <tr><td>Armadura de Placas</td><td>Pesada</td><td>+3</td><td>−3</td></tr>
           <tr><td>Escudo</td><td>Uma mão</td><td>+2 (só Defender)</td><td>—</td></tr>
         </tbody>
-      </table>
+      </table></div>
 
       <h3>Rank do item</h3>
-      <p>Todo item tem um Rank (E a S), que lhe dá um <strong>Bônus de Rank (BR)</strong>:</p>
-      <table class="tabela compacta">
+      <div class="tabela-wrap"><table class="tabela compacta">
         <thead><tr><th>Rank</th><th>E</th><th>D</th><th>C</th><th>B</th><th>A</th><th>S</th></tr></thead>
         <tbody>
-          <tr><th>BR</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>6</td></tr>
+          <tr><th>Bônus de Rank (BR)</th><td>0</td><td>1</td><td>2</td><td>3</td><td>4</td><td>6</td></tr>
           <tr><th>Requisito</th><td>—</td><td>14</td><td>18</td><td>22</td><td>26</td><td>34</td></tr>
           <tr><th>Preço base</th><td>50</td><td>200</td><td>800</td><td>3.000</td><td>12.000</td><td>50.000</td></tr>
         </tbody>
-      </table>
+      </table></div>
       <ul>
         <li><strong>Armas:</strong> +BR no ataque e +2×BR no dano.</li>
         <li><strong>Armaduras e escudos:</strong> +BR em Defender e RD igual ao BR.</li>
-        <li><strong>Requisito:</strong> valor mínimo no atributo do item (atributo da arma; FOR para armaduras médias e pesadas; nenhum para leves e acessórios). Sem o requisito, o item funciona como Rank E.</li>
+        <li><strong>Requisito:</strong> valor mínimo no atributo do item (o da arma; FOR para armaduras médias, pesadas e escudos; nenhum para leves e acessórios). Sem ele, o item funciona como Rank E.</li>
       </ul>
 
-      <h3>Raridade e afixos</h3>
-      <p>A raridade define quantas propriedades o item tem. <strong>Afixos</strong> são visíveis. <strong>Selos</strong> são propriedades ocultas, que despertam com a Sincronia.</p>
-      <table class="tabela">
+      <h3>Raridade, afixos e Selos</h3>
+      <div class="tabela-wrap"><table class="tabela">
         <thead><tr><th>d100</th><th>Raridade</th><th>Afixos</th><th>Selos</th><th>Preço ×</th></tr></thead>
         <tbody id="tab-raridades"></tbody>
-      </table>
-      <p><strong>Bônus na rolagem de raridade:</strong> item de Chefe +10, Portal Vermelho +15, Masmorra Dupla +20.</p>
-      <p>Nos afixos, <strong>X = 1 + BR</strong> do item. Assim, um afixo "Brutal" (+2X de dano) num item Rank C dá +6 de dano.</p>
+      </table></div>
+      <p><strong>Bônus na rolagem:</strong> item de Chefe +10, Portal Vermelho +15, Masmorra Dupla +20. <strong>Acessórios</strong> recebem 1 afixo a mais. Nos afixos, <strong>X = 1 + BR</strong>: "Brutal" (+2X de dano) num item Rank C dá +6.</p>
       <div id="cat-afixos"></div>
 
       <h3>Evolução de itens</h3>
       <div class="grade-3">
         <div class="caixa">
           <h4>Refino (+1 a +10)</h4>
-          <p>Cada nível de Refino dá <strong>+1 em ataque e dano</strong> (armas) ou <strong>+1 em Defender</strong> (armaduras e escudos). Acessórios não são refinados.</p>
-          <p>Custo: <strong>Cristais de Mana</strong> do Rank do item em quantidade igual ao Refino desejado, mais um <strong>Teste de Refino</strong>: 1d20 + grau de Conhecimento ≥ 2 × Refino desejado.</p>
-          <p><strong>Falha:</strong> até +5, perde só os cristais. De +6 a +8, o item cai 1 nível. Em +9 e +10, cai 2 níveis. Um 1 natural a partir de +8 deixa o item <strong>Rachado</strong> (perde o BR até ser purificado).</p>
+          <p>Cada nível dá <strong>+1 em ataque e dano</strong> (armas) ou <strong>+1 em Defender</strong> (armaduras e escudos).</p>
+          <p><b>Custo:</b> Cristais de Mana do Rank do item em quantidade igual ao Refino desejado.</p>
+          <p><b>Teste:</b> 1d20 + grau de Conhecimento ≥ 2 × Refino desejado.</p>
+          <p><b>Falha:</b> até +5, perde os cristais. De +6 a +8, o item cai 1 nível. Em +9 e +10, cai 2. Um 1 natural a partir de +8 deixa o item <b>Rachado</b> (sem BR até ser purificado).</p>
         </div>
         <div class="caixa">
           <h4>Sincronia (Selos)</h4>
-          <p>Itens Raros ou melhores acumulam <strong>Sincronia</strong>: +1 por Chefe derrotado ou Portal concluído usando o item como principal.</p>
-          <p>Os Selos despertam com <strong>3</strong>, <strong>8</strong> e <strong>15</strong> pontos de Sincronia. O Mestre sabe quais são; o jogador só descobre quando despertam (ou com Análise nv3 ou Pergaminho de Selo).</p>
-          <p>Itens <strong>Lendários</strong> com <strong>25</strong> pontos de Sincronia despertam um poder único, criado pelo Mestre a partir da história do item.</p>
+          <p>Itens Raros ou melhores ganham <strong>+1 de Sincronia</strong> por Chefe derrotado ou Portal concluído usando o item como principal.</p>
+          <p>Os Selos despertam com <b>3</b>, <b>8</b> e <b>15</b> de Sincronia. O jogador só descobre qual é quando desperta (ou com Análise nv3 ou Pergaminho de Selo).</p>
+          <p>Itens Lendários com <b>25</b> de Sincronia despertam um poder único, criado pelo Mestre.</p>
         </div>
         <div class="caixa">
           <h4>Ascensão de Rank</h4>
-          <p>Um item com <strong>Refino +10</strong> pode ser <strong>Ascendido</strong> ao Rank seguinte usando um <strong>Núcleo de Chefe</strong> do novo Rank.</p>
-          <p>O item sobe de Rank (BR e requisito novos), o Refino volta para <strong>+5</strong> e ele ganha <strong>1 afixo novo</strong> sorteado. A Sincronia é mantida.</p>
+          <p>Item com <b>Refino +10</b> + <b>Núcleo de Chefe</b> do Rank seguinte: o item sobe de Rank, o Refino volta a <b>+5</b> e ele ganha <b>1 afixo novo</b> sorteado. A Sincronia é mantida.</p>
           <p>É assim que uma arma querida acompanha o Caçador do Rank E ao S.</p>
         </div>
       </div>
 
       <h3>Relíquias</h3>
-      <p>Relíquias são itens únicos com nome e história próprios. Não têm Rank fixo: <strong>usam sempre o Rank do portador</strong>. Toda Relíquia tem uma <strong>Vontade</strong>: um desejo ou exigência. Se o portador a contrariar, perde os afixos até se redimir.</p>
+      <p>Itens únicos, com nome e história. Não têm Rank fixo: <strong>usam sempre o Rank do portador</strong>. Toda Relíquia tem uma <strong>Vontade</strong>, um desejo ou uma exigência. Contrariá-la desliga os afixos até o portador se redimir.</p>
 
       <h3>Consumíveis e materiais</h3>
       <div id="cat-consumiveis"></div>
-      <p>Consumíveis custam <strong>1/5 do preço base</strong> do Rank (Pergaminhos de Habilidade e Elixires não são vendidos: só se encontram em Portais).</p>
+      <p>Consumíveis custam <strong>1/5 do preço base</strong> do Rank. Pergaminhos de Habilidade, Elixires, Núcleos e Chaves de Instância não são vendidos: só se encontram em Portais.</p>
 
       <h3>Ouro e recompensas</h3>
-      <p>Cada Jogador recebe, por Portal concluído, Ouro igual a <strong>4 × preço base do Rank do Portal</strong>, vindo de cristais e materiais vendidos (menos taxas de guilda, se houver). Role <strong>1 item</strong> por Elite derrotada e <strong>2 itens</strong> (com +10 na raridade) pelo Chefe.</p>
-    </section>
-
-    <!-- ===================== CAP 12 -->
-    <section class="cap" id="c-portais">
-      <h2><span class="num">12</span> Portais e Ameaças (para o Mestre)</h2>
-
-      <h3>Gerando um Portal</h3>
-      <p>Use a aba <strong>Sorteios → Portal</strong> ou role nas tabelas: Rank (d100), Tipo (d20), Ambiente (d12), Criaturas (d12), Chefe (título e epíteto, d12 cada) e Complicação (d12).</p>
-      <div id="cat-portal"></div>
-
-      <h3>Estrutura de uma masmorra</h3>
-      <ol>
-        <li><strong>Entrada:</strong> 1–2 encontros com Lacaios (o grupo mede o Portal).</li>
-        <li><strong>Profundezas:</strong> 2–3 encontros mistos (Lacaios, Soldados), uma armadilha ou um enigma, um descanso curto possível.</li>
-        <li><strong>Antecâmara:</strong> uma Elite ou um evento: o primeiro sinal do Chefe.</li>
-        <li><strong>Sala do Chefe:</strong> o Chefe com escolta. Quando o Chefe cai, o Portal começa a fechar em 1 hora.</li>
-      </ol>
-
-      <h3>Criando ameaças</h3>
-      <p>Monstros não usam as regras de criação dos Jogadores. Escolha um <strong>nível</strong> (dentro da faixa do Rank do Portal) e uma <strong>categoria</strong>, e use a tabela. Depois acrescente 1 ou 2 traços especiais.</p>
-      <ul>
-        <li><strong>Lacaio:</strong> cai em 1–2 golpes. Usa Defesa Fixa e não rola Reação. Aparece em grupos.</li>
-        <li><strong>Soldado:</strong> o inimigo padrão. Rola Reações.</li>
-        <li><strong>Elite:</strong> um desafio para 1–2 Jogadores. Tem RD e um poder.</li>
-        <li><strong>Chefe:</strong> um desafio para o grupo inteiro. Várias ações, RD, 2–3 poderes e uma <strong>segunda fase</strong> aos 50% dos PV.</li>
-      </ul>
-      <div class="controle-ameaca">
-        <label>Nível: <input type="number" id="amea-nivel" value="5" min="1" max="40"></label>
-      </div>
-      <div id="tab-ameacas"></div>
-      <p><strong>Poderes de ameaça:</strong> use a CD indicada. Dano de área típico: (nível ÷ 2 + 2)d6. O Chefe ganha +1 Ação Principal na segunda fase.</p>
-
-      <h3>Encontros equilibrados</h3>
-      <p>Para um grupo de 4 Jogadores de nível N: <strong>Fácil</strong>, 6 Lacaios de nível N; <strong>Médio</strong>, 3 Soldados de nível N + 4 Lacaios; <strong>Difícil</strong>, 1 Elite de nível N+1 + 3 Soldados; <strong>Chefe</strong>, 1 Chefe de nível N+2 + 2 Elites ou 6 Lacaios. Ajuste em ±1 nível para grupos maiores ou menores.</p>
-
-      <h3>Bestiário rápido</h3>
-      <div id="cat-bestiario"></div>
+      <p>Por Portal concluído, cada Jogador recebe Ouro igual a <strong>4 × preço base do Rank do Portal</strong> (cristais e materiais vendidos, já descontadas as taxas). Role <strong>1 item</strong> por Elite derrotada e <strong>2 itens</strong> (com +10 na raridade) pelo Chefe.</p>
     </section>
 
     <!-- ===================== CAP 13 -->
+    <section class="cap" id="c-portais">
+      <h2><span class="num">13</span> Portais e Ameaças (para o Mestre)</h2>
+      <p>A aba <strong>Mestre</strong> gera Portais, encontros e saques prontos. Este capítulo explica as tabelas por trás.</p>
+
+      <h3>Gerando um Portal</h3>
+      <p>Role na ordem: Rank (d100), Tipo (d20), Ambiente (d12), Criaturas (d12), Título e Epíteto do Chefe (d12 cada) e Complicação (d12).</p>
+      <div id="cat-portal"></div>
+
+      <h3>Estrutura de uma masmorra</h3>
+      <ol class="passos">
+        <li><b>Entrada:</b> 1–2 encontros fáceis, com Lacaios. O grupo mede o Portal.</li>
+        <li><b>Profundezas:</b> 2–3 encontros médios, uma armadilha ou um enigma, talvez um descanso curto.</li>
+        <li><b>Antecâmara:</b> uma Elite ou um evento: o primeiro sinal do Chefe.</li>
+        <li><b>Sala do Chefe:</b> o Chefe com escolta, com segunda fase aos 50% dos PV. Quando ele cai, o Portal fecha em 1 hora.</li>
+      </ol>
+
+      <h3>Criando ameaças</h3>
+      <p>Monstros não são montados como os Jogadores: escolha um <strong>nível</strong> (dentro da faixa do Rank do Portal) e uma <strong>categoria</strong>, leia os números da tabela e acrescente 1 ou 2 traços.</p>
+      <div class="dnd"><div class="dnd-t">📘 Vindo do D&amp;D 3.5</div><p>O nível da ameaça funciona como o ND. Um encontro "Médio" consome cerca de 20% dos recursos do grupo, como no 3.5. As categorias fazem o papel de "capanga, soldado, tenente, vilão".</p></div>
+      <ul>
+        <li><strong>Lacaio:</strong> cai em 1–2 golpes. Usa Defesa Fixa e não rola Reação. Vem em grupo.</li>
+        <li><strong>Soldado:</strong> o inimigo padrão. Rola Reações.</li>
+        <li><strong>Elite:</strong> desafio para 1–2 Jogadores, com RD e um poder.</li>
+        <li><strong>Chefe:</strong> desafio para o grupo inteiro: várias ações, RD, 2–3 poderes e segunda fase aos 50% dos PV (+1 Ação Principal).</li>
+      </ul>
+      <div class="controle-ameaca"><label>Ver ameaças de nível: <input type="number" id="amea-nivel" value="5" min="1" max="40"></label></div>
+      <div id="tab-ameacas"></div>
+      <p><strong>Poderes de ameaça:</strong> use a CD da tabela. Dano de área típico: (nível ÷ 2 + 2)d6.</p>
+
+      <h3>Encontros equilibrados</h3>
+      <p>Para 4 Jogadores de nível N: <b>Fácil</b>, 6 Lacaios de nível N. <b>Médio</b>, 3 Soldados + 4 Lacaios de nível N. <b>Difícil</b>, 1 Elite de nível N+1 + 3 Soldados. <b>Chefe</b>, 1 Chefe de nível N+2 + 2 Elites. Para cada Jogador a mais ou a menos, ajuste 1 inimigo.</p>
+
+      <h3>Bestiário rápido</h3>
+      <div id="cat-bestiario"></div>
+
+      <h3>Ideias de campanha</h3>
+      <ul>
+        <li><strong>O segredo:</strong> o grupo precisa esconder o Sistema enquanto sobe de nível rápido demais. A Associação começa a desconfiar.</li>
+        <li><strong>A guilda:</strong> o grupo funda a própria guilda e precisa de dinheiro, licenças e recrutas, além de enfrentar rivais.</li>
+        <li><strong>A ilha perdida:</strong> uma região tomada por uma Ruptura antiga, onde algo continua crescendo.</li>
+        <li><strong>O criador do Sistema:</strong> Instâncias com mensagens e um Chefe que conhece o nome dos Jogadores.</li>
+      </ul>
+    </section>
+
+    <!-- ===================== CAP 14 -->
     <section class="cap" id="c-ref">
-      <h2><span class="num">13</span> Referência Rápida</h2>
+      <h2><span class="num">14</span> Glossário e Referência Rápida</h2>
+      <h3>Glossário</h3>
+      <dl class="glossario">
+        <dt>Associação</dt><dd>Órgão oficial que mede Ranks, emite licenças, distribui Portais e investiga Caçadores.</dd>
+        <dt>Avaliação do Sistema</dt><dd>Sorteio de 3 habilidades, com escolha de uma, na criação e a cada novo Rank.</dd>
+        <dt>BR (Bônus de Rank)</dt><dd>Bônus fixo de um item conforme o Rank dele.</dd>
+        <dt>Carregador / Coletor</dt><dd>Pessoa (às vezes um Caçador Rank E) contratada para carregar saque ou minerar cristais.</dd>
+        <dt>Chefe</dt><dd>O monstro mais forte da masmorra. Matá-lo fecha o Portal.</dd>
+        <dt>Cristal de Mana</dt><dd>Mana solidificada extraída de Portais e monstros. Moeda, energia e material de Refino.</dd>
+        <dt>Despertar</dt><dd>O momento em que alguém ganha poderes, e também a Habilidade Única sorteada do Jogador.</dd>
+        <dt>Instância</dt><dd>Masmorra criada pelo Sistema, visível só para os Portadores.</dd>
+        <dt>Jogador / Portador</dt><dd>Caçador escolhido pelo Sistema: os personagens dos jogadores.</dd>
+        <dt>Masmorra Dupla</dt><dd>Masmorra oculta dentro de outra, muito mais perigosa.</dd>
+        <dt>PH</dt><dd>Pontos de Habilidade, usados para adquirir e evoluir habilidades.</dd>
+        <dt>Portal</dt><dd>Fenda que leva a uma masmorra. Tem Rank conforme a mana que emite.</dd>
+        <dt>Portal Vermelho</dt><dd>Portal que se fecha com o grupo dentro; o tempo corre diferente.</dd>
+        <dt>Pressão</dt><dd>−2 cumulativo em cada Reação após a primeira na rodada.</dd>
+        <dt>Rank</dt><dd>Escala de poder de E a S, para Caçadores, Portais e itens.</dd>
+        <dt>Ruptura</dt><dd>Quando um Portal não é fechado a tempo e os monstros saem.</dd>
+        <dt>Selo</dt><dd>Propriedade oculta de um item, despertada pela Sincronia.</dd>
+        <dt>Zona de Penalidade</dt><dd>Instância punitiva para quem falha na Missão Diária.</dd>
+      </dl>
+
+      <h3>Referência rápida</h3>
       <div class="grade-2">
-        <div class="caixa">
-          <h4>Rolagens</h4>
-          <p>Teste: d20 + mod + perícia ≥ CD<br>Ataque: d20 + Nível + mod<br>Defender: d20 + Nível + FOR + armadura + escudo<br>Esquivar: d20 + Nível + AGI − penalidade<br>Resistência: d20 + Nível + mod<br>CD de poder: 10 + Nível + mod<br>Dano: dado + mod + Nível ÷ 2</p>
-        </div>
-        <div class="caixa">
-          <h4>Turno</h4>
-          <p>Ações Principais: 1 + Nível ÷ 5 (intercaladas)<br>1 Ação de Movimento<br>ou 1 Ação Especial (o turno inteiro)<br>Ações Livres<br>Reações: ilimitadas, −2 cumulativo após a 1ª</p>
-        </div>
-        <div class="caixa">
-          <h4>Evolução</h4>
-          <p>XP para o próximo: Nível × 10<br>Por nível: 1d6 Status, 1d6 PH, 2 Perícia, PV +5+VIT, PM +4+INT<br>Rank: níveis 5/10/15/20/25<br>Habilidade nível n: n PH</p>
-        </div>
-        <div class="caixa">
-          <h4>Recuperação</h4>
-          <p>Descanso curto (1h, 2×/dia): 1/4 PV e PM<br>Descanso longo (8h): tudo<br>0 PV: Incapacitado<br>−PV máx: morte</p>
-        </div>
+        <div class="caixa"><h4>Rolagens</h4><p>Teste: d20 + mod + perícia ≥ CD<br>Ataque: d20 + Nível + mod<br>Defender: d20 + Nível + FOR + armadura + escudo<br>Esquivar: d20 + Nível + AGI − penalidade<br>Resistência: d20 + Nível + mod<br>CD de poder: 10 + Nível + mod<br>Dano: dado + mod + Nível ÷ 2 − RD</p></div>
+        <div class="caixa"><h4>Turno</h4><p>Ações Principais: 1 + Nível ÷ 5 (em passadas)<br>1 Ação de Movimento<br>ou 1 Ação Especial (o turno inteiro)<br>Ações Livres<br>Reações: ilimitadas, −2 cumulativo após a 1ª<br>Área: Reação bem-sucedida = metade do dano</p></div>
+        <div class="caixa"><h4>Evolução</h4><p>XP para o próximo nível: Nível × 10<br>Por nível: 1d6 Status, 1d6 PH, 2 perícia, PV +5+VIT, PM +4+INT<br>Rank: níveis 5/10/15/20/25<br>Habilidade nível n: n PH</p></div>
+        <div class="caixa"><h4>Recuperação</h4><p>Descanso curto (1h, 2×/dia): 1/4 PV e PM<br>Descanso longo (8h): tudo<br>0 PV: Incapacitado<br>−PV máx: morte</p></div>
       </div>
-      <p class="rodape-livro">DESPERTAR é uma obra de fã, sem fins lucrativos, inspirada em <em>Solo Leveling</em> (Chugong / DUBU / Redice Studio). Todas as regras, nomes de habilidades e itens deste livro são originais.</p>
+      <p class="rodape-livro">DESPERTAR é uma obra de fã, sem fins lucrativos, inspirada em <em>Solo Leveling</em> (Chugong / DUBU / Redice Studio). As regras, os nomes de habilidades e os itens deste livro são originais.</p>
     </section>
   </article>
+</section>
+
+<!-- ===================================================== FICHA -->
+<section id="aba-ficha" class="painel">
+  <div class="ficha-barra">
+    <button class="btn mini" id="f-gerenciar" title="Gerenciar fichas">☰ <span id="f-nome-atual">Fichas</span></button>
+    <div class="ficha-sorteios">
+      <button class="btn mini btn-sec" data-modal="atrib" title="Rolar atributos">🎲 Atributos</button>
+      <button class="btn mini btn-sec" data-modal="desp" title="Rolar Despertar">✦ Despertar</button>
+      <button class="btn mini btn-sec" data-modal="aval" title="Avaliação do Sistema">◈ Avaliação</button>
+      <button class="btn mini btn-sec" data-modal="nivel" title="Subir de nível">▲ Nível</button>
+      <button class="btn mini btn-sec" data-modal="item" title="Gerar item">⚒ Item</button>
+    </div>
+    <span class="salvo" id="f-salvo"></span>
+  </div>
+  <div class="ficha" id="ficha"></div>
 </section>
 
 <!-- ===================================================== ÁRVORES -->
@@ -548,52 +779,13 @@
   </div>
   <div class="arv-corpo">
     <div class="arv-mapa" id="arv-mapa"></div>
-    <aside class="arv-detalhe" id="arv-detalhe"><p class="dica">Clique numa habilidade para ver os detalhes.</p></aside>
+    <aside class="arv-detalhe" id="arv-detalhe"></aside>
   </div>
 </section>
 
-<!-- ===================================================== SORTEIOS -->
+<!-- ===================================================== MESTRE (sorteios genéricos) -->
 <section id="aba-sorteios" class="painel">
   <div class="sorteios">
-    <div class="sort-card">
-      <h3>Atributos</h3>
-      <p class="dica">Potencial (1d6) + 2d6 por atributo.</p>
-      <button class="btn" id="s-atrib">Rolar atributos</button>
-      <div class="saida" id="o-atrib"></div>
-    </div>
-    <div class="sort-card">
-      <h3>Despertar</h3>
-      <p class="dica">1d100 na tabela de Despertares.</p>
-      <button class="btn" id="s-desp">Rolar Despertar</button>
-      <div class="saida" id="o-desp"></div>
-    </div>
-    <div class="sort-card">
-      <h3>Avaliação do Sistema</h3>
-      <p class="dica">3 habilidades sorteadas do Rank. Escolha 1.</p>
-      <div class="linha"><label>Rank <select id="s-aval-rank"></select></label><button class="btn" id="s-aval">Sortear</button></div>
-      <div class="saida" id="o-aval"></div>
-    </div>
-    <div class="sort-card">
-      <h3>Subir de Nível</h3>
-      <p class="dica">1d6 Status + 1d6 PH (Bênção do Sistema: rerrola 1).</p>
-      <button class="btn" id="s-nivel">Subir de nível</button>
-      <div class="saida" id="o-nivel"></div>
-    </div>
-    <div class="sort-card largo">
-      <h3>Gerador de Itens</h3>
-      <div class="linha">
-        <label>Rank <select id="s-item-rank"></select></label>
-        <label>Tipo <select id="s-item-tipo">
-          <option value="aleatorio">Aleatório</option><option value="arma">Arma</option><option value="armadura">Armadura</option>
-          <option value="escudo">Escudo</option><option value="acessorio">Acessório</option><option value="consumivel">Consumível</option></select></label>
-        <label>Origem <select id="s-item-bonus">
-          <option value="0">Comum</option><option value="10">Chefe (+10)</option><option value="15">Portal Vermelho (+15)</option>
-          <option value="20">Masmorra Dupla (+20)</option><option value="30">Chefe de Masmorra Dupla (+30)</option></select></label>
-        <label>Qtd <input type="number" id="s-item-qtd" value="1" min="1" max="10"></label>
-        <button class="btn" id="s-item">Gerar</button>
-      </div>
-      <div class="saida itens" id="o-item"></div>
-    </div>
     <div class="sort-card largo">
       <h3>Gerador de Portal</h3>
       <div class="linha">
@@ -602,38 +794,55 @@
       </div>
       <div class="saida" id="o-portal"></div>
     </div>
-    <div class="sort-card largo">
+    <div class="sort-card">
+      <h3>Gerador de Encontro</h3>
+      <div class="linha">
+        <label>Nível do grupo <input type="number" id="s-enc-nivel" value="3" min="1" max="40"></label>
+        <label>Jogadores <input type="number" id="s-enc-qtd" value="4" min="1" max="8"></label>
+        <label>Dificuldade <select id="s-enc-dif"><option>Fácil</option><option selected>Médio</option><option>Difícil</option><option>Chefe</option></select></label>
+        <button class="btn" id="s-enc">Gerar</button>
+      </div>
+      <div class="saida" id="o-enc"></div>
+    </div>
+    <div class="sort-card">
       <h3>Rolador de Dados</h3>
       <div class="linha">
-        <input type="text" id="s-dado-exp" value="1d20+5" placeholder="ex.: 2d6+3, 1d20+8, 4d8">
+        <input type="text" id="s-dado-exp" value="1d20+5" placeholder="ex.: 2d6+3">
         <button class="btn" id="s-dado">Rolar</button>
-        <span class="atalhos">
-          <button class="btn mini" data-d="1d20">d20</button><button class="btn mini" data-d="1d4">d4</button><button class="btn mini" data-d="1d6">d6</button>
-          <button class="btn mini" data-d="1d8">d8</button><button class="btn mini" data-d="1d10">d10</button><button class="btn mini" data-d="1d12">d12</button><button class="btn mini" data-d="1d100">d100</button>
-        </span>
+      </div>
+      <div class="atalhos" style="margin-top:8px">
+        <button class="btn mini btn-sec" data-d="1d20">d20</button><button class="btn mini btn-sec" data-d="1d4">d4</button><button class="btn mini btn-sec" data-d="1d6">d6</button>
+        <button class="btn mini btn-sec" data-d="1d8">d8</button><button class="btn mini btn-sec" data-d="1d10">d10</button><button class="btn mini btn-sec" data-d="1d12">d12</button><button class="btn mini btn-sec" data-d="1d100">d100</button>
       </div>
       <div class="saida" id="o-dado"></div>
+    </div>
+    <div class="sort-card largo">
+      <h3>Saque (Gerador de Itens)</h3>
+      <div class="linha">
+        <label>Rank <select id="s-item-rank"></select></label>
+        <label>Tipo <select id="s-item-tipo">
+          <option value="aleatorio">Aleatório</option><option value="arma">Arma</option><option value="armadura">Armadura</option>
+          <option value="escudo">Escudo</option><option value="acessorio">Acessório</option><option value="consumivel">Consumível</option></select></label>
+        <label>Origem <select id="s-item-bonus">
+          <option value="0">Comum</option><option value="10">Chefe (+10)</option><option value="15">Portal Vermelho (+15)</option>
+          <option value="20">Masmorra Dupla (+20)</option><option value="30">Chefe de Masmorra Dupla (+30)</option></select></label>
+        <label>Qtd <input type="number" id="s-item-qtd" value="3" min="1" max="10"></label>
+        <button class="btn" id="s-item">Gerar</button>
+      </div>
+      <div class="saida itens" id="o-item"></div>
     </div>
   </div>
 </section>
 
-<!-- ===================================================== FICHA -->
-<section id="aba-ficha" class="painel">
-  <div class="ficha-barra">
-    <select id="f-lista"></select>
-    <button class="btn mini" id="f-novo">+ Novo</button>
-    <button class="btn mini" id="f-dup">Duplicar</button>
-    <button class="btn mini btn-perigo" id="f-apagar">Apagar</button>
-    <span class="sep"></span>
-    <button class="btn mini" id="f-exportar">Exportar JSON</button>
-    <label class="btn mini" for="f-importar">Importar JSON</label><input type="file" id="f-importar" accept=".json,application/json" hidden>
-    <button class="btn mini" id="f-imprimir">⎙ Imprimir ficha</button>
-    <span class="salvo" id="f-salvo"></span>
+<div class="modal-fundo" id="modal-fundo" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-titulo">
+    <div class="modal-topo"><h3 id="modal-titulo"></h3><button class="modal-x" id="modal-x" aria-label="Fechar">✕</button></div>
+    <div class="modal-corpo" id="modal-corpo"></div>
+    <div class="modal-rodape" id="modal-rodape"></div>
   </div>
-  <div class="ficha" id="ficha"></div>
-</section>
-
+</div>
 <div class="toast" id="toast"></div>
+<div class="rolagens" id="rolagens"></div>
 
 <script src="js/data.js"></script>
 <script src="js/app.js"></script>
