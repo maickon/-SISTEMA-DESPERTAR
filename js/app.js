@@ -1594,6 +1594,32 @@ async function tgEnviar(destinos, texto, link) {
   }
   return out;
 }
+/* confere chave, chat, permissão de administrador e envio, explicando cada falha */
+async function tgDiagnostico(cfg, d0) {
+  const out = []; const id = String(d0.id).trim();
+  let me; try { me = await tgApi(cfg.token, 'getMe'); out.push({ ok: true, txt: `Chave válida: bot <b>@${esc(me.username)}</b>.` }); }
+  catch (e) { out.push({ ok: false, txt: `A chave do bot não funciona (${esc(e.message)}). Copie de novo o token do @BotFather, sem espaços, e clique em Testar.` }); return out; }
+  if (/^https?:|t\.me\//i.test(id) || /\s/.test(id) || (!/^@/.test(id) && !/^-?\d+$/.test(id))) {
+    out.push({ ok: false, txt: `O ID "${esc(id)}" não é válido. Use <b>@nome_do_canal</b> (canal público) ou o número que começa com <b>-100</b> (canal privado). Nome de exibição e link de convite não servem.` }); return out; }
+  let chat; try { chat = await tgApi(cfg.token, 'getChat', { chat_id: id }); out.push({ ok: true, txt: `Chat encontrado: <b>${esc(chat.title || chat.first_name || id)}</b> (${chat.type === 'channel' ? 'canal' : chat.type === 'private' ? 'privado' : 'grupo'}).` }); }
+  catch (e) { out.push({ ok: false, txt: /not found/i.test(e.message)
+      ? `O Telegram não achou "${esc(id)}" para este bot. Causas comuns: o bot ainda não foi adicionado ao canal; o canal é <b>privado</b> e você usou @nome (privado só aceita o número -100…); ou houve erro de digitação. Dica: com o bot já administrador, poste qualquer mensagem no canal e use <b>Buscar contatos</b> para pegar o ID certo.`
+      : `Não consegui abrir o chat: ${esc(e.message)}` }); return out; }
+  if (chat.type !== 'private') {
+    try { const m = await tgApi(cfg.token, 'getChatMember', { chat_id: id, user_id: me.id });
+      if (chat.type === 'channel') {
+        if (m.status !== 'administrator' && m.status !== 'creator') out.push({ ok: false, txt: `O bot está no canal como "<b>${esc(m.status)}</b>". Em canais, só administradores podem publicar: abra o canal → Administradores → Adicionar administrador → escolha o bot.` });
+        else if (m.can_post_messages === false) out.push({ ok: false, txt: 'O bot é administrador, mas sem a permissão <b>Publicar mensagens</b>. Edite o administrador e ligue essa opção.' });
+        else out.push({ ok: true, txt: 'O bot é administrador e pode publicar.' });
+      } else if (m.status === 'left' || m.status === 'kicked') out.push({ ok: false, txt: 'O bot não está mais neste grupo. Adicione-o de novo.' });
+      else if (m.status === 'restricted' && m.can_send_messages === false) out.push({ ok: false, txt: 'O bot está no grupo, mas proibido de mandar mensagens.' });
+      else out.push({ ok: true, txt: `O bot está no grupo (${esc(m.status)}).` });
+    } catch (e) { out.push({ ok: false, txt: `Não consegui ver as permissões do bot: ${esc(e.message)}` }); }
+  }
+  try { await tgApi(cfg.token, 'sendMessage', { chat_id: id, text: '[ SISTEMA ] Teste de conexão do DESPERTAR: este chat recebe mensagens.' }); out.push({ ok: true, txt: 'Mensagem de teste enviada. Confira no Telegram.' }); }
+  catch (e) { out.push({ ok: false, txt: `O envio falhou: ${esc(e.message)}${/initiate|blocked/i.test(e.message) ? '. O jogador precisa abrir o bot e tocar em Iniciar (ou desbloqueá-lo).' : ''}` }); }
+  return out;
+}
 function modalTelegram(voltar) {
   const cfg = tgCfg(); let achados = [];
   const tipoIcone = t => t === 'privado' ? '👤' : t === 'canal' ? '📣' : '👥';
@@ -1601,7 +1627,7 @@ function modalTelegram(voltar) {
     <div class="campo" style="margin-top:10px"><span>Chave do bot (token do @BotFather)</span><div class="lado"><input type="password" id="tg-token" value="${esc(cfg.token)}" placeholder="123456789:AAH…" autocomplete="off" spellcheck="false"><button class="btn mini btn-sec" data-tg="testar">Testar</button></div></div>
     <div id="tg-info" class="dica">${cfg.bot ? `Bot conectado: <b>@${esc(cfg.bot)}</b>. Link para os jogadores iniciarem o bot: <a href="https://t.me/${esc(cfg.bot)}" target="_blank" rel="noopener">t.me/${esc(cfg.bot)}</a> <button class="btn mini btn-sec" data-tg="copiar-bot">Copiar</button>` : ''}</div>
     <h4 style="margin:14px 0 6px">Destinos (${cfg.destinos.length})</h4>
-    <div class="lista-f">${cfg.destinos.length ? cfg.destinos.map((d0, i) => `<div class="lin"><span class="icone-item" style="--cor:var(--brilho)">${tipoIcone(d0.tipo)}</span><span class="meio"><span class="t1">${esc(d0.nome)}</span><span class="t2">${esc(d0.tipo)} · ${esc(d0.id)}</span></span><span class="dir"><button class="btn mini btn-sec" data-tg="teste" data-i="${i}">Testar</button><button class="btn-ghost" data-tg="del" data-i="${i}" aria-label="Remover">✕</button></span></div>`).join('') : '<p class="vazio-msg">Nenhum destino ainda.</p>'}</div>
+    <div class="lista-f">${cfg.destinos.length ? cfg.destinos.map((d0, i) => `<div class="lin"><span class="icone-item" style="--cor:var(--brilho)">${tipoIcone(d0.tipo)}</span><span class="meio"><span class="t1">${esc(d0.nome)}</span><span class="t2">${esc(d0.tipo)} · ${esc(d0.id)}</span></span><span class="dir"><button class="btn mini btn-sec" data-tg="teste" data-i="${i}">Diagnosticar</button><button class="btn-ghost" data-tg="del" data-i="${i}" aria-label="Remover">✕</button></span></div><div class="tg-diag" id="tg-diag-${i}"></div>`).join('') : '<p class="vazio-msg">Nenhum destino ainda.</p>'}</div>
     <div class="acoes"><button class="btn mini" data-tg="buscar" ${cfg.token ? '' : 'disabled'}>🔎 Buscar contatos</button></div>
     <div id="tg-achados">${achados.length ? `<div class="dica" style="margin:6px 0">Encontrados (quem falou com o bot ou onde ele está):</div><div class="lista-f">${achados.map((a, i) => { const ja = cfg.destinos.some(d0 => String(d0.id) === String(a.id));
       return `<div class="lin"><span class="icone-item" style="--cor:var(--ok)">${tipoIcone(a.tipo)}</span><span class="meio"><span class="t1">${esc(a.nome)}</span><span class="t2">${esc(a.tipo)} · ${esc(a.id)}</span></span><span class="dir">${ja ? '<span class="equip-tag">adicionado</span>' : `<button class="btn mini btn-ok" data-tg="add" data-i="${i}">Adicionar</button>`}</span></div>`; }).join('')}</div>` : ''}</div>
@@ -1627,7 +1653,9 @@ function modalTelegram(voltar) {
     if (a === 'add') { const x = achados[Number(b.dataset.i)]; if (x) { cfg.destinos.push(x); tgSalvar(cfg); redesenhar(); } }
     if (a === 'del') { cfg.destinos.splice(Number(b.dataset.i), 1); tgSalvar(cfg); redesenhar(); }
     if (a === 'add-man') { const id = $('#tg-id').value.trim(); if (!id) return toast('Informe o ID ou @canal.'); cfg.destinos.push({ id, nome: $('#tg-n').value.trim() || id, tipo: $('#tg-tp').value }); tgSalvar(cfg); redesenhar(); }
-    if (a === 'teste') { const d0 = cfg.destinos[Number(b.dataset.i)]; b.disabled = true; const r = await tgEnviar([d0], '[ SISTEMA ] Teste de conexão\nO DESPERTAR consegue falar com este chat.', urlBase()); b.disabled = false; toast(r[0].ok ? `Mensagem de teste enviada para ${d0.nome}.` : `Falhou: ${r[0].erro}`); }
+    if (a === 'teste') { const i = Number(b.dataset.i); const el = $('#tg-diag-' + i); b.disabled = true; el.innerHTML = '<div class="dica">Verificando…</div>';
+      const passos = await tgDiagnostico(cfg, cfg.destinos[i]); b.disabled = false;
+      el.innerHTML = passos.map(x => `<div class="${x.ok ? 'ok' : 'no-ok'}">${x.ok ? '✓' : '✗'} ${x.txt}</div>`).join(''); }
   });
 }
 function renderTgResumo() {

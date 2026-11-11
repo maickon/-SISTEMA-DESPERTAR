@@ -720,3 +720,6 @@ textarea { width: 100%; min-height: 84px; resize: vertical; }
 @media (min-width: 761px) {
   .notifs { left: auto; right: 16px; transform: none; width: 360px; }
 }
+.tg-diag { font-size: 13px; padding: 0 10px; }
+.tg-diag:empty { display: none; }
+.tg-diag > div { margin: 3px 0; }
