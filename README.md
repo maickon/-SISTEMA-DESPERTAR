@@ -4,7 +4,7 @@
 
 ## Como usar
 
-Abra `index.html` no navegador. O site funciona offline e não precisa de instalação.
+Abra `index.html` no navegador, ou acesse https://maickon.github.io/-SISTEMA-DESPERTAR/ e toque em **📲 Instalar** para usar como aplicativo no Android, no iPhone ou no computador (funciona sem internet depois da primeira visita).
 
 - **Livro:** regras completas em 14 capítulos, escritas para quem vem do D&D 3.5, com botão para imprimir ou salvar em PDF.
 - **Ficha:** cálculo automático, várias fichas salvas no navegador (IndexedDB), ajuda "?" em cada campo, guia de criação, histórico com desfazer, sorteios com a opção de rolar no site ou informar o dado da mesa, Refino e Ascensão de itens, limites de mãos e inventário.

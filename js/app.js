@@ -1492,9 +1492,10 @@ function modalMais() {
     <button class="mais-op" data-mais="texto"><b>📄 Ficha em texto</b><span>Para copiar, guardar ou passar para o papel</span></button>
     <button class="mais-op" data-mais="imprimir"><b>⎙ Imprimir ficha</b><span>Papel ou PDF</span></button>
     <button class="mais-op" data-mais="guia"><b>🧭 Guia de criação</b><span>Passo a passo de uma ficha nova</span></button>
-    <button class="mais-op" data-mais="fichas"><b>☰ Gerenciar fichas</b><span>Criar, duplicar, importar, exportar</span></button></div>`, [{ label: 'Fechar', cls: 'btn-sec' }]);
+    <button class="mais-op" data-mais="fichas"><b>☰ Gerenciar fichas</b><span>Criar, duplicar, importar, exportar</span></button>
+    <button class="mais-op" data-mais="instalar"><b>📲 Instalar aplicativo</b><span>Ícone na tela inicial e uso sem internet</span></button></div>`, [{ label: 'Fechar', cls: 'btn-sec' }]);
   corpo.addEventListener('click', e => { const b = e.target.closest('[data-mais]'); if (!b) return;
-    ({ hist: modalHist, link: () => compartilharFicha(P()), texto: modalTextoFicha, imprimir: imprimirFicha, guia: modalGuia, fichas: modalFichas })[b.dataset.mais](); });
+    ({ hist: modalHist, link: () => compartilharFicha(P()), texto: modalTextoFicha, imprimir: imprimirFicha, guia: modalGuia, fichas: modalFichas, instalar: modalInstalar })[b.dataset.mais](); });
 }
 
 /* =========================================================
@@ -1849,6 +1850,34 @@ function ligar() {
 }
 
 /* =========================================================
+   APLICATIVO (PWA): funciona offline e pode ser instalado
+   ========================================================= */
+let pedidoInstalar = null;
+const instalado = () => window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+const ehIOS = () => /iphone|ipad|ipod/i.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+function atualizarBotaoInstalar() { const b = $('#btn-instalar'); if (b) b.hidden = instalado() || !(pedidoInstalar || ehIOS()); }
+function modalInstalar() {
+  if (instalado()) { abrirModal('📲 Aplicativo', '<p class="ok">O DESPERTAR já está instalado e aberto como aplicativo.</p>', [{ label: 'Fechar', cls: 'btn-sec' }]); return; }
+  if (pedidoInstalar) {
+    pedidoInstalar.prompt();
+    pedidoInstalar.userChoice.then(r => { if (r.outcome === 'accepted') sistema('DESPERTAR instalado. Procure o ícone na tela inicial.', 'APLICATIVO'); pedidoInstalar = null; atualizarBotaoInstalar(); });
+    return;
+  }
+  const ios = ehIOS();
+  abrirModal('📲 Instalar o DESPERTAR', `<div class="intro"><p>Instalado, o DESPERTAR ganha um ícone na tela inicial, abre em tela cheia como um aplicativo e <b>funciona sem internet</b>. As fichas continuam guardadas no aparelho.</p></div>
+    ${ios ? `<p><b>No iPhone ou iPad (Safari):</b></p><ol class="passos"><li>Toque no botão <b>Compartilhar</b> <span class="tag">⬆︎</span> na barra do Safari.</li><li>Role a lista e toque em <b>Adicionar à Tela de Início</b>.</li><li>Confirme em <b>Adicionar</b>.</li></ol><p class="dica">Em outros navegadores do iPhone (Chrome, Edge), a opção fica no mesmo menu de compartilhar. Se não aparecer, abra este endereço no Safari.</p>`
+      : `<p><b>No Android (Chrome):</b> toque no menu <b>⋮</b> e escolha <b>Instalar app</b> ou <b>Adicionar à tela inicial</b>.</p><p><b>No computador (Chrome ou Edge):</b> clique no ícone de instalar na barra de endereço, ou no menu → <b>Instalar DESPERTAR</b>.</p><p class="dica">Se a opção não aparecer, recarregue a página uma vez com internet.</p>`}`,
+    [{ label: 'Entendi', cls: 'btn' }]);
+}
+function iniciarPWA() {
+  window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); pedidoInstalar = e; atualizarBotaoInstalar(); });
+  window.addEventListener('appinstalled', () => { pedidoInstalar = null; atualizarBotaoInstalar(); });
+  $('#btn-instalar').addEventListener('click', modalInstalar);
+  atualizarBotaoInstalar();
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => { });
+}
+
+/* =========================================================
    INÍCIO
    ========================================================= */
 (async () => {
@@ -1856,7 +1885,10 @@ function ligar() {
   ligar();
   await carregar();
   let aba = 'livro'; try { aba = sessionStorage.getItem('despertar.aba') || 'livro'; } catch (e) { }
+  const abaUrl = new URLSearchParams(location.search).get('aba'); // atalhos do app instalado
+  if (abaUrl && $(`.aba[data-aba="${CSS.escape(abaUrl)}"]`)) { aba = abaUrl; history.replaceState(null, '', location.pathname + location.hash); }
   if (aba !== 'livro') abrirAba(aba);
+  iniciarPWA();
   await verificarLink();
   window.__despertar = { computar, P, FICHAS: () => FICHAS, modo: () => Armazem.modo, codificar, decodificar, linkDe, guardarItem, criarMat, gerarItem, itemBase, armaComum, renderFicha };
 })();

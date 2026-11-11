@@ -738,3 +738,7 @@ textarea { width: 100%; min-height: 84px; resize: vertical; }
   #f-mais .bt-mais { display: none; }
   .salvo { font-size: 11px; }
 }
+
+/* topo: instalar + PDF */
+.topo-acoes { display: flex; gap: 6px; align-items: center; }
+@media (display-mode: standalone) { .topo { padding-top: max(8px, env(safe-area-inset-top)); } }
