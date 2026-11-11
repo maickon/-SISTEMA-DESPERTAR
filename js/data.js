@@ -830,7 +830,13 @@ const AFIXOS = {
     ['Caçadora', 'da Caçada', '+3X de dano contra criaturas de nível maior que o seu.'],
     ['Ressonante', 'da Mana', '+X de dano em habilidades usadas com esta arma.'],
     ['Veloz', 'do Vento', '+X em Iniciativa e +1,5 m de deslocamento.'],
-    ['Pesada', 'do Impacto', 'Acertos empurram o alvo 1,5 m (3 m se o item for Rank A ou S).']
+    ['Pesada', 'do Impacto', 'Acertos empurram o alvo 1,5 m (3 m se o item for Rank A ou S).'],
+    ['Ceifadora', 'da Colheita', 'Ao derrubar um inimigo, +X no próximo ataque desta rodada.'],
+    ['Sagrada', 'da Aurora', '+Xd4 de dano contra mortos-vivos, demônios e criaturas de sombra.'],
+    ['Silenciosa', 'do Silêncio', '+2X em Furtividade; ataques contra alvos Surpresos causam +X de dano.'],
+    ['Leal', 'da Lealdade', 'Não pode ser desarmada; volta à sua mão como Ação Livre.'],
+    ['Quebradora', 'da Ruptura', 'O alvo atingido sofre −X na próxima Reação de Defender.'],
+    ['Sedenta', 'do Fluxo', 'Ao causar um crítico, recupera X PV e X PM.']
   ],
   armadura: [
     ['Robusta', 'da Muralha', '+X na Reação de Defender.'],
@@ -843,7 +849,8 @@ const AFIXOS = {
     ['Espinhosa', 'dos Espinhos', 'Atacantes corpo a corpo que o acertarem sofrem Xd6.'],
     ['Regenerativa', 'da Renovação', 'Recupera X PV no início de cada turno em combate.'],
     ['Firme', 'da Montanha', '+X em Resistências de FOR e VIT; não pode ser Derrubado por criaturas de nível menor.'],
-    ['Sombria', 'das Sombras', '+2X em Furtividade.']
+    ['Sombria', 'das Sombras', '+2X em Furtividade.'],
+    ['Refletora', 'do Espelho', '1× por combate, ao resistir a um poder, devolva Xd6 de dano ao conjurador.']
   ],
   acessorio: [
     ['Forte', 'do Touro', '+2X de Força.'],
@@ -856,9 +863,12 @@ const AFIXOS = {
     ['Focado', 'da Concentração', '+X na CD de todos os seus poderes.'],
     ['Profundo', 'do Poço', '+5X PM máximos.'],
     ['Resiliente', 'da Raiz', '+5X PV máximos.'],
-    ['Ligeiro', 'da Lebre', '+X m de deslocamento.']
+    ['Ligeiro', 'da Lebre', '+X m de deslocamento.'],
+    ['Vigilante', 'da Vigília', '+X em Iniciativa.']
   ]
 };
+/* dado para sortear afixo por tipo de item (tabelas numeradas no livro) */
+const DADO_AFIXO = { arma: 20, armadura: 12, acessorio: 12 };
 
 const SELOS = [
   ['Fome de Sangue', 'Ao derrotar um inimigo, ganhe uma Ação de Movimento extra imediatamente.'],
@@ -885,8 +895,8 @@ const CONSUMIVEIS = [
   ['Pedra de Retorno', 'Teleporta o usuário para fora do Portal (não funciona em Portais Vermelhos).'],
   ['Pergaminho de Habilidade', 'Ensina uma habilidade sorteada deste Rank sem custo de aquisição (requisitos de nível e atributo ainda valem).'],
   ['Elixir de Despertar', 'Muito raro: +1 permanente em um atributo à sua escolha (máximo de 1 por Rank do personagem).'],
-  ['Cristal de Mana', 'Material de Refino. Vale 20% do preço base do Rank em Ouro.'],
-  ['Núcleo de Chefe', 'Coração cristalizado de um Chefe. Usado para Ascender itens ou criar equipamentos.'],
+  ['Cristal de Mana', 'Mana solidificada, com Rank. Moeda e material de Refino. Vende por: E 10 · D 40 · C 160 · B 600 · A 2.400 · S 10.000 Ouro.'],
+  ['Núcleo de Chefe', 'Coração cristalizado de um Chefe, com o Rank do Portal. Todo Chefe deixa 1. Serve para Ascender itens (Núcleo do Rank seguinte ao do item) ou Forjar.'],
   ['Pó de Purificação', 'Remove uma maldição ou o estado Rachado de um item.'],
   ['Pergaminho de Selo', 'Revela todos os Selos ocultos de um item (não os desbloqueia).'],
   ['Chave de Instância', 'Abre uma Instância do Sistema privada do Rank da chave (uma masmorra só para o grupo, com recompensas normais).']
@@ -1022,4 +1032,61 @@ const ENCONTROS = {
   'Médio':   [['Soldado', 0, 3], ['Lacaio', 0, 4]],
   'Difícil': [['Elite', 1, 1], ['Soldado', 0, 3]],
   'Chefe':   [['Chefe', 2, 1], ['Elite', 0, 2]]
+};
+
+/* ---------------------------------------------------------
+   AJUDA — textos dos ícones "?" (ficha, modais e Mestre).
+   liv = âncora da seção do livro com a regra completa.
+   --------------------------------------------------------- */
+const AJUDA = {
+  status: { t: 'Janela de Status', liv: 'c-criacao', txt: '<p>Os dados básicos do Caçador: nome, nível, XP, Ouro e o Título equipado. O <b>Rank</b> ao lado do título é calculado pelo nível (E 1–4, D 5–9, C 10–14, B 15–19, A 20–24, S 25+).</p>' },
+  nivel: { t: 'Nível', liv: 'l-subir-nivel', txt: '<p>O Nível entra em quase tudo: ataque, Reações, Resistências e CDs somam o Nível inteiro (é o "bônus base" do D&amp;D, igual para todos). Para subir, use o botão <b>▲ Nível</b> quando a XP encher.</p>' },
+  xp: { t: 'Experiência (XP)', liv: 'l-xp', txt: '<p>Do nível N para o N+1 são necessários <b>N × 10 XP</b>. A XP vem de Portais: 5 × nível do Chefe × multiplicador do tipo de Portal. Todos os participantes recebem a XP inteira. O botão <b>⛩ Portal</b> calcula isso por você.</p>' },
+  potencial: { t: 'Potencial', liv: 'l-potencial', txt: '<p>Rolado uma vez, na criação (1d6): <b>Fraco</b> (1–2), <b>Normal</b> (3–4) ou <b>Forte</b> (5–6). Define a base dos atributos. Quem tira Fraco recebe compensação em Pontos de Status e PH, então ninguém fica para trás.</p>' },
+  rankOficial: { t: 'Rank oficial', liv: 'l-ranks', txt: '<p>O Rank que a Associação mediu e que aparece na sua licença. Ele <b>não sobe sozinho</b>: o Rank real (pelo nível) pode ficar bem acima. Pedir uma nova medição chama atenção, como num Segundo Despertar.</p>' },
+  ouro: { t: 'Ouro', liv: 'l-ouro', txt: '<p>A moeda do jogo. Cada Portal concluído rende <b>4 × o preço base do Rank do Portal</b> por Jogador (cristais e materiais já vendidos). Cristais de Mana guardados também podem ser vendidos pela tabela de valores.</p>' },
+  titulo: { t: 'Título equipado', liv: 'l-titulos', txt: '<p>Títulos são conquistas do Sistema por feitos marcantes ("Sobrevivente", "Matador de Gigantes"…). Cada um dá um <b>bônus pequeno e permanente</b>. Pense num talento do D&amp;D que você <b>conquista</b> em vez de escolher.</p><p>Você pode ter vários, mas só <b>um equipado</b> por vez, e só troca fora de combate. O bônus do Título equipado já entra na ficha sozinho.</p>' },
+  despertar: { t: 'Despertar', liv: 'c-despertares', txt: '<p>A sua Habilidade Única, rolada em d100 na criação. É o que torna o personagem diferente de todos os outros. Os mais raros são mais fortes; os comuns vêm com compensação em PH e Pontos de Status.</p><p>Evolui com PH como uma habilidade (níveis 1–5) e ganha <b>1 nível grátis a cada novo Rank</b>. As árvores de <b>Afinidade</b> custam −1 PH.</p>' },
+  atributos: { t: 'Atributos', liv: 'c-atributos', txt: '<p>Os mesmos seis números do D&amp;D, com outros nomes: FOR, AGI, VIT, INT, PER (Percepção, no lugar de Sabedoria) e PRE (Presença, no lugar de Carisma). O <b>modificador</b> é igual: (valor − 10) ÷ 2, arredondado para baixo.</p><p>Clique no modificador para rolar um teste do atributo. O valor em verde embaixo mostra bônus de itens e efeitos.</p>' },
+  statusPend: { t: 'Pontos de Status livres', liv: 'l-subir-nivel', txt: '<p>Pontos ganhos ao subir de nível (1d6 por nível), em missões ou como compensação. Gaste clicando no <b>+</b> de um atributo: cada clique tira 1 ponto livre. O <b>−</b> devolve o ponto.</p>' },
+  combate: { t: 'Combate', liv: 'c-combate', txt: '<p>Aqui não existe CA fixa: quando alguém ataca você, <b>você rola uma Reação</b> (Defender ou Esquivar) contra o ataque. Empate favorece quem defende. Clique num valor para rolar.</p>' },
+  pv: { t: 'Pontos de Vida (PV)', liv: 'l-pv', txt: '<p>10 + mod. VIT no nível 1, e +5 + mod. VIT a cada nível. Com 0 PV ou menos você fica Incapacitado; morre ao chegar a −PV máximo. Use os botões para registrar dano e cura.</p>' },
+  pm: { t: 'Pontos de Mana (PM)', liv: 'l-pm', txt: '<p>Pagam habilidades ativas, como os pontos de poder do psiônico. 10 + mod. INT no nível 1, e +4 + mod. INT por nível. Descanso longo recupera tudo.</p>' },
+  'PV máx': { t: 'PV máximo', liv: 'l-pv', txt: '<p>Total de vida: 10 + mod. VIT, mais (5 + mod. VIT) por nível acima do 1º, mais bônus de itens, habilidades e Títulos.</p>' },
+  'PM máx': { t: 'PM máximo', liv: 'l-pm', txt: '<p>Total de mana: 10 + mod. INT, mais (4 + mod. INT) por nível acima do 1º, mais bônus.</p>' },
+  'Deslocamento': { t: 'Deslocamento', liv: 'l-mov', txt: '<p>Metros por Ação de Movimento: 9 m + metade do mod. AGI. Correr (o turno inteiro) dá 4×.</p>' },
+  'Ações Principais': { t: 'Ações Principais', liv: 'l-acoes', txt: '<p>Quantas ações de ataque ou poder você faz por turno: <b>1 + Nível ÷ 5</b>. Substituem os ataques iterativos do D&amp;D, mas sem penalidade. Com mais de uma, todos agem em "passadas" alternadas.</p>' },
+  'Iniciativa': { t: 'Iniciativa', liv: 'l-iniciativa', txt: '<p>d20 + mod. AGI + bônus. Define a ordem do combate. Clique para rolar.</p>' },
+  'Defender': { t: 'Defender', liv: 'l-ataque', txt: '<p>Reação de bloquear: <b>d20 + Nível + FOR + armadura + escudo</b>. Melhor com armadura pesada. Cada Reação depois da primeira na rodada sofre −2 cumulativo (Pressão).</p>' },
+  'Esquivar': { t: 'Esquivar', liv: 'l-ataque', txt: '<p>Reação de sair do caminho: <b>d20 + Nível + AGI − penalidade da armadura</b>. Melhor sem armadura pesada. Também sofre Pressão (−2 por Reação extra).</p>' },
+  'Defesa Passiva': { t: 'Defesa Passiva', liv: 'l-ataque', txt: '<p>Usada quando você não pode reagir (Surpreso, Incapacitado): 10 + bônus de armadura e escudo. É o que mais se parece com a CA do D&amp;D.</p>' },
+  'RD': { t: 'Redução de Dano', liv: 'l-ataque', txt: '<p>Subtrai esse valor de todo dano que você sofre. Vem do Bônus de Rank da armadura e do escudo, de habilidades e de Despertares.</p>' },
+  resist: { t: 'Resistências e CDs', liv: 'l-resist', txt: '<p><b>Resistência</b> = d20 + Nível + mod. do atributo (como os testes de resistência do D&amp;D, mas um por atributo). <b>CD</b> = 10 + Nível + mod.: é a dificuldade dos seus poderes contra os outros.</p>' },
+  ataques: { t: 'Ataques', liv: 'l-ataque', txt: '<p><b>Ataque</b> = d20 + Nível + mod. do atributo da arma + Bônus de Rank + Refino. <b>Dano</b> = dado da arma + mod. + Nível ÷ 2 + 2 × Bônus de Rank + Refino. Armas de duas mãos corpo a corpo somam 1,5 × o modificador. Clique para rolar.</p>' },
+  habilidades: { t: 'Habilidades e PH', liv: 'c-habilidades', txt: '<p>Habilidades vêm de três jeitos: <b>Avaliação do Sistema</b> (grátis, a cada Rank), <b>Pergaminhos</b> e <b>compra com PH</b>. Adquirir custa 1–6 PH conforme o Rank; levar ao nível n custa n PH.</p><p>Você recebe 3 PH na criação e 1d6 por nível. Os campos abaixo guardam os PH recebidos; o gasto é calculado sozinho.</p>' },
+  pericias: { t: 'Perícias', liv: 'l-pericias', txt: '<p>Como no D&amp;D: teste = d20 + mod. do atributo + grau. Você começa com 4 pontos e ganha 2 por nível. O grau máximo é 2 + Nível ÷ 2. Clique no total para rolar.</p>' },
+  inventario: { t: 'Inventário e limites', liv: 'l-limites', txt: '<p><b>Mãos:</b> 2. Arma de uma mão e escudo ocupam 1 cada; arma de duas mãos ocupa as 2.<br><b>Armadura:</b> 1. <b>Acessórios:</b> 4.<br><b>Inventário do Sistema:</b> 20 itens fora do corpo (uma pilha de consumíveis conta como 1).</p><p>Ao equipar algo sem espaço, o item mais antigo do mesmo lugar volta para a mochila. Se a mochila passar de 20, o sistema pede para você escolher o que descartar.</p>' },
+  condicoes: { t: 'Condições ativas', liv: 'l-condicoes', txt: '<p>Anote aqui efeitos temporários (Envenenado, Queimando…). Se uma condição muda números, use os Bônus manuais.</p>' },
+  bonus: { t: 'Bônus manuais', liv: 'c-habilidades', txt: '<p>A ficha já soma sozinha as habilidades passivas, o Despertar, o Título e os itens equipados. Use estes campos para o resto: efeitos condicionais ("+2 em Fúria"), magias de aliados, decisões do Mestre.</p>' },
+  notas: { t: 'Notas', liv: 'c-mundo', txt: '<p>Espaço livre: guilda, contatos, missões, segredos do personagem.</p>' },
+  refino: { t: 'Refino', liv: 'l-refino', txt: '<p>Cada nível de Refino (+1 a +10) dá <b>+1 em ataque e dano</b> (armas) ou <b>+1 em Defender</b> (armaduras e escudos).</p><p>Para tentar o próximo nível N: gaste <b>N Cristais de Mana do Rank do item</b> e role <b>1d20 + grau de Conhecimento</b> contra <b>CD 2 × N</b>. Na falha, os cristais se perdem e, de +6 para cima, o item pode cair de nível.</p>' },
+  sincronia: { t: 'Sincronia', liv: 'l-sincronia', txt: '<p>Só itens <b>Raros ou melhores</b> têm Sincronia. Ela <b>não é gasta</b>: é um contador do quanto o item se acostumou com você.</p><p>Ganha <b>+1 sempre que um Chefe é derrotado com o item equipado</b>. Com 3, 8 e 15 o item desperta seus Selos ocultos (um de cada vez). Lendários despertam um poder único com 25.</p>' },
+  ascensao: { t: 'Ascensão de Rank', liv: 'l-ascensao', txt: '<p>Quando um item chega a <b>Refino +10</b>, ele pode subir de Rank gastando <b>1 Núcleo de Chefe do Rank seguinte</b> ao do item (item Rank D → Núcleo Rank C). Não há teste.</p><p>Resultado: Rank +1 (Bônus de Rank maior), Refino volta a +5, ganha <b>1 afixo novo</b> sorteado na tabela do tipo do item, e a Sincronia é mantida.</p>' },
+  cristal: { t: 'Cristal de Mana', liv: 'l-cristais', txt: '<p>Mana solidificada retirada dos monstros. Todo cristal tem Rank. Serve como <b>moeda</b> (vende por E 10, D 40, C 160, B 600, A 2.400, S 10.000 Ouro) e como <b>material de Refino</b>. Cada Jogador recebe 1d6 cristais do Rank do Portal ao concluí-lo.</p>' },
+  nucleo: { t: 'Núcleo de Chefe', liv: 'l-nucleo', txt: '<p>O coração cristalizado de um Chefe. <b>Todo Chefe deixa 1 Núcleo</b> do Rank do Portal (Portal Vermelho e Masmorra Dupla: 2). Não se compra em loja.</p><p>Uso principal: <b>Ascender</b> um item cujo Rank seja um abaixo do Núcleo.</p>' },
+  afixos: { t: 'Afixos', liv: 'l-afixos', txt: '<p>Propriedades especiais visíveis do item (Flamejante, Robusta…), como as de armas mágicas do D&amp;D. A Raridade define quantos o item tem. O valor X = 1 + Bônus de Rank: quanto maior o Rank, mais forte o afixo.</p>' },
+  selos: { t: 'Selos', liv: 'l-sincronia', txt: '<p>Poderes ocultos de itens Raros ou melhores. Ficam trancados até a Sincronia chegar a 3, 8 e 15. Pergaminho de Selo ou Análise nv3 revelam quais são antes de abrir.</p>' },
+  m_atrib: { t: 'Rolar atributos', liv: 'l-potencial', txt: '<p>Feito <b>uma vez, na criação</b>. Primeiro rola-se o Potencial (1d6), que define a base: Fraco 6, Normal 8, Forte 10. Depois cada atributo recebe base + 2d6.</p><p>Os atributos atuais da ficha são substituídos.</p>' },
+  m_desp: { t: 'Despertar', liv: 'c-despertares', txt: '<p>Feito <b>na criação</b>: role 1d100 na tabela de Despertares. Os raros vêm sem compensação; os comuns dão PH e Pontos de Status extras. Rolar de novo depois só com permissão do Mestre (um Segundo Despertar, por exemplo).</p>' },
+  m_aval: { t: 'Avaliação do Sistema', liv: 'l-avaliacao', txt: '<p>Acontece <b>na criação e a cada novo Rank</b> (níveis 5, 10, 15, 20, 25). O Sistema oferece 3 habilidades sorteadas do Rank atual e você fica com uma, de graça, no nível 1. Os requisitos de atributo e de pré-requisito são ignorados nessa escolha.</p>' },
+  m_nivel: { t: 'Subir de nível', liv: 'l-subir-nivel', txt: '<p>Use quando a XP chegar a Nível × 10. Você ganha <b>1d6 Pontos de Status</b>, <b>1d6 PH</b> (um 1 é rerrolado uma vez), +2 pontos de perícia, e PV/PM aumentam sozinhos. A XP gasta é descontada.</p>' },
+  m_item: { t: 'Gerar item', liv: 'c-itens', txt: '<p>Sorteia um item como saque: escolha o Rank, o tipo e a origem (itens de Chefe têm mais chance de raridade alta). Você vê o item e o que ele muda na ficha antes de decidir guardar ou descartar.</p>' },
+  m_portal: { t: 'Portal concluído', liv: 'l-ouro', txt: '<p>Registra as recompensas de um Portal fechado: XP, Ouro, Cristais de Mana, Núcleo do Chefe e +1 de Sincronia nos itens Raros ou melhores que estavam equipados.</p>' },
+  g_portal: { t: 'Gerador de Portal', liv: 'l-portal-gerar', txt: '<p>Rola Rank, tipo, ambiente, criaturas, Chefe e complicação, com a tabela de ameaças pronta. Depois gere o saque do Chefe e envie aos jogadores como um pacote.</p>' },
+  g_enc: { t: 'Gerador de Encontro', liv: 'l-encontros', txt: '<p>Monta um grupo de ameaças equilibrado para o nível e o tamanho do grupo. Fácil: só Lacaios. Chefe: um Chefe 2 níveis acima com escolta.</p>' },
+  g_dados: { t: 'Rolador de dados', liv: 'c-testes', txt: '<p>Digite uma expressão como <b>2d6+3</b>, <b>1d20+7</b> ou <b>4d8−2</b> e aperte Enter. Os atalhos rolam um dado só. O histórico guarda as últimas 20 rolagens; use Limpar para zerar.</p>' },
+  g_saque: { t: 'Saque', liv: 'c-itens', txt: '<p>Gera itens para distribuir. Cada item pode ir direto para a ficha aberta neste navegador ou ser <b>enviado</b> a um jogador por link, Telegram ou WhatsApp.</p>' },
+  telegram: { t: 'Envio pelo Telegram', liv: null, txt: '<p><b>Como montar:</b></p><ol><li>No Telegram, fale com <b>@BotFather</b>, envie <code>/newbot</code> e copie a chave (token) que ele der.</li><li>Cole a chave aqui. Ela fica <b>só neste navegador</b> e não vai nas fichas exportadas.</li><li>Crie um canal ou grupo e adicione o bot como <b>administrador</b>.</li><li>Cada jogador que quiser receber no privado abre o bot e toca em <b>Iniciar</b> (/start). Sem isso o Telegram não deixa o bot escrever para a pessoa.</li><li>Clique em <b>Buscar contatos</b>: aparecem os grupos, canais e pessoas que falaram com o bot. Adicione os que quiser.</li></ol><p>Se o canal não aparecer, poste qualquer mensagem nele e busque de novo. Você também pode digitar o ID do chat à mão (canais públicos aceitam <code>@nome_do_canal</code>).</p>' },
+  compartilhar: { t: 'Compartilhar', liv: null, txt: '<p>O <b>link</b> carrega o item (ou a ficha) dentro do próprio endereço. Quem abrir o link no navegador vê o conteúdo e escolhe em qual ficha guardar. Não precisa de servidor.</p><p>O <b>texto</b> é para quem joga com ficha de papel: tem tudo o que é preciso anotar.</p>' },
+  historico: { t: 'Histórico da ficha', liv: null, txt: '<p>Toda mudança importante (sorteios, itens, Refino, níveis, habilidades) fica registrada aqui. <b>Desfazer</b> volta a ficha ao estado de antes daquela mudança; o que veio depois também é desfeito. As 30 mudanças mais recentes podem ser desfeitas.</p>' }
 };
