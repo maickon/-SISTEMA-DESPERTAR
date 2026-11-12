@@ -84,7 +84,7 @@
           <tr><td>Fortitude / Reflexos / Vontade</td><td>Resistência (de um atributo)</td><td>1d20 + Nível + mod do atributo pedido. Todas crescem como "save bom".</td></tr>
           <tr><td>Ação padrão</td><td>Ação Principal</td><td>Atacar, usar um poder, beber poção.</td></tr>
           <tr><td>Ação de movimento</td><td>Ação de Movimento</td><td>Igual.</td></tr>
-          <tr><td>Ação de rodada completa</td><td>Ação Especial</td><td>Ocupa o turno inteiro: técnicas fortes, Corrida.</td></tr>
+          <tr><td>Ação de rodada completa</td><td>Ação Especial</td><td>Gasta 1 Ação Principal + a Ação de Movimento: técnicas fortes, Corrida.</td></tr>
           <tr><td>Ação imediata</td><td>Reação</td><td>Sem limite por rodada, mas cada uma após a primeira dá −2 cumulativo.</td></tr>
           <tr><td>Magias e espaços de magia</td><td>Habilidades + Pontos de Mana</td><td>Funciona como os <b>pontos de poder</b> do psiônico: cada uso gasta PM.</td></tr>
           <tr><td>Talentos</td><td>Habilidades Passivas</td><td>Compradas com Pontos de Habilidade (PH) e evoluem do nível 1 ao 5.</td></tr>
@@ -210,7 +210,7 @@
         </tbody>
       </table></div>
       <p>Depois, role <strong>2d6 para cada atributo</strong>, na ordem, e some ao valor base. <strong>Pontos de Status</strong> são pontos livres que você soma a qualquer atributo, 1 por 1.</p>
-      <div class="dnd"><div class="dnd-t">📘 Vindo do D&amp;D 3.5</div><p>No lugar de 4d6 descartando o menor, é base + 2d6, em ordem. Os resultados ficam entre 8 e 22, parecidos com os do 3.5. A diferença é que aqui atributos <b>sobem muito</b>: cerca de 3,5 pontos por nível. Um Caçador Rank S tem FOR 40 ou mais.</p></div>
+      <div class="dnd"><div class="dnd-t">📘 Vindo do D&amp;D 3.5</div><p>No lugar de 4d6 descartando o menor, é base + 2d6, em ordem. Os resultados ficam entre 8 e 22, parecidos com os do 3.5. A diferença é que aqui atributos <b>sobem sempre</b>: 2 pontos por nível. Um Caçador Rank S que priorizou um atributo chega a 40 ou mais nele.</p></div>
       <p class="opcional"><strong>Opcional — Método Padrão:</strong> todos usam base 8, sem compensação, e distribuem 7, 7, 6, 6, 5 e 4 (o equivalente ao <em>point buy</em>).</p>
 
       <h3>Passo 3 — Despertar</h3>
@@ -222,7 +222,7 @@
       <p class="opcional"><strong>Opcional — Escolha Guiada:</strong> role 2× e fique com o resultado que preferir; ou o Mestre permite escolher livremente um Despertar Comum ou Raro.</p>
 
       <h3 id="l-avaliacao">Passo 4 — Avaliação Inicial do Sistema</h3>
-      <p>O Sistema sorteia <strong>3 habilidades de Rank E</strong> de quaisquer árvores. Escolha uma: você a recebe de graça no nível 1, mesmo sem cumprir o requisito de atributo.</p>
+      <p>O Sistema sorteia <strong>3 habilidades de Rank E</strong> de quaisquer árvores. Escolha uma: você a recebe de graça no nível 1, mesmo sem cumprir o requisito de atributo (veja <a href="#l-recebida">Habilidade recebida</a>).</p>
 
       <h3>Passo 5 — Pontos de Habilidade (PH)</h3>
       <p>Você começa com <strong>3 PH</strong>, mais as compensações. Gaste em habilidades de Rank E: adquirir custa 1 PH; levar ao nível 2 custa 2 PH. PH não gastos ficam guardados.</p>
@@ -338,7 +338,7 @@
         <div class="resumo-t">Em resumo</div>
         <ol>
           <li>Todos rolam <b>Iniciativa</b> (1d20 + AGI).</li>
-          <li>No turno: <b>Ação de Movimento</b> + <b>Ações Principais</b> (ou uma <b>Ação Especial</b>, que gasta o turno inteiro).</li>
+          <li>No turno: <b>Ação de Movimento</b> + <b>Ações Principais</b>. Uma <b>Ação Especial</b> gasta 1 Ação Principal + a Ação de Movimento.</li>
           <li>Para atacar: <b>1d20 + Nível + mod</b>. O alvo rola <b>Defender</b> ou <b>Esquivar</b>. Se o alvo tirar igual ou mais, o ataque não causa dano.</li>
           <li>Se acertar, o dano é <b>dado da arma + mod + metade do Nível</b>, menos a RD do alvo.</li>
         </ol>
@@ -352,19 +352,20 @@
         <thead><tr><th>Ação</th><th>Quantas</th><th>Para quê</th><th>No 3.5</th></tr></thead>
         <tbody>
           <tr><th>Principal</th><td>1 + Nível ÷ 5</td><td>Atacar, usar a maioria das habilidades, beber poção, manobras.</td><td>Padrão</td></tr>
-          <tr><th>Movimento</th><td>1</td><td>Andar até o Deslocamento, levantar-se, sacar arma.</td><td>Movimento</td></tr>
-          <tr><th>Especial</th><td>Ocupa o turno inteiro</td><td>Técnicas poderosas e a Corrida (4× o Deslocamento).</td><td>Rodada completa</td></tr>
-          <tr><th>Livre</th><td>À vontade</td><td>Falar, soltar objeto, ativar certas habilidades.</td><td>Livre</td></tr>
+          <tr><th>Movimento</th><td>1</td><td>Andar até o Deslocamento, levantar-se, equipar ou trocar arma, escudo ou acessório.</td><td>Movimento</td></tr>
+          <tr><th>Especial</th><td>Gasta 1 Principal + a de Movimento (máx. 1 por rodada)</td><td>Técnicas poderosas e a Corrida (4× o Deslocamento).</td><td>Rodada completa</td></tr>
+          <tr><th>Livre</th><td>À vontade</td><td>Falar, soltar objeto, pegar algo do Inventário do Sistema. Cada habilidade de Ação Livre: 1× por rodada.</td><td>Livre</td></tr>
           <tr><th>Reação</th><td>Sem limite (com Pressão)</td><td>Defender/Esquivar cada ataque que você perceba; habilidades de Reação.</td><td>Imediata</td></tr>
         </tbody>
       </table></div>
+      <p><strong>Ação Especial:</strong> custa 1 Ação Principal e a sua Ação de Movimento da rodada. Do nível 1 ao 4, como todos têm só 1 Ação Principal, ela ocupa o turno inteiro. Com mais Ações Principais, as outras continuam disponíveis nas passadas seguintes, mas você já não pode se mover naquela rodada (a não ser pelo movimento que a própria Ação Especial der, como na Corrida).</p>
 
       <h3>Mais de uma Ação Principal: as passadas</h3>
       <p>Quem tem 2 ou mais Ações Principais <strong>não as usa todas de uma vez</strong>. A rodada acontece em <strong>passadas</strong>:</p>
       <ol>
         <li><b>1ª passada:</b> todos, em ordem de iniciativa, fazem seu turno normal: Movimento + 1ª Ação Principal (ou a Ação Especial).</li>
         <li><b>2ª passada:</b> quem tem 2+ ações faz a 2ª, de novo em ordem de iniciativa.</li>
-        <li>E assim por diante. A Ação de Movimento pode ser usada em qualquer uma das suas passadas.</li>
+        <li>E assim por diante. A Ação de Movimento (ou a Ação Especial, que a inclui) pode ser usada em qualquer uma das suas passadas.</li>
       </ol>
       <div class="exemplo"><div class="exemplo-t">Exemplo</div><p>A (Nível 10, 3 ações), B (Nível 5, 2 ações) e um Lacaio (1 ação), nessa ordem de iniciativa: A → B → Lacaio → A → B → A.</p></div>
       <div class="dnd"><div class="dnd-t">📘 Vindo do D&amp;D 3.5</div><p>É o substituto dos ataques iterativos, mas cada ação extra vale uma ação padrão inteira: pode ser um ataque ou um poder, sem −5 acumulado. Em troca, você não despeja tudo de uma vez, e o inimigo pode reagir entre suas ações.</p></div>
@@ -379,8 +380,9 @@
       <ul>
         <li><strong>Reação ≥ ataque:</strong> o golpe não causa dano. <strong>Reação &lt; ataque:</strong> acertou.</li>
         <li><strong>Não percebeu o ataque</strong> (invisível, surpresa, pelas costas sem som): sem Reação. O ataque acerta se superar a <strong>Defesa Passiva</strong> = 10 + bônus de armadura.</li>
-        <li><strong>Pressão:</strong> cada Reação depois da primeira, na mesma rodada, sofre <strong>−2 cumulativo</strong> (−2, −4, −6…). Zera no início do seu turno. Por isso ser cercado é perigoso.</li>
-        <li><strong>20 natural no ataque:</strong> Acerto Crítico, que só um 20 natural na Reação evita. <strong>1 natural na Reação:</strong> falha automática.</li>
+        <li><strong>Pressão:</strong> cada Defender ou Esquivar depois do primeiro, na mesma rodada, sofre <strong>−2 cumulativo, até no máximo −6</strong> (−2, −4, −6, −6…). Zera no início do seu turno. Resistências e habilidades de Reação não sofrem nem causam Pressão.</li>
+        <li><strong>20 natural no ataque:</strong> acerta sempre e é <strong>Acerto Crítico</strong>; só um 20 natural na Reação evita. <strong>1 natural no ataque:</strong> erra sempre. <strong>1 natural na Reação:</strong> falha sempre.</li>
+        <li><strong>Margem de crítico ampliada</strong> (19–20, 18–20…): os números da margem abaixo de 20 só viram crítico se o ataque também acertar normalmente.</li>
       </ul>
       <div class="dnd"><div class="dnd-t">📘 Vindo do D&amp;D 3.5</div><p>Pense na CA como um número que o alvo <b>rola</b>, em vez de ser fixo: CA = 1d20 + Nível + mod. É o que faz os duelos de anime funcionarem, com um Caçador mais forte desviando de tudo enquanto os fracos são atingidos sempre. Para agilizar, <b>Lacaios usam Defesa Fixa</b> = 10 + bônus de Reação, exatamente como uma CA do 3.5.</p></div>
 
@@ -403,13 +405,15 @@
       <h3>Poderes: ataque ou resistência</h3>
       <p>Habilidades ofensivas funcionam de um destes dois jeitos, e a descrição diz qual:</p>
       <ul>
-        <li><strong>"Rolagem de ataque"</strong>: como um ataque com arma. O alvo reage com Defender ou Esquivar. No 3.5, equivale a uma magia de toque ou um raio.</li>
-        <li><strong>"Resistência (atributo)"</strong>: o alvo rola Resistência contra a sua CD, sem Reação. No 3.5, equivale a uma magia com teste de resistência.</li>
+        <li><strong>"Ataque com arma"</strong>: um ataque normal com a arma que você empunha (ou desarmado). O dano é o normal da arma (dado + mod + metade do Nível + bônus do item), mais o extra que a habilidade disser.</li>
+        <li><strong>"Ataque de poder (atributo)"</strong>: 1d20 + Nível + mod do atributo indicado. O alvo reage com Defender ou Esquivar. No 3.5, equivale a uma magia de toque ou um raio.</li>
+        <li><strong>"Resistência (atributo) contra sua CD (atributo)"</strong>: o alvo rola 1d20 + Nível + mod do primeiro atributo contra 10 + seu Nível + mod do segundo, sem Reação. No 3.5, equivale a uma magia com teste de resistência.</li>
+        <li><strong>Dois atributos</strong> ("FOR/AGI", "INT ou PRE"): use sempre o maior dos dois, para ataque, dano e CD.</li>
       </ul>
       <p><strong>Ataques em área:</strong> role um único ataque e compare com a Reação de cada alvo. Contra ataques em área, uma Reação bem-sucedida <strong>reduz o dano à metade</strong> em vez de zerar (como "Reflexos reduz à metade"), a menos que o poder diga outra coisa.</p>
 
       <h3 id="l-mov">Movimento e Ataque de Oportunidade</h3>
-      <p><strong>Deslocamento</strong> = 9 m + metade do mod AGI. <strong>Corrida</strong> (Ação Especial) = 4× o Deslocamento.</p>
+      <p><strong>Deslocamento</strong> = 9 m + metade do mod AGI. <strong>Corrida</strong> (Ação Especial) = mover até 4× o Deslocamento.</p>
       <p>Quem pode atacar corpo a corpo ameaça a área ao alcance da arma (normalmente 1,5 m). Provocam <strong>Ataque de Oportunidade</strong> (um ataque imediato e gratuito do inimigo):</p>
       <ul>
         <li><strong>Sair</strong> da área ameaçada, andando ou correndo. Entrar não provoca.</li>
@@ -424,7 +428,7 @@
           <tr><th>Terreno elevado</th><td>+1 no ataque corpo a corpo.</td></tr>
           <tr><th>Cobertura parcial</th><td>+2 nas Reações e na Defesa Passiva contra ataques à distância.</td></tr>
           <tr><th>Cobertura total</th><td>Não pode ser alvo direto.</td></tr>
-          <tr><th>Agarrar</th><td>Ação Principal. Teste oposto de Atletismo; se vencer, o alvo fica Agarrado.</td></tr>
+          <tr><th>Agarrar</th><td>Ação Principal. Teste oposto: seu Atletismo contra o Atletismo ou a Acrobacia do alvo (ele escolhe). Só contra criaturas de até 1 tamanho acima do seu. Se vencer, o alvo fica Agarrado.</td></tr>
           <tr><th>Derrubar / Empurrar</th><td>Ação Principal. Teste oposto (Atletismo contra Atletismo ou Acrobacia). Derruba ou empurra 1,5 m, +1,5 m a cada 5 de diferença.</td></tr>
           <tr><th>Desarmar</th><td>Ação Principal. Ataque com −4 contra a Reação do alvo; se acertar, a arma cai.</td></tr>
           <tr><th>Preparar ação</th><td>Ação Principal. Defina um gatilho; quando ele acontecer, você age como Reação.</td></tr>
@@ -432,6 +436,18 @@
           <tr><th>Fugir</th><td>Corrida para longe; os inimigos ao lado fazem Ataque de Oportunidade.</td></tr>
         </tbody>
       </table></div>
+
+      <h3 id="l-tamanho">Tamanho</h3>
+      <div class="tabela-wrap"><table class="tabela">
+        <thead><tr><th>Tamanho</th><th>Espaço que ocupa</th><th>Alcance corpo a corpo</th><th>Exemplos</th></tr></thead>
+        <tbody>
+          <tr><th>Médio</th><td>1,5 m</td><td>1,5 m</td><td>Humanos, goblins, lobos. Todo Caçador é Médio.</td></tr>
+          <tr><th>Grande</th><td>3 m</td><td>3 m</td><td>Ogros, ursos gigantes.</td></tr>
+          <tr><th>Enorme</th><td>4,5 m</td><td>4,5 m</td><td>Gigantes, golens.</td></tr>
+          <tr><th>Colossal</th><td>9 m</td><td>9 m</td><td>Dragões antigos, titãs.</td></tr>
+        </tbody>
+      </table></div>
+      <p>Armas com "alcance" somam 1,5 m ao alcance do tamanho.</p>
     </section>
 
     <!-- ===================== CAP 7 -->
@@ -440,17 +456,20 @@
 
       <h3 id="l-pv">Pontos de Vida (PV)</h3>
       <ul>
-        <li><strong>1º nível:</strong> 10 + mod VIT. <strong>A cada nível:</strong> +5 + mod VIT (mínimo +1).</li>
-        <li><strong>0 PV ou menos:</strong> você fica <strong>Incapacitado</strong>: consciente, mas sem agir. Os PV podem ficar negativos.</li>
-        <li><strong>Morte:</strong> quando os PV negativos igualam os seus PV máximos (80 PV máx. → morte em −80).</li>
-        <li><strong>Morte instantânea:</strong> desintegração, decapitação ou um efeito que diga isso explicitamente.</li>
+        <li><strong>1º nível:</strong> 10 + mod VIT. <strong>A cada nível:</strong> +5 + mod VIT (mínimo +1). Os PV máximos usam sempre o mod VIT <em>atual</em> em todos os níveis: se o mod VIT sobe 1 no nível 10, os PV máximos sobem 10 de uma vez.</li>
+        <li><strong>O dano não para no zero:</strong> os PV podem ficar negativos.</li>
+        <li><strong>No Limite (0 PV ou menos):</strong> você cai <strong>Derrubado</strong> (parece morto), mas <strong>continua lutando</strong>. Enquanto estiver No Limite, tem <strong>só 1 Ação Principal por rodada</strong> (mais a Ação de Movimento, ou uma Ação Especial). Levantar-se continua custando a Ação de Movimento.</li>
+        <li><strong>Cura No Limite:</strong> conta a partir do valor negativo. Com −10 PV, uma cura de 15 deixa você com 5 PV.</li>
+        <li><strong>Morte:</strong> quando os PV chegam a <strong>−PV máximos</strong> (80 PV máx. → morte em −80). Exemplo: com 12 PV máximos, um golpe de 30 leva a −18: morte.</li>
+        <li><strong>Fim do combate:</strong> quem terminar No Limite desmaia. Acorda ao receber cura que o leve acima de 0 PV, ou depois de um descanso longo (que recupera todos os PV).</li>
+        <li><strong>Morte instantânea:</strong> desintegração, decapitação ou um efeito que diga explicitamente que mata.</li>
       </ul>
 
       <h3 id="l-pm">Pontos de Mana (PM)</h3>
       <ul>
         <li><strong>1º nível:</strong> 10 + mod INT. <strong>A cada nível:</strong> +4 + mod INT (mínimo +1).</li>
         <li>Cada habilidade ativa diz quantos PM gasta.</li>
-        <li><strong>Exaustão de Mana:</strong> sem PM suficientes, você pode pagar o <strong>dobro do custo em PV</strong> e depois fica Exausto.</li>
+        <li><strong>Exaustão de Mana:</strong> se não tem PM suficientes, gaste todos os PM que tem e pague <strong>só a diferença, em dobro, com PV</strong>. Depois disso você fica Exausto. Exemplo: custo 10, você tem 4 PM: gasta os 4 PM e 12 PV. Não é possível se levar a 0 PV ou menos desse jeito.</li>
       </ul>
       <div class="dnd"><div class="dnd-t">📘 Vindo do D&amp;D 3.5</div><p>PV fixos equivalem à média de um d10 com bônus, e o "−10 para morrer" virou "−PV máximos", porque Caçadores aguentam ferimentos absurdos como no anime. PM funcionam como os pontos de poder do <i>Expanded Psionics Handbook</i>: um único reservatório para todas as habilidades.</p></div>
 
@@ -458,7 +477,7 @@
       <ul>
         <li><strong>Descanso curto</strong> (1 hora, até 2 por dia): recupera 1/4 dos PV e dos PM máximos.</li>
         <li><strong>Descanso longo</strong> (8 horas): recupera todos os PV e PM e remove Exausto.</li>
-        <li>Quem está Incapacitado só se recupera depois de estabilizado (Medicina CD 15 ou qualquer cura).</li>
+        <li>Um descanso interrompido por combate não recupera nada.</li>
       </ul>
 
       <h3 id="l-condicoes">Condições</h3>
@@ -474,7 +493,7 @@
       </div>
       <div class="resumo">
         <div class="resumo-t">Em resumo</div>
-        <p>XP do Portal → subir de nível → <b>1d6 Status + 1d6 PH + 2 perícia + PV + PM</b>. A cada 5 níveis: novo <b>Rank</b>, <b>+1 Ação Principal</b>, Avaliação do Sistema e +1 nível grátis no Despertar.</p>
+        <p>XP do Portal → subir de nível → <b>2 Status + 1d6 PH + 2 perícia + PV + PM</b>. A cada 5 níveis: novo <b>Rank</b>, <b>+1 Ação Principal</b>, Avaliação do Sistema e +1 nível grátis no Despertar.</p>
       </div>
 
       <h3 id="l-xp">Experiência (XP)</h3>
@@ -491,14 +510,14 @@
       <h3 id="l-subir-nivel">Ao subir de nível</h3>
       <div class="tabela-wrap"><table class="tabela">
         <tbody>
-          <tr><th>Pontos de Status</th><td>1d6, distribuídos livremente entre os atributos.</td></tr>
+          <tr><th>Pontos de Status</th><td>2, distribuídos livremente entre os atributos (1 ponto = +1 no atributo).</td></tr>
           <tr><th>Pontos de Habilidade</th><td>1d6 PH, para habilidades e Despertar.</td></tr>
           <tr><th>Perícias</th><td>+2 pontos.</td></tr>
           <tr><th>PV e PM</th><td>PV +5 + mod VIT; PM +4 + mod INT (mínimo +1 cada).</td></tr>
           <tr><th>Automático</th><td>Ataque, Reações, Resistências e CDs sobem +1 (são baseados no Nível); o dano sobe a cada 2 níveis.</td></tr>
         </tbody>
       </table></div>
-      <p><strong>Bênção do Sistema:</strong> se tirar 1 no d6 de Status ou de PH, role de novo uma vez e fique com o segundo resultado.</p>
+      <p><strong>Bênção do Sistema:</strong> se tirar 1 no d6 de PH, role de novo uma vez e fique com o segundo resultado.</p>
 
       <h3 id="l-subir-rank">Subir de Rank (níveis 5, 10, 15, 20, 25)</h3>
       <ul>
@@ -528,7 +547,7 @@
       <div id="cat-titulos"></div>
 
       <h3 id="l-inventario">Loja e Inventário do Sistema</h3>
-      <p>A <strong>Loja do Sistema</strong> vende consumíveis e itens Comuns e Incomuns até o Rank do Jogador, pelos preços de <a href="#c-itens">Equipamentos</a>, e compra itens por metade do preço. O <strong>Inventário</strong> guarda 20 itens (pilhas de consumíveis contam como 1) num espaço que só o Portador acessa, como Ação Livre.</p>
+      <p>A <strong>Loja do Sistema</strong> vende consumíveis e itens Comuns e Incomuns até o Rank do Jogador, pelos preços de <a href="#c-itens">Equipamentos</a>, e compra itens por metade do preço. Os itens vendidos são novos, com Refino +0; um item Incomum vem com 1 afixo sorteado na tabela do tipo dele. O <strong>Inventário do Sistema</strong> está explicado em <a href="#l-limites">Quanto você pode usar e carregar</a>.</p>
     </section>
 
     <!-- ===================== CAP 9 -->
@@ -548,6 +567,12 @@
         <li><strong>Pergaminhos de Habilidade</strong> encontrados em Portais: ensinam uma habilidade sem custo de aquisição.</li>
         <li><strong>Missões e mestres</strong> que ensinam técnicas na ficção, a critério do Mestre.</li>
       </ol>
+      <h4 id="l-recebida">Habilidade recebida (Avaliação, Pergaminho ou Missão)</h4>
+      <ul>
+        <li>Você a recebe no nível 1 sem pagar a aquisição. Pela Avaliação, os requisitos de atributo e de pré-requisito são dispensados (o de nível, não). Por Pergaminho, os de nível e atributo continuam valendo; só o pré-requisito é dispensado.</li>
+        <li><strong>Ela é sua para tudo:</strong> você pode evoluí-la com PH normalmente (nv2, nv3…), sem precisar cumprir os requisitos dela, e ela serve de pré-requisito para as habilidades seguintes da árvore.</li>
+        <li><strong>Ela não abre nenhuma outra:</strong> as habilidades anteriores e as seguintes da árvore continuam exigindo os próprios requisitos. Exemplo: receber Golpe Esmagador sem ter Domínio de Armas nv2 não permite comprar Domínio de Armas sem cumprir o requisito dele, nem pular o requisito de atributo do Corte Vácuo.</li>
+      </ul>
 
       <h3>Requisitos e custo</h3>
       <div class="tabela-wrap"><table class="tabela">
@@ -569,7 +594,7 @@
         <div class="hab-card exemplo-card">
           <div class="hab-topo"><span class="rk rk-D">D</span><strong>Golpe Esmagador</strong><span class="hab-tipo">Ativa · Ação Principal · 4 PM</span></div>
           <div class="hab-req">Requisitos: FOR 16 · Domínio de Armas nv2 · Nível 5</div>
-          <div class="hab-meta">Alcance: Arma · Duração: 1 rodada</div>
+          <div class="hab-meta">Alcance: Alcance da arma · Duração: Até o fim do próximo turno do alvo · <b>À vontade</b></div>
           <p><b>Efeito:</b> o que acontece no nível 1.</p>
           <p><b>Por nível:</b> o ganho a cada nível acima do 1º.</p>
           <p><b>Nível 3 / Nível 5:</b> marcos que acrescentam regras novas.</p>
@@ -577,9 +602,23 @@
       </div>
       <ul>
         <li><strong>Passiva:</strong> sempre ativa. Quando ela muda um número da ficha, o site já soma.</li>
-        <li><strong>Ativa:</strong> exige a ação indicada e normalmente gasta PM.</li>
-        <li><strong>Frequência:</strong> "1× por combate" volta quando não há inimigos por 1 minuto; "1× por dia" volta com o descanso longo.</li>
-        <li><strong>Acúmulo:</strong> efeitos diferentes se somam; a mesma habilidade não se soma com ela mesma.</li>
+        <li><strong>Ativa:</strong> exige a ação indicada e gasta os PM indicados no momento do uso. Sem PM suficientes, vale a Exaustão de Mana.</li>
+        <li><strong>Frequência</strong> (sempre escrita no cartão): "À vontade" = quantas vezes quiser, pagando ação e PM a cada uso. "1× por rodada" = volta no início do seu turno. "1× por combate" = volta quando não há inimigos por 1 minuto. "1× por dia" = volta com o descanso longo.</li>
+        <li><strong>Duração:</strong> "Até o início do seu próximo turno"; "N rodadas" = termina no início do seu turno N rodadas depois; "1 minuto" = 10 rodadas; "Instantânea" = acontece e acaba.</li>
+        <li><strong>Por nível:</strong> o ganho é somado a cada nível acima do 1º; o cartão mostra o total no nível 5.</li>
+        <li><strong>Acúmulo:</strong> efeitos diferentes se somam; a mesma habilidade não se soma com ela mesma (usar de novo só renova a duração).</li>
+      </ul>
+
+      <h3 id="l-invocacoes">Invocações</h3>
+      <p>Vale para tudo o que você invoca ou comanda: familiares, feras domadas, companheiros, Sombras, enxames, clones, guardiões e Tropas.</p>
+      <ul>
+        <li><strong>Valores:</strong> cada invocação usa a linha da tabela de ameaças (cap. 13) da categoria e do nível que a habilidade diz.</li>
+        <li><strong>Quando age:</strong> logo depois de você, em cada passada em que você agir. Cada invocação tem a própria Ação de Movimento.</li>
+        <li><strong>Ações:</strong> cada Ação Principal (ou Ação Especial) que uma invocação usa <strong>gasta uma Ação Principal sua</strong>. Ter mais invocações não multiplica as ações. A exceção é Elo de Comando, que deixa algumas agirem com as próprias Ações Principais.</li>
+        <li><strong>Reações:</strong> as invocações reagem normalmente (Defender, Esquivar, Resistências) sem gastar nada seu.</li>
+        <li><strong>Quantas ao mesmo tempo:</strong> cada habilidade diz o número máximo de invocações ativas dela.</li>
+        <li><strong>A 0 PV:</strong> a invocação some (ou volta para onde a habilidade disser). Invocações não ficam No Limite.</li>
+        <li><strong>Tropa:</strong> várias criaturas que contam como <strong>uma só invocação</strong>, como diz a habilidade que a cria (Exército de Mana).</li>
       </ul>
 
       <h3>O Despertar</h3>
@@ -616,6 +655,7 @@
         <li><strong>Uma mão</strong> (sem marcação): ocupa 1 mão. Você pode empunhar duas armas de uma mão, ou uma arma e um escudo.</li>
         <li><strong>Duas mãos:</strong> ocupa as 2 mãos, então impede escudo e segunda arma. Em troca, os dados são maiores e, <strong>corpo a corpo, o dano soma 1,5 × o modificador</strong> (arredondado para baixo), como no D&amp;D 3.5. Arcos e bestas não ganham esse bônus.</li>
         <li><strong>Leve:</strong> conta como uma mão e é a exigida pela habilidade Lâminas Gêmeas.</li>
+        <li><strong>Duas armas de uma mão:</strong> cada Ação Principal de ataque usa uma das duas, à sua escolha. Empunhar duas armas não dá ataque extra; isso só vem com a habilidade Lâminas Gêmeas.</li>
       </ul>
 
       <h3>Armaduras e escudos</h3>
@@ -626,21 +666,27 @@
           <tr><td>Traje de Combate</td><td>Leve</td><td>+1</td><td>—</td></tr>
           <tr><td>Couraça de Couro de Besta</td><td>Média</td><td>+2</td><td>−1</td></tr>
           <tr><td>Armadura de Placas</td><td>Pesada</td><td>+3</td><td>−3</td></tr>
-          <tr><td>Escudo</td><td>Uma mão</td><td>+2 (só Defender)</td><td>—</td></tr>
+          <tr><td>Escudo</td><td>Uma mão</td><td>+2 + Bônus de Rank (só Defender)</td><td>—</td></tr>
         </tbody>
       </table></div>
 
       <h3 id="l-limites">Quanto você pode usar e carregar</h3>
+      <p><strong>Tipos de item:</strong> Arma (uma mão ou duas mãos) · Escudo · Armadura (leve, média ou pesada) · Acessório (anel, colar, brinco, bracelete, cinto, manto, botas ou luvas) · Consumível (poções, pergaminhos, pedras) · Material (Cristal de Mana, Núcleo de Chefe).</p>
+      <p>Todo item do Jogador está em um de dois lugares: <strong>equipado no corpo</strong> ou <strong>no Inventário do Sistema</strong>.</p>
       <div class="tabela-wrap"><table class="tabela">
         <tbody>
           <tr><th>Mãos</th><td>2. Arma de uma mão = 1, escudo = 1, arma de duas mãos = 2.</td></tr>
           <tr><th>Armadura</th><td>1 vestida.</td></tr>
-          <tr><th>Acessórios</th><td>Até 4 (anéis, colares, botas…), sem repetir o mesmo afixo de atributo.</td></tr>
-          <tr><th>Título</th><td>1 equipado.</td></tr>
-          <tr><th>Inventário do Sistema</th><td>20 itens fora do corpo. Uma pilha de consumíveis iguais conta como 1. Pegar algo do Inventário é Ação Livre.</td></tr>
+          <tr><th>Acessórios</th><td>Até 4 ao mesmo tempo: no máximo <strong>2 anéis</strong> e <strong>1 de cada outro tipo</strong> (colar, brinco, bracelete, cinto, manto, botas, luvas).</td></tr>
+          <tr><th>Título</th><td>1 equipado (troca só fora de combate).</td></tr>
+          <tr><th>Inventário do Sistema</th><td>Todos os outros itens, em <strong>20 espaços</strong>. Cada item ocupa 1 espaço. Itens iguais (o mesmo consumível, ou o mesmo material do mesmo Rank, como Cristais Rank D) formam uma pilha sem limite que ocupa 1 espaço. Ouro não ocupa espaço. Funciona em qualquer lugar, inclusive dentro de Portais, e só o Portador o abre.</td></tr>
+          <tr><th>Tempo de troca</th><td>Pegar ou guardar algo no Inventário: Ação Livre. Equipar ou trocar arma, escudo ou acessório: Ação de Movimento. Vestir ou tirar armadura: 1 minuto, nunca em combate.</td></tr>
         </tbody>
       </table></div>
-      <p>Se o Inventário estiver cheio, para guardar algo novo é preciso descartar, vender ou deixar algum item para trás. A ficha do site avisa e pergunta o que descartar.</p>
+      <ul>
+        <li><strong>Inventário cheio:</strong> para guardar algo novo, é preciso vender, entregar a alguém ou descartar outro item. Um item que não está equipado nem no Inventário deixa de ser seu. A ficha do site avisa e pergunta o que deixar para trás.</li>
+        <li><strong>Afixo repetido:</strong> se dois itens equipados têm o <strong>mesmo afixo</strong> (dois anéis "Forte", por exemplo), não se somam: vale o de maior valor. Afixos de arma valem só para os ataques daquela arma.</li>
+      </ul>
 
       <h3 id="l-rank-item">Rank do item</h3>
       <div class="tabela-wrap"><table class="tabela compacta">
@@ -655,6 +701,7 @@
       <ul>
         <li><strong>Armas:</strong> +BR no ataque e +2×BR no dano.</li>
         <li><strong>Armaduras e escudos:</strong> +BR em Defender e RD igual ao BR.</li>
+        <li><strong>Refino</strong> (veja abaixo): arma +1 no ataque e +1 no dano por nível; armadura +1 em Defender por nível; escudo +1 de RD por nível. Acessórios não recebem Refino nem Ascendem.
         <li><strong>Requisito:</strong> valor mínimo no atributo do item (o da arma; FOR para armaduras médias, pesadas e escudos; nenhum para leves e acessórios). Sem ele, o item funciona como Rank E.</li>
       </ul>
 
@@ -696,46 +743,37 @@
       <div class="resumo">
         <div class="resumo-t">O caminho de uma arma</div>
         <ol>
-          <li><strong>Refino</strong> (+1 a +10): você gasta Cristais de Mana e rola um teste. Cada nível dá +1.</li>
+          <li><strong>Refino</strong> (+1 a +10): você gasta Cristais de Mana. Cada nível dá +1.</li>
           <li><strong>Ascensão</strong>: no +10, um Núcleo de Chefe do Rank seguinte faz o item subir de Rank. O Refino volta a +5 e o item ganha 1 afixo.</li>
           <li>Repita: refine de novo até +10 e Ascenda outra vez. É assim que uma arma Rank E pode chegar a S.</li>
-          <li><strong>Sincronia</strong> corre em paralelo (só Raros ou melhores): sobe sozinha a cada Chefe derrotado e abre os Selos ocultos.</li>
+          <li><strong>Sincronia</strong> corre em paralelo (só Raros ou melhores): sobe a cada Chefe derrotado com o item equipado e abre os Selos ocultos.</li>
         </ol>
       </div>
 
       <h4 id="l-refino">Refino passo a passo</h4>
       <ol class="passos">
-        <li>Escolha o próximo nível. Para levar um item de +3 para +4, o nível desejado é <strong>4</strong>.</li>
-        <li>Gaste <strong>Cristais de Mana do Rank do item</strong> em quantidade igual ao nível desejado (4 cristais).</li>
-        <li>Role <strong>1d20 + seu grau de Conhecimento</strong> (os pontos investidos na perícia, sem o modificador de INT). A CD é <strong>2 × o nível desejado</strong> (CD 8).</li>
-        <li>Sucesso: o item vai para +4. Falha: veja a tabela.</li>
+        <li><strong>Que itens:</strong> armas, armaduras e escudos. Acessórios não recebem Refino.</li>
+        <li><strong>Escolha o próximo nível.</strong> Para levar um item de +3 para +4, o nível desejado é <strong>4</strong>. Não se pula nível.</li>
+        <li><strong>Gaste Cristais de Mana do Rank do item</strong> em quantidade igual ao nível desejado (4 cristais). Cristais de outro Rank precisam antes ser trocados na casa de câmbio.</li>
+        <li><strong>Pronto:</strong> o item sobe na hora. <strong>Não há teste nem falha.</strong> O Sistema faz o Refino em 1 minuto, fora de combate, em qualquer lugar.</li>
       </ol>
       <div class="tabela-wrap"><table class="tabela compacta">
-        <thead><tr><th>Nível desejado</th><th>Cristais</th><th>CD</th><th>Se falhar</th></tr></thead>
+        <thead><tr><th>Nível desejado</th><th>+1</th><th>+2</th><th>+3</th><th>+4</th><th>+5</th><th>+6</th><th>+7</th><th>+8</th><th>+9</th><th>+10</th></tr></thead>
         <tbody>
-          <tr><td>+1</td><td>1</td><td>2</td><td rowspan="5">Perde só os cristais</td></tr>
-          <tr><td>+2</td><td>2</td><td>4</td></tr>
-          <tr><td>+3</td><td>3</td><td>6</td></tr>
-          <tr><td>+4</td><td>4</td><td>8</td></tr>
-          <tr><td>+5</td><td>5</td><td>10</td></tr>
-          <tr><td>+6</td><td>6</td><td>12</td><td rowspan="3">Perde os cristais e o item cai 1 nível</td></tr>
-          <tr><td>+7</td><td>7</td><td>14</td></tr>
-          <tr><td>+8</td><td>8</td><td>16</td></tr>
-          <tr><td>+9</td><td>9</td><td>18</td><td rowspan="2">Perde os cristais e o item cai 2 níveis</td></tr>
-          <tr><td>+10</td><td>10</td><td>20</td></tr>
+          <tr><th>Cristais</th><td>1</td><td>2</td><td>3</td><td>4</td><td>5</td><td>6</td><td>7</td><td>8</td><td>9</td><td>10</td></tr>
+          <tr><th>Total desde +0</th><td>1</td><td>3</td><td>6</td><td>10</td><td>15</td><td>21</td><td>28</td><td>36</td><td>45</td><td>55</td></tr>
         </tbody>
       </table></div>
       <ul>
-        <li><strong>Rachado:</strong> um <strong>1 natural</strong> tentando +8 ou mais racha o item. Ele perde o Bônus de Rank até ser tratado com <strong>Pó de Purificação</strong>.</li>
-        <li><strong>Ferreiro da Associação:</strong> quem não tem Conhecimento pode pagar um ferreiro. Ele rola com grau 5 e cobra 10% do preço base do Rank do item por tentativa (os cristais continuam por sua conta).</li>
-        <li>Do +0 ao +10 são <strong>55 cristais</strong> no total, sem contar as falhas.</li>
+        <li><strong>O que cada nível dá:</strong> arma +1 no ataque e +1 no dano; armadura +1 em Defender; escudo +1 de RD.</li>
+        <li><strong>O ritmo é do Mestre:</strong> os cristais vêm dos Portais (1d6 por Jogador em cada Portal concluído, mais o que o saque trouxer). Quanto mais cristais o Mestre entregar, mais rápido os itens evoluem.</li>
       </ul>
-      <div class="exemplo"><div class="exemplo-t">Exemplo</div><p>Rin tem uma Katana Rank D com Refino +5 e grau 4 em Conhecimento. Para tentar +6, gasta <strong>6 Cristais Rank D</strong> e rola 1d20 + 4 contra <strong>CD 12</strong>. Tira 6: total 10, falha. Os 6 cristais se perdem e, como o nível desejado era +6, a Katana cai 1 nível: fica +4.</p></div>
+      <div class="exemplo"><div class="exemplo-t">Exemplo</div><p>Rin tem uma Katana Rank D com Refino +5. Para ir a +6, gasta <strong>6 Cristais Rank D</strong>, e a Katana fica +6 na hora. Para chegar a +10 a partir daí, ainda vai precisar de 7 + 8 + 9 + 10 = <strong>34 Cristais Rank D</strong>.</p></div>
 
       <h4 id="l-sincronia">Sincronia e Selos</h4>
       <ul>
         <li><strong>Quem tem:</strong> só itens <strong>Raros, Épicos, Lendários e Relíquias</strong>. Eles nascem com Selos ocultos (poderes trancados).</li>
-        <li><strong>Como ganhar:</strong> <strong>+1 de Sincronia sempre que um Chefe for derrotado</strong> com o item equipado por você. Não importa quem deu o golpe final.</li>
+        <li><strong>Como ganhar:</strong> <strong>+1 de Sincronia sempre que um Chefe for derrotado</strong> com o item equipado por você <strong>durante todo o combate</strong> contra ele. Não importa quem deu o golpe final. Item equipado no meio da luta não ganha.</li>
         <li><strong>Como usar:</strong> a Sincronia <strong>não é gasta</strong>. Ela só se acumula e, ao chegar a <strong>3</strong>, <strong>8</strong> e <strong>15</strong>, abre o 1º, o 2º e o 3º Selo, que passam a valer para sempre. Lendários com <strong>25</strong> despertam um poder único, criado pelo Mestre.</li>
         <li><strong>Descobrir antes:</strong> o Selo só se revela ao abrir, a menos que você use Análise nv3 ou um Pergaminho de Selo.</li>
         <li>A Sincronia fica no item: se você o der a outro Caçador, ela continua lá.</li>
@@ -747,7 +785,7 @@
         <li>Gaste o Núcleo. <strong>Não há teste</strong>: a Ascensão sempre funciona.</li>
         <li>O item sobe 1 Rank: o Bônus de Rank, o valor X dos afixos e o requisito de atributo passam a ser os do Rank novo.</li>
         <li>O Refino volta para <strong>+5</strong>.</li>
-        <li>O item ganha <strong>1 afixo novo</strong>: role na tabela do tipo do item (arma d20, armadura/escudo d12, acessório d12). Se repetir, role de novo.</li>
+        <li>O item ganha <strong>1 afixo novo</strong>: role na tabela do tipo do item (arma d20, armadura ou escudo d12). Se repetir, role de novo.</li>
         <li>A Raridade e a Sincronia são mantidas.</li>
       </ol>
       <div class="exemplo"><div class="exemplo-t">Exemplo</div><p>A Katana Afiada de Rin chegou a Rank D +10. Depois de vencer um Portal Rank C, o grupo entrega a ela o <strong>Núcleo Rank C</strong>. A Katana vira <strong>Rank C +5</strong>: o BR sobe de 1 para 2, o X de "Afiada" sobe de 2 para 3, e Rin rola 1d20 na tabela de armas: 3, <strong>Flamejante</strong>.</p></div>
@@ -757,6 +795,9 @@
 
       <h3>Relíquias</h3>
       <p>Itens únicos, com nome e história. Não têm Rank fixo: <strong>usam sempre o Rank do portador</strong> e, por isso, nunca precisam Ascender. Toda Relíquia tem uma <strong>Vontade</strong>, um desejo ou uma exigência. Contrariá-la desliga os afixos até o portador se redimir.</p>
+
+      <h3 id="l-maldicao">Itens amaldiçoados</h3>
+      <p>Um item amaldiçoado parece normal (Análise nv3 revela a maldição). Ele tem <strong>1 afixo invertido</strong>, escolhido pelo Mestre: o bônus vira penalidade do mesmo valor (Afiada +3 vira −3 no ataque). Depois de equipado, <strong>não pode ser desequipado</strong> até a maldição ser removida com <strong>Pó de Purificação</strong>, que deixa o afixo normal.</p>
 
       <h3>Consumíveis e materiais</h3>
       <div id="cat-consumiveis"></div>
@@ -768,7 +809,7 @@
         <li><strong>XP:</strong> 5 × nível do Chefe × multiplicador do tipo de Portal.</li>
         <li><strong>Ouro:</strong> 4 × preço base do Rank do Portal (cristais comuns e materiais já vendidos, descontadas as taxas).</li>
         <li><strong>Cristais de Mana:</strong> 1d6 do Rank do Portal, guardados para Refino.</li>
-        <li><strong>Sincronia:</strong> +1 em cada item Raro ou melhor que estava equipado quando o Chefe caiu.</li>
+        <li><strong>Sincronia:</strong> +1 em cada item Raro ou melhor que ficou equipado durante todo o combate contra o Chefe.</li>
       </ul>
       <p>Para o <strong>grupo</strong>: 1 item por Elite derrotada, 2 itens do Chefe (com +10 na raridade) e o <strong>Núcleo do Chefe</strong>. Na ficha do site, o botão <strong>⛩ Portal</strong> aplica tudo isso de uma vez.</p>
     </section>
@@ -838,12 +879,15 @@
         <dt>PH</dt><dd>Pontos de Habilidade, usados para adquirir e evoluir habilidades.</dd>
         <dt>Portal</dt><dd>Fenda que leva a uma masmorra. Tem Rank conforme a mana que emite.</dd>
         <dt>Portal Vermelho</dt><dd>Portal que se fecha com o grupo dentro; o tempo corre diferente.</dd>
-        <dt>Pressão</dt><dd>−2 cumulativo em cada Reação após a primeira na rodada.</dd>
-        <dt>Refino</dt><dd>Melhoria +1 a +10 de um item, paga com Cristais de Mana e um teste. Veja <a href="#l-refino">Refino</a>.</dd>
+        <dt>No Limite</dt><dd>Estado com 0 PV ou menos: você cai, mas continua lutando com só 1 Ação Principal por rodada. Morre em −PV máximos. Veja <a href="#l-pv">Pontos de Vida</a>.</dd>
+        <dt>Pressão</dt><dd>−2 cumulativo em cada Defender ou Esquivar após o primeiro na rodada, até no máximo −6.</dd>
+        <dt>Refino</dt><dd>Melhoria +1 a +10 de arma, armadura ou escudo, paga com Cristais de Mana do Rank do item (N cristais para chegar a +N), sem teste. Veja <a href="#l-refino">Refino</a>.</dd>
         <dt>Rank</dt><dd>Escala de poder de E a S, para Caçadores, Portais e itens.</dd>
         <dt>Ruptura</dt><dd>Quando um Portal não é fechado a tempo e os monstros saem.</dd>
         <dt>Selo</dt><dd>Propriedade oculta de um item, despertada pela Sincronia.</dd>
-        <dt>Sincronia</dt><dd>Contador de um item Raro ou melhor: +1 por Chefe derrotado com ele equipado. Abre Selos em 3, 8 e 15. Não é gasto.</dd>
+        <dt>Sincronia</dt><dd>Contador de um item Raro ou melhor: +1 por Chefe derrotado com ele equipado durante todo o combate. Abre Selos em 3, 8 e 15. Não é gasto.</dd>
+        <dt>Tamanho</dt><dd>Médio, Grande, Enorme ou Colossal: define o espaço ocupado e o alcance. Veja <a href="#l-tamanho">Tamanho</a>.</dd>
+        <dt>Tropa</dt><dd>Grupo de criaturas invocadas que conta como uma só invocação. Veja <a href="#l-invocacoes">Invocações</a>.</dd>
         <dt>Título</dt><dd>Conquista do Sistema por um feito, com um bônus pequeno. Só um fica equipado.</dd>
         <dt>Zona de Penalidade</dt><dd>Instância punitiva para quem falha na Missão Diária.</dd>
       </dl>
@@ -851,9 +895,9 @@
       <h3>Referência rápida</h3>
       <div class="grade-2">
         <div class="caixa"><h4>Rolagens</h4><p>Teste: d20 + mod + perícia ≥ CD<br>Ataque: d20 + Nível + mod<br>Defender: d20 + Nível + FOR + armadura + escudo<br>Esquivar: d20 + Nível + AGI − penalidade<br>Resistência: d20 + Nível + mod<br>CD de poder: 10 + Nível + mod<br>Dano: dado + mod + Nível ÷ 2 − RD</p></div>
-        <div class="caixa"><h4>Turno</h4><p>Ações Principais: 1 + Nível ÷ 5 (em passadas)<br>1 Ação de Movimento<br>ou 1 Ação Especial (o turno inteiro)<br>Ações Livres<br>Reações: ilimitadas, −2 cumulativo após a 1ª<br>Área: Reação bem-sucedida = metade do dano</p></div>
-        <div class="caixa"><h4>Evolução</h4><p>XP para o próximo nível: Nível × 10<br>Por nível: 1d6 Status, 1d6 PH, 2 perícia, PV +5+VIT, PM +4+INT<br>Rank: níveis 5/10/15/20/25<br>Habilidade nível n: n PH</p></div>
-        <div class="caixa"><h4>Recuperação</h4><p>Descanso curto (1h, 2×/dia): 1/4 PV e PM<br>Descanso longo (8h): tudo<br>0 PV: Incapacitado<br>−PV máx: morte</p></div>
+        <div class="caixa"><h4>Turno</h4><p>Ações Principais: 1 + Nível ÷ 5 (em passadas)<br>1 Ação de Movimento<br>Ação Especial = 1 Principal + a de Movimento<br>Ações Livres (habilidade: 1× por rodada)<br>Reações: ilimitadas; Pressão −2 por Defender/Esquivar após o 1º, máx. −6<br>Área: Reação bem-sucedida = metade do dano</p></div>
+        <div class="caixa"><h4>Evolução</h4><p>XP para o próximo nível: Nível × 10<br>Por nível: 2 Status, 1d6 PH, 2 perícia, PV +5+VIT, PM +4+INT<br>Rank: níveis 5/10/15/20/25<br>Habilidade nível n: n PH</p></div>
+        <div class="caixa"><h4>Recuperação</h4><p>Descanso curto (1h, 2×/dia): 1/4 PV e PM<br>Descanso longo (8h): tudo<br>0 PV ou menos: No Limite (1 Ação Principal)<br>−PV máx: morte</p></div>
       </div>
       <p class="rodape-livro">DESPERTAR é uma obra de fã, sem fins lucrativos, inspirada em <em>Solo Leveling</em> (Chugong / DUBU / Redice Studio). As regras, os nomes de habilidades e os itens deste livro são originais.</p>
     </section>

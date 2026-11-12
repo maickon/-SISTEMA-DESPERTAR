@@ -169,6 +169,7 @@ function normalizar(p) {
   p.itens.forEach(it => {
     if (!it.uid) it.uid = uid();
     if (it.X == null) it.X = 1 + (RANKS[it.rank] ? RANKS[it.rank].br : 0);
+    delete it.rachado; if (it.cat === 'acessorio' && !ACESSORIOS.includes(it.base)) it.base = tipoAce(it);
     if (it.cat === 'arma' && !it.base) { it.base = acharBase(it.nome); const a = ARMAS.find(x => x.n === it.base); if (a) { it.dist = /distância/.test(a.tags); it.reqAtr = a.a; } }
     if (it.cat === 'arma' && !it.maos) { const a = ARMAS.find(x => x.n === it.base); it.maos = a && /duas mãos/.test(a.tags) ? 2 : 1; }
     if (it.cat === 'consumivel' && !it.mat) { if (/^Cristal de Mana/.test(it.nome)) it.mat = 'cristal'; else if (/^Núcleo de Chefe/.test(it.nome)) it.mat = 'nucleo'; }
@@ -196,7 +197,6 @@ const rankDoNivel = n => { let r = 'E'; for (const k of RANK_ORDEM) if (n >= RAN
 function brItem(it, p) {
   const rank = it.rar === 'Relíquia' ? rankDoNivel(Number(p.nivel) || 1) : it.rank;
   const br = RANKS[rank] ? RANKS[rank].br : 0;
-  if (it.rachado) return { br: 0, rank, semReq: false, rachado: true };
   if (br && it.reqAtr && Number(p.atr[it.reqAtr]) < 10 + 4 * br) return { br: 0, rank, semReq: true };
   return { br, rank, semReq: false };
 }
@@ -207,7 +207,8 @@ function bolsa(p) {
   p.habs.forEach(x => { const f = EFEITOS_HAB[x.id]; if (f) add(f(x.nv, p)); });
   if (p.despertar.id && EFEITOS_DESP[p.despertar.id]) add(EFEITOS_DESP[p.despertar.id](p.despertar.nv, p));
   if (p.titulo && TIT[p.titulo]) add(TIT[p.titulo].ef);
-  equipados(p).forEach(it => it.afixos.forEach(a => { const f = EF_AFIXO[a.n]; if (f) add(f(it.X || 1)); }));
+  const maiorX = {}; equipados(p).forEach(it => it.afixos.forEach(a => { if (EF_AFIXO[a.n]) maiorX[a.n] = Math.max(maiorX[a.n] || 0, it.X || 1); }));
+  for (const n in maiorX) add(EF_AFIXO[n](maiorX[n])); // o mesmo afixo em dois itens não se soma
   const m = p.bonus; add({ pv: m.pv, pm: m.pm, def: m.def, esq: m.esq, atk: m.atk, dano: m.dano, rd: m.rd, desl: m.desl, ini: m.ini });
   return b;
 }
@@ -219,7 +220,7 @@ function computar(p) {
   const arm = eq.find(i => i.cat === 'armadura'); const esc_ = eq.find(i => i.cat === 'escudo');
   let defArm = 0, pen = 0, rdArm = 0, defEsc = 0;
   if (arm) { const t = ARMADURAS.find(a => a.tipo === arm.armTipo) || ARMADURAS[0]; const { br } = brItem(arm, p); defArm = t.def + br + Number(arm.refino || 0); pen = b.semPenEsq ? 0 : t.esq; rdArm += br; }
-  if (esc_) { const { br } = brItem(esc_, p); defEsc = 2 + br + Number(esc_.refino || 0); rdArm += br; }
+  if (esc_) { const { br } = brItem(esc_, p); defEsc = 2 + br; rdArm += br + Number(esc_.refino || 0); } // escudo: Refino dá RD, não Defender
   const res = {}, cd = {}, per = {};
   for (const a of ATRIBUTOS) { res[a.id] = n + m[a.id] + (b.res || 0) + (b['res.' + a.id] || 0); cd[a.id] = 10 + n + m[a.id] + (b.cd || 0); }
   for (const pc of PERICIAS) per[pc.n] = m[pc.a] + Number(p.pericias[pc.n] || 0) + (b['per.' + pc.n] || 0);
@@ -563,7 +564,7 @@ function habDetalheHTML(id) {
     bts += `<button class="btn btn-sec" data-hacao="descer">${x.nv > 1 ? 'Reduzir nível' : 'Remover da ficha'}</button>`;
   }
   return habCard(h) + efs + `<div class="det-status">${x ? `<b>Na ficha "${esc(p.nome)}": nível ${x.nv}${x.gratis ? ' (aquisição grátis)' : ''}</b><br>` : ''}
-    ${reqs.map(r => `<span class="${r.ok ? 'ok' : 'no-ok'}">${r.ok ? '✓' : '✗'} ${esc(r.txt)}</span>`).join('<br>')}<br><span class="dica">PH disponíveis: ${disp}</span></div>
+    ${x && x.gratis ? '<span class="ok">✓ Recebida pelo Sistema: requisitos dispensados. Pode evoluir e serve de pré-requisito.</span>' : reqs.map(r => `<span class="${r.ok ? 'ok' : 'no-ok'}">${r.ok ? '✓' : '✗'} ${esc(r.txt)}</span>`).join('<br>')}<br><span class="dica">PH disponíveis: ${disp}</span></div>
     <div class="det-acoes" data-hid="${id}">${bts}</div>`;
 }
 function acaoHab(id, acao) {
@@ -696,7 +697,7 @@ function gerarItem(rank, tipo, bonus) {
   if (tipo === 'arma') { it = armaComum(pick(ARMAS).n, rank); if (br) it.linhas.push(`Bônus de Rank: +${br} no ataque e +${2 * br} no dano.`); }
   else if (tipo === 'armadura') it = armaduraComum(pick(ARMADURAS).tipo, rank);
   else if (tipo === 'escudo') it = itemBase('escudo', 'Escudo', { base: 'Escudo', rank, reqAtr: 'FOR', maos: 1, linhas: [`Escudo · Defender +${2 + br} · RD ${br} · ocupa uma mão`] });
-  else { const b = pick(ACESSORIOS); it = itemBase('acessorio', b, { base: b, rank, linhas: ['Acessório (até 4 equipados)'] }); }
+  else { const b = pick(ACESSORIOS); it = itemBase('acessorio', b, { base: b, rank, linhas: ['Acessório (até 4 equipados: no máximo 2 anéis e 1 de cada outro tipo)'] }); }
   Object.assign(it, { rar: r.n, cor: r.cor, rolRar: v, X });
   const cat = tipo === 'arma' ? 'arma' : tipo === 'acessorio' ? 'acessorio' : 'armadura';
   const afx = shuffle(AFIXOS[cat]).slice(0, r.afx + (tipo === 'acessorio' ? 1 : 0));
@@ -813,11 +814,17 @@ function equiparMut(p, uid_, ligar = true) {
     while (usadas + maosItem(it) > 2 && outros.length) { const t = outros.shift(); t.equip = false; usadas -= maosItem(t); tirados.push(t); }
   } else {
     const limite = { armadura: 1, acessorio: 4 }[it.cat]; if (!limite) return [];
+    if (it.cat === 'acessorio') { // no máximo 2 anéis e 1 de cada outro tipo
+      const tipo = tipoAce(it); const lim = tipo === 'Anel' ? 2 : 1;
+      const doTipo = p.itens.filter(i => i.equip && i.cat === 'acessorio' && i.uid !== it.uid && tipoAce(i) === tipo);
+      while (doTipo.length >= lim) { const t = doTipo.shift(); t.equip = false; tirados.push(t); }
+    }
     const mesmos = p.itens.filter(i => i.equip && i.cat === it.cat && i.uid !== it.uid);
     while (mesmos.length >= limite) { const t = mesmos.shift(); t.equip = false; tirados.push(t); }
   }
   it.equip = true; return tirados;
 }
+function tipoAce(it) { if (ACESSORIOS.includes(it.base)) return it.base; const n = (it.nome || '').toLowerCase(); return ACESSORIOS.find(a => n.startsWith(a.toLowerCase())) || 'Outro'; }
 function slots(p) {
   const eq = p.itens.filter(i => i.equip);
   return { maos: eq.reduce((a, i) => a + maosItem(i), 0), arm: eq.filter(i => i.cat === 'armadura').length, ace: eq.filter(i => i.cat === 'acessorio').length, mochila: naMochila(p) };
@@ -938,7 +945,7 @@ function renderFichaDinamico() {
   $('#f-pv-b').style.width = Math.max(0, Math.min(100, pv / c.pvMax * 100)) + '%';
   $('#f-pv-b').style.background = pv <= 0 ? 'var(--perigo)' : pv <= c.pvMax / 2 ? 'var(--ouro)' : 'var(--ok)';
   $('#f-pm-b').style.width = Math.max(0, Math.min(100, pm / c.pmMax * 100)) + '%';
-  const estado = pv <= -c.pvMax ? 'MORTO' : pv <= 0 ? 'Incapacitado' : '';
+  const estado = pv <= -c.pvMax ? 'MORTO' : pv <= 0 ? 'NO LIMITE · 1 Ação Principal' : '';
   $('#f-deriv').innerHTML = [
     stat('PV máx', c.pvMax), stat('PM máx', c.pmMax), stat('Deslocamento', fmt(c.desl) + ' m', `Corrida ${fmt(c.desl * 4)} m`), stat('Ações Principais', c.acoes),
     stat('Iniciativa', sinal(c.ini), '', c.ini), stat('Defender', sinal(c.def), '', c.def), stat('Esquivar', sinal(c.esq), '', c.esq),
@@ -1051,11 +1058,10 @@ function evoHTML(p, x) {
   let h = '<div class="evo"><div class="evo-t">EVOLUÇÃO DO ITEM</div>';
   if (refinavel) {
     const ref = Number(x.refino || 0); const N = ref + 1;
-    const tem = contarMat(p, 'cristal', x.rank); const grau = Number(p.pericias['Conhecimento'] || 0);
+    const tem = contarMat(p, 'cristal', x.rank); const custoN = custoRefino(p, N);
     h += `<div class="evo-lin"><span class="evo-k">Refino${ajudaBtn('refino', 'in')}</span>${numInp('', ref, { min: 0, max: 10, id: 'mi-ref', cls: 'mini' })}
-      ${ref < 10 ? `<button class="btn mini btn-ok" data-evo="refino">Tentar +${N}</button>` : '<span class="ok"><b>+10: máximo</b></span>'}</div>`;
-    if (ref < 10) h += `<div class="evo-info">Próximo: <b>${N} Cristais Rank ${x.rank}</b> (você tem <b class="${tem >= N ? 'ok' : 'no-ok'}">${tem}</b>) · teste 1d20 + ${grau} contra CD <b>${2 * N}</b>${N >= 6 ? ' · na falha o item cai' : ''}</div>`;
-    if (x.rachado) h += `<div class="evo-info no-ok">Rachado: sem Bônus de Rank até usar Pó de Purificação. <button class="btn mini btn-sec" data-evo="purificar">Já purifiquei</button></div>`;
+      ${ref < 10 ? `<button class="btn mini btn-ok" data-evo="refino">Refinar para +${N}</button>` : '<span class="ok"><b>+10: máximo</b></span>'}</div>`;
+    if (ref < 10) h += `<div class="evo-info">Próximo: <b>${custoN} Cristais Rank ${x.rank}</b> (você tem <b class="${tem >= custoN ? 'ok' : 'no-ok'}">${tem}</b>) · sem teste: sobe na hora${x.cat === 'escudo' ? ' · no escudo, cada nível dá +1 de RD' : ''}</div>`;
     if (x.rar !== 'Relíquia') {
       const prox = RANK_ORDEM[RANK_ORDEM.indexOf(x.rank) + 1];
       if (prox) { const nuc = contarMat(p, 'nucleo', prox);
@@ -1107,41 +1113,28 @@ function modalItem(uid_) {
     const b = e.target.closest('[data-evo]'); if (!b) return;
     if (b.dataset.evo === 'refino') modalRefino(uid_);
     if (b.dataset.evo === 'ascender') modalAscensao(uid_);
-    if (b.dataset.evo === 'purificar') { mudar(`${it.nome} purificado`, () => { pega().rachado = false; }); redesenhar(); renderFichaDinamico(); }
   });
 }
+function custoRefino(p, N) { return p.despertar.id === 'd16' ? Math.max(1, N - 1) : N; } // Mestre das Runas: 1 cristal a menos por nível
 function modalRefino(uid_) {
   const p = P(); const x = p.itens.find(i => i.uid === uid_); if (!x) return;
-  const N = Number(x.refino || 0) + 1; if (N > 10) return; const cd = 2 * N; const grau = Number(p.pericias['Conhecimento'] || 0); const tem = contarMat(p, 'cristal', x.rank);
-  const inq = seloAberto(x, 'Inquebrável');
-  const falha = N <= 5 ? 'perde só os cristais' : N <= 8 ? 'perde os cristais e o item cai 1 nível' : 'perde os cristais e o item cai 2 níveis';
-  abrirModal(`Refino: ${x.nome}`, `<div class="intro"><p>Tentativa de levar o item de <b>+${N - 1}</b> para <b>+${N}</b>.</p>
-    <ul><li><b>Custo:</b> ${N} Cristais de Mana Rank ${x.rank}. Você tem <b class="${tem >= N ? 'ok' : 'no-ok'}">${tem}</b> na ficha.</li>
-    <li><b>Teste:</b> 1d20 + ${grau} (seu grau de Conhecimento) contra CD ${cd}. Você precisa tirar <b>${Math.max(1, cd - grau)}</b> ou mais no dado.</li>
-    <li><b>Se falhar:</b> ${falha}.${N >= 8 ? ' Um 1 natural deixa o item <b>Rachado</b>.' : ''}${inq ? ' <span class="ok">O Selo Inquebrável impede quedas e rachaduras.</span>' : ''}</li></ul></div>
-    <label class="chk"><input type="checkbox" id="rf-gastar" ${tem >= N ? 'checked' : ''}> Descontar os ${N} cristais da ficha</label>
-    ${tem < N ? '<p class="dica">Você não tem cristais suficientes na ficha. Deixe desmarcado se eles estão fora da ficha ou se o Mestre liberou.</p>' : ''}
-    <div class="campo" style="max-width:230px;margin-top:10px"><span>Já rolou na mesa? d20 natural</span>${numInp('', '', { min: 1, max: 20, id: 'rf-d20' })}</div>`,
+  const N = Number(x.refino || 0) + 1; if (N > 10) return; const custo = custoRefino(p, N); const tem = contarMat(p, 'cristal', x.rank);
+  const ganho = x.cat === 'arma' ? '+1 no ataque e +1 no dano' : x.cat === 'escudo' ? '+1 de RD' : '+1 em Defender';
+  abrirModal(`Refino: ${x.nome}`, `<div class="intro"><p>Levar o item de <b>+${N - 1}</b> para <b>+${N}</b> (${ganho}).</p>
+    <ul><li><b>Custo:</b> ${custo} Cristais de Mana Rank ${x.rank}${custo < N ? ' (Mestre das Runas: 1 a menos)' : ''}. Você tem <b class="${tem >= custo ? 'ok' : 'no-ok'}">${tem}</b> na ficha.</li>
+    <li><b>Sem teste:</b> o item sobe na hora. Feito fora de combate, em 1 minuto.</li></ul></div>
+    <label class="chk"><input type="checkbox" id="rf-gastar" ${tem >= custo ? 'checked' : ''}> Descontar os ${custo} cristais da ficha</label>
+    ${tem < custo ? '<p class="dica">Você não tem cristais suficientes na ficha. Deixe desmarcado só se o Mestre entregou os cristais por fora.</p>' : ''}`,
     [{ label: '← Voltar ao item', cls: 'btn-sec', fechar: false, onClick: () => modalItem(uid_) },
-     { label: '✎ Usar o d20 informado', cls: 'btn-sec', fechar: false, onClick: () => { const v = Number($('#rf-d20').value); if (!(v >= 1 && v <= 20)) { toast('Informe o d20 natural, de 1 a 20.'); return; } resolver(v); } },
-     { label: '🎲 Rolar no sistema', cls: 'btn-ok', fechar: false, onClick: () => resolver(d(20)) }], { ajuda: 'refino' });
-  function resolver(r) {
-    const gastar = $('#rf-gastar').checked; const tot = r + grau; const ok = tot >= cd; const antes = clone(p); let res = '';
-    mudar(`Refino +${N} em ${x.nome}: ${ok ? 'sucesso' : 'falha'} (d20 ${r} + ${grau} = ${tot} contra CD ${cd})`, q => {
-      if (gastar) gastarMat(q, 'cristal', x.rank, N);
-      if (ok) { x.refino = N; res = `<p class="res-g ok">SUCESSO! ${esc(x.nome)} agora está +${N}.</p>`; }
-      else {
-        const cai = inq ? 0 : N >= 9 ? 2 : N >= 6 ? 1 : 0; x.refino = Math.max(0, N - 1 - cai);
-        res = `<p class="res-g no-ok">FALHOU.</p><p>${gastar ? `Os ${N} cristais se perderam. ` : ''}${cai ? `O item caiu para +${x.refino}.` : `O item continua +${x.refino}.`}</p>`;
-        if (r === 1 && N >= 8 && !inq) { x.rachado = true; res += '<p class="no-ok"><b>1 natural: o item ficou RACHADO</b> (sem Bônus de Rank até usar Pó de Purificação).</p>'; }
-      }
-    });
-    if (ok) sistema(`Refino +${N} concluído: ${x.nome}`, 'REFINO'); else sistema(`O Refino de ${x.nome} falhou.`, 'REFINO', 'ruim');
-    mostrarRolagem('Refino', tot, `d20 (${r}) + ${grau} contra CD ${cd}`, ok ? '' : 'falha');
+     { label: `Refinar para +${N}`, cls: 'btn-ok', fechar: false, onClick: resolver }], { ajuda: 'refino' });
+  function resolver() {
+    const gastar = $('#rf-gastar').checked; const antes = clone(p);
+    mudar(`Refino +${N} em ${x.nome}${gastar ? ` (${custo} Cristais Rank ${x.rank})` : ''}`, q => { if (gastar) gastarMat(q, 'cristal', x.rank, custo); x.refino = N; });
+    sistema(`Refino +${N} concluído: ${x.nome}`, 'REFINO');
     const efs = diferenca(achatar(computar(antes)), achatar(computar(p)));
-    abrirModal(`Refino: ${x.nome}`, janela(`d20 = ${r} · total ${tot} · CD ${cd}`, res) + efeitosHTML(efs, 'Mudanças na ficha') +
+    abrirModal(`Refino: ${x.nome}`, janela(`REFINO +${N}`, `<p class="res-g ok">${esc(x.nome)} agora está +${N}.</p>`) + efeitosHTML(efs, 'Mudanças na ficha') +
       (x.refino >= 10 ? '<p class="ok">Refino +10! Agora o item pode <b>Ascender</b> com um Núcleo de Chefe do Rank seguinte.</p>' : ''),
-      [{ label: '← Voltar ao item', cls: 'btn-sec', fechar: false, onClick: () => modalItem(uid_) }, ...(x.refino < 10 ? [{ label: `Tentar +${x.refino + 1}`, cls: 'btn-ok', fechar: false, onClick: () => modalRefino(uid_) }] : [])], { aoFechar: renderFichaDinamico });
+      [{ label: '← Voltar ao item', cls: 'btn-sec', fechar: false, onClick: () => modalItem(uid_) }, ...(x.refino < 10 ? [{ label: `Refinar para +${x.refino + 1}`, cls: 'btn-ok', fechar: false, onClick: () => modalRefino(uid_) }] : [])], { aoFechar: renderFichaDinamico });
     renderFichaDinamico();
   }
 }
@@ -1189,11 +1182,11 @@ function usarItem(uid_) {
   const p = P(); const it = p.itens.find(i => i.uid === uid_); if (!it) return; const c = computar(p);
   const consumir = q => { const y = q.itens.find(i => i.uid === uid_); if (y.qtd > 1) y.qtd--; else q.itens = q.itens.filter(i => i.uid !== uid_); };
   if (/^Pó de Purificação/.test(it.nome)) {
-    const rach = p.itens.filter(i => i.rachado);
-    if (!rach.length) { toast('Nenhum item rachado na ficha.'); return; }
-    const corpo = abrirModal('Pó de Purificação', `<p>Escolha o item rachado que será purificado:</p><div class="lista-f">${rach.map(i => `<button type="button" class="lin" data-pur="${i.uid}" style="text-align:left"><span class="icone-item" style="--cor:${i.cor}">${ICONE_CAT[i.cat]}</span><span class="meio"><span class="t1">${esc(i.nome)}</span></span><span></span></button>`).join('')}</div>`, [{ label: 'Cancelar', cls: 'btn-sec' }]);
+    const rach = p.itens.filter(i => ['arma', 'armadura', 'escudo', 'acessorio'].includes(i.cat));
+    if (!rach.length) { toast('Nenhum equipamento na ficha.'); return; }
+    const corpo = abrirModal('Pó de Purificação', `<p>Escolha o item amaldiçoado. A maldição some e o afixo invertido volta ao normal (ajuste o texto do item se precisar).</p><div class="lista-f">${rach.map(i => `<button type="button" class="lin" data-pur="${i.uid}" style="text-align:left"><span class="icone-item" style="--cor:${i.cor}">${ICONE_CAT[i.cat]}</span><span class="meio"><span class="t1">${esc(i.nome)}</span></span><span></span></button>`).join('')}</div>`, [{ label: 'Cancelar', cls: 'btn-sec' }]);
     corpo.addEventListener('click', e => { const b = e.target.closest('[data-pur]'); if (!b) return; const alvo = p.itens.find(i => i.uid === b.dataset.pur);
-      mudar(`Purificou ${alvo.nome}`, q => { alvo.rachado = false; consumir(q); }); sistema(`Purificação concluída: ${alvo.nome}`); fecharModal(); renderFichaDinamico(); });
+      mudar(`Purificou ${alvo.nome} (maldição removida)`, q => { const y = q.itens.find(i => i.uid === alvo.uid); if (y) y.maldito = false; consumir(q); }); sistema(`Purificação concluída: ${alvo.nome}`); fecharModal(); renderFichaDinamico(); });
     return;
   }
   if (it.ensina) {
@@ -1217,6 +1210,7 @@ function modalItemProprio() {
     <label class="campo"><span>Dano (armas)</span><input type="text" id="ip-d" placeholder="1d8"></label>
     <label class="campo"><span>Atributo (armas)</span><select id="ip-a">${ATRIBUTOS.map(a => `<option>${a.id}</option>`).join('')}</select></label>
     <label class="campo"><span>Mãos (armas)</span><select id="ip-m"><option value="1">Uma mão</option><option value="2">Duas mãos</option></select></label>
+    <label class="campo"><span>Acessório (tipo)</span><select id="ip-ac">${ACESSORIOS.map(a => `<option>${a}</option>`).join('')}</select></label>
     <label class="campo"><span>Armadura</span><select id="ip-t">${ARMADURAS.map(a => `<option value="${a.tipo}">${a.tipo}</option>`).join('')}</select></label>
     ${campo('Refino', numInp('', 0, { min: 0, max: 10, id: 'ip-ref' }))}
     ${campo('Quantidade', numInp('', 1, { min: 1, id: 'ip-q' }))}</div>
@@ -1229,6 +1223,7 @@ function modalItemProprio() {
       const q = Number($('#ip-q').value) || 1; if (q > 1 || cat === 'consumivel') it.qtd = q;
       if (cat === 'arma') Object.assign(it, { dano: $('#ip-d').value.trim() || '1d6', atr: $('#ip-a').value, dist: false, maos: Number($('#ip-m').value) });
       if (cat === 'armadura') it.armTipo = $('#ip-t').value;
+      if (cat === 'acessorio') it.base = $('#ip-ac').value;
       if (/^Cristal de Mana/i.test(nome)) it.mat = 'cristal'; if (/^Núcleo de Chefe/i.test(nome)) it.mat = 'nucleo';
       guardarItem(P(), it, { msg: 'Item registrado' });
     } }]);
@@ -1321,11 +1316,12 @@ function escolhaAval(rk) {
 function modalNivel() {
   const p = P(); const c = computar(p); const pronto = Number(p.xp) >= c.xpProx;
   const rolar = () => { const a = d(6); if (a === 1) { const b = d(6); return { v: b, txt: `1 → rerrolado ${b}` }; } return { v: a, txt: String(a) }; };
+  const st = { v: 2, txt: 'fixo' };
   modalIntro({ titulo: '▲ Subir de nível', ajuda: 'm_nivel',
     contexto: pronto ? `<p class="ok">XP ${p.xp}/${c.xpProx}: pronto para o nível ${c.n + 1}!</p>` : `<p class="aviso">⚠ XP ${p.xp || 0}/${c.xpProx}: ainda faltam ${c.xpProx - (Number(p.xp) || 0)} XP. Suba só se o Mestre mandou (regra de marcos).</p>`,
-    html: `<div class="campos" style="max-width:440px">${campo('Já rolou? d6 de Status', numInp('', '', { min: 1, max: 6, id: 'nv-st' }))}${campo('d6 de PH', numInp('', '', { min: 1, max: 6, id: 'nv-ph' }))}</div><p class="dica">Um 1 no d6 é rerrolado uma vez (Bênção do Sistema). Informe o resultado final.</p>`,
-    rotInformar: '✎ Usar os valores informados', informar: () => { const a = Number($('#nv-st').value), b = Number($('#nv-ph').value); if (!(a >= 1 && a <= 6 && b >= 1 && b <= 6)) { toast('Informe os dois d6 (1 a 6).'); return; } resultadoNivel({ v: a, txt: 'mesa' }, { v: b, txt: 'mesa' }); },
-    rolar: () => resultadoNivel(rolar(), rolar()) });
+    html: `<div class="campos" style="max-width:440px">${campo('Já rolou? d6 de PH', numInp('', '', { min: 1, max: 6, id: 'nv-ph' }))}</div><p class="dica">Pontos de Status são sempre 2 por nível. No d6 de PH, um 1 é rerrolado uma vez (Bênção do Sistema): informe o resultado final.</p>`,
+    rotInformar: '✎ Usar o valor informado', informar: () => { const b = Number($('#nv-ph').value); if (!(b >= 1 && b <= 6)) { toast('Informe o d6 de PH (1 a 6).'); return; } resultadoNivel(st, { v: b, txt: 'mesa' }); },
+    rolar: () => resultadoNivel(st, rolar()) });
 }
 function resultadoNivel(st, ph) {
   const p = P(); const novo = (Number(p.nivel) || 1) + 1;
@@ -1350,7 +1346,7 @@ function modalPortalConcluido() {
     </div>
     <p class="dica" id="pc-calc"></p>
     <label class="chk"><input type="checkbox" id="pc-nuc"> Fiquei com o Núcleo do Chefe <span id="pc-nuc-rk"></span>${ajudaBtn('nucleo', 'in')}</label>
-    ${eqSinc.length ? `<div class="evo"><div class="evo-t">+1 DE SINCRONIA${ajudaBtn('sincronia', 'in')}</div><div class="dica">Itens Raros ou melhores equipados quando o Chefe caiu:</div>${eqSinc.map(i => `<label class="chk"><input type="checkbox" data-sinc="${i.uid}" checked> ${esc(i.nome)} <span class="dica">(Sincronia ${i.sinc || 0} → ${(i.sinc || 0) + 1})</span></label>`).join('')}</div>` : '<p class="dica">Nenhum item Raro ou melhor equipado: não há Sincronia para ganhar.</p>'}`,
+    ${eqSinc.length ? `<div class="evo"><div class="evo-t">+1 DE SINCRONIA${ajudaBtn('sincronia', 'in')}</div><div class="dica">Itens Raros ou melhores que ficaram equipados durante todo o combate contra o Chefe:</div>${eqSinc.map(i => `<label class="chk"><input type="checkbox" data-sinc="${i.uid}" checked> ${esc(i.nome)} <span class="dica">(Sincronia ${i.sinc || 0} → ${(i.sinc || 0) + 1})</span></label>`).join('')}</div>` : '<p class="dica">Nenhum item Raro ou melhor equipado: não há Sincronia para ganhar.</p>'}`,
     [{ label: 'Cancelar', cls: 'btn-sec' }, { label: 'Aplicar à ficha', cls: 'btn-ok', onClick: () => aplicar() }], { ajuda: 'm_portal' });
   let xpManual = false, ouroManual = false;
   const calc = () => {
