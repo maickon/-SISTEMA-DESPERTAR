@@ -8,7 +8,7 @@ Abra `index.html` no navegador, ou acesse https://maickon.github.io/-SISTEMA-DES
 
 - **Livro:** regras completas em 14 capítulos, escritas para quem vem do D&D 3.5, com botão para imprimir ou salvar em PDF.
 - **Ficha:** cálculo automático, várias fichas salvas no navegador (IndexedDB), ajuda "?" em cada campo, guia de criação, histórico com desfazer, sorteios com a opção de rolar no site ou informar o dado da mesa, Refino e Ascensão de itens, limites de mãos e inventário.
-- **Árvores:** 10 árvores com 80 habilidades. Mostra pré-requisitos e permite comprar habilidades para a ficha.
+- **Árvores:** 10 árvores com 85 habilidades. Mostra pré-requisitos e permite comprar habilidades para a ficha.
 - **Mestre:** gerador de Portais, encontros, saque e rolador de dados.
 - **Compartilhar:** itens, fichas e pacotes de recompensa viajam dentro de um link (sem servidor). Também dá para mandar pelo WhatsApp, pelo Telegram ou por um bot do Telegram configurado pelo Mestre (a chave do bot fica só no navegador dele).
 
