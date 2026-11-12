@@ -750,6 +750,43 @@ const DESPERTARES = [
 ];
 
 /* ---------------------------------------------------------
+   USOS ATIVOS DOS DESPERTARES (botão "Usar" da ficha)
+   n: nome · acao · pm (custo) · freq · desde: nível do Despertar em que libera
+   pm5 / acao5: custo ou ação a partir do nv5 · forma: só com a Forma Evoluída (nv5 e Nível 20+)
+   pmRank: custo depende do Rank da Sombra (Herdeiro das Sombras)
+   --------------------------------------------------------- */
+const USOS_DESP = {
+  d01: [{ n: 'Dobrar a RD', acao: 'Ação de Movimento', pm: 2, freq: 'À vontade' }, { n: 'Forma de Aço', acao: 'Ação Livre', pm: 15, freq: '1× por combate', forma: true }],
+  d02: [{ n: 'Revestir a arma', acao: 'Ação Livre', pm: 1, pm5: 0, freq: '1× por rodada' }, { n: 'Lâmina Absoluta', acao: 'Ação Principal', pm: 10, freq: 'À vontade', forma: true }],
+  d04: [{ n: 'Velocidade Divina', acao: 'Ação Livre', pm: 0, freq: '1× por combate', forma: true }],
+  d05: [{ n: 'Projétil de fogo', acao: 'Ação Principal', pm: 2, freq: 'À vontade' }],
+  d06: [{ n: 'Cura', acao: 'Ação Principal', acao5: 'Ação de Movimento', pm: 2, freq: 'À vontade' }],
+  d07: [{ n: 'Barreira (+Defender)', acao: 'Reação', pm: 2, freq: '1× por rodada' }, { n: 'Parede', acao: 'Ação Principal', pm: 4, freq: '1 parede por vez', desde: 3 }, { n: 'Domo', acao: 'Ação Especial', pm: 20, freq: '1× por combate', forma: true }],
+  d08: [{ n: 'Tiro Inevitável', acao: 'Ação Livre', pm: 0, freq: '1× por combate', forma: true }],
+  d09: [{ n: 'Entrar em Fúria', acao: 'Ação Livre', pm: 2, freq: '1× por rodada' }],
+  d10: [{ n: 'Toque Gélido', acao: 'Ação Principal', pm: 2, freq: 'À vontade' }, { n: 'Criar gelo sólido', acao: 'Ação Principal', pm: 2, freq: 'À vontade', desde: 3 }, { n: 'Inverno Eterno', acao: 'Ação Especial', pm: 20, freq: '1× por combate', forma: true }],
+  d13: [{ n: 'Raio em linha', acao: 'Ação Principal', pm: 3, freq: 'À vontade' }, { n: 'Teleporte de raio', acao: 'Ação de Movimento', pm: 3, freq: 'À vontade', desde: 3 }, { n: 'Tempestade Viva', acao: 'Ação Livre', pm: 20, freq: '1× por combate', forma: true }],
+  d14: [{ n: 'Mover / arremessar', acao: 'Ação Principal', pm: 2, freq: 'À vontade' }, { n: 'Parar projéteis', acao: 'Reação', pm: 0, freq: '1× por rodada', desde: 5 }, { n: 'Mão do Céu', acao: 'Ação Principal', pm: 20, freq: '1× por combate', forma: true }],
+  d15: [{ n: 'Forma bestial', acao: 'Ação de Movimento', pm: 4, freq: 'À vontade' }],
+  d16: [{ n: 'Gravar runa', acao: '10 minutos, fora de combate', pm: 0, freq: 'Runas ativas: 1 por nível' }, { n: 'Runa armadilha', acao: '10 minutos', pm: 0, freq: 'Conta como runa ativa', desde: 3 }, { n: 'Escriba do Sistema', acao: 'Fora de combate', pm: 0, freq: '1× por mês', forma: true }],
+  d17: [{ n: 'Amedrontar', acao: 'Ação Livre', pm: 3, freq: '1× por rodada' }],
+  d18: [{ n: 'Envenenar o próximo acerto', acao: 'Ação Livre', pm: 2, freq: '1× por rodada' }, { n: 'Nuvem tóxica', acao: 'Ação Principal', pm: 4, freq: 'À vontade', desde: 3 }],
+  d19: [{ n: 'Criar clone', acao: 'Ação Principal', pm: 4, freq: 'Até o máximo de clones' }, { n: 'Trocar com um clone', acao: 'Reação', pm: 0, freq: '1× por rodada', desde: 5 }],
+  d20: [{ n: 'Absorver poder', acao: 'Reação', pm: 5, freq: '1× por rodada', desde: 5 }, { n: 'Devorar', acao: 'Ao derrotar um Chefe', pm: 0, freq: '1× por aventura', forma: true }],
+  d21: [{ n: 'Crescer', acao: 'Ação de Movimento', pm: 6, freq: 'À vontade' }],
+  d22: [{ n: 'Área de gravidade', acao: 'Ação Principal', pm: 4, freq: 'À vontade' }, { n: 'Singularidade', acao: 'Ação Especial', pm: 25, freq: '1× por combate', forma: true }],
+  d23: [{ n: 'Teleporte', acao: 'Ação de Movimento', pm: 3, freq: 'À vontade' }, { n: 'Teleporte de esquiva', acao: 'Reação', pm: 6, freq: '1× por rodada', desde: 5 }, { n: 'Portal Pessoal', acao: '10 minutos', pm: 20, freq: '1× por dia', forma: true }],
+  d24: [{ n: 'Explosão de luz', acao: 'Ação Principal', pm: 4, freq: 'À vontade' }, { n: 'Milagre', acao: '1 hora de ritual', pm: 50, freq: '1× por semana', forma: true }],
+  d25: [{ n: 'Lâmina de vento', acao: 'Ação Principal', pm: 3, freq: 'À vontade' }, { n: 'Furacão', acao: 'Ação Especial', pm: 25, freq: '1× por combate', forma: true }],
+  d26: [{ n: 'Criar arma', acao: 'Ação Livre', pm: 2, freq: '1× por rodada' }, { n: 'Arsenal Infinito', acao: 'Ação Especial', pm: 25, freq: '1× por combate', forma: true }],
+  d27: [{ n: 'Mil Futuros', acao: 'Ação Livre', pm: 0, freq: '1× por dia', forma: true }],
+  d28: [{ n: 'Lâmina de sangue', acao: 'Ação Principal', pm: 3, freq: 'À vontade' }, { n: 'Maré Carmesim', acao: 'Ação Principal', pm: 20, freq: '1× por combate', forma: true }],
+  d29: [{ n: 'Sopro de fogo negro', acao: 'Ação Principal', pm: 6, freq: 'À vontade' }, { n: 'Forma Dracônica', acao: 'Ação Especial', pm: 30, freq: '1× por dia', forma: true }],
+  d31: [{ n: 'Invocar enxame', acao: 'Ação Principal', pm: 5, freq: 'Até o máximo de enxames' }, { n: 'Colmeia', acao: 'Ação Especial', pm: 20, freq: '1× por combate', forma: true }],
+  d32: [{ n: 'Erguer Sombra', acao: 'Ação Especial', pm: 5, freq: 'Até 3 tentativas por corpo' }, { n: 'Invocar Sombra', acao: 'Ação de Movimento', pmRank: true, freq: 'Até o máximo de Sombras invocadas' }, { n: 'Trocar de lugar com uma Sombra', acao: 'Ação de Movimento', pm: 0, freq: 'À vontade', desde: 3 }]
+};
+
+/* ---------------------------------------------------------
    CONDIÇÕES
    --------------------------------------------------------- */
 const CONDICOES = [
@@ -1037,6 +1074,8 @@ const ENCONTROS = {
    liv = âncora da seção do livro com a regra completa.
    --------------------------------------------------------- */
 const AJUDA = {
+  usarDesp: { t: 'Usar o Despertar', liv: 'l-pm', txt: '<p>Cada botão ⚡ é uma parte ativa do seu Despertar. Usar desconta o custo em PM e registra no histórico. Botões apagados liberam num nível maior do Despertar ou com a Forma Evoluída.</p><p>Sem PM suficientes, vale a <b>Exaustão de Mana</b>: você gasta os PM que tem e paga a diferença em dobro com PV, e fica Exausto (não pode se levar a 0 PV ou menos). A frequência (1× por rodada, por combate…) é controlada na mesa.</p>' },
+  loja: { t: 'Loja do Sistema', liv: 'l-inventario', txt: '<p>A Loja do Sistema funciona de qualquer lugar. <b>Vende</b> consumíveis e equipamentos <b>Comuns e Incomuns</b> até o Rank do Jogador, pelos preços do livro: equipamento Comum = preço base do Rank, Incomum = 2 × o preço base, consumível = 1/5 do preço base. Os afixos são sorteados na compra.</p><p><b>Compra</b> itens por <b>metade do preço</b>, e Cristais de Mana pelo valor cheio da tabela. Não vende nem compra Núcleos, Pergaminhos de Habilidade, Elixires e Chaves de Instância. Não vende Cristais.</p>' },
   status: { t: 'Janela de Status', liv: 'c-criacao', txt: '<p>Os dados básicos do Caçador: nome, nível, XP, Ouro e o Título equipado. O <b>Rank</b> ao lado do título é calculado pelo nível (E 1–4, D 5–9, C 10–14, B 15–19, A 20–24, S 25+).</p>' },
   nivel: { t: 'Nível', liv: 'l-subir-nivel', txt: '<p>O Nível entra em quase tudo: ataque, Reações, Resistências e CDs somam o Nível inteiro (é o "bônus base" do D&amp;D, igual para todos). Para subir, use o botão <b>▲ Nível</b> quando a XP encher.</p>' },
   xp: { t: 'Experiência (XP)', liv: 'l-xp', txt: '<p>Do nível N para o N+1 são necessários <b>N × 10 XP</b>. A XP vem de Portais: 5 × nível do Chefe × multiplicador do tipo de Portal. Todos os participantes recebem a XP inteira. O botão <b>⛩ Portal</b> calcula isso por você.</p>' },

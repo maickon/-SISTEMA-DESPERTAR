@@ -644,11 +644,15 @@ function rolarConsumivel(rank, bonus) {
     ['Elixir de Despertar', 2], ['Pó de Purificação', 4], ['Pergaminho de Selo', 5], ['Chave de Instância', 3], ['Núcleo de Chefe', bonus >= 10 ? 6 : 0]];
   let r = Math.random() * pesos.reduce((a, [, w]) => a + w, 0); let nome = pesos[0][0];
   for (const [n, w] of pesos) { if ((r -= w) < 0) { nome = n; break; } }
+  const it = consumivel(nome, rank); if (nome === 'Cristal de Mana') it.qtd = d(6); return it;
+}
+/* cria um consumível do Rank pedido (saque e Loja) */
+function consumivel(nome, rank) {
   const desc = CONSUMIVEIS.find(c => c[0] === nome)[1]; const br = RANKS[rank].br;
   const it = itemBase('consumivel', `${nome} (Rank ${rank})`, { rank, linhas: [desc], X: 1 + br });
   if (nome === 'Poção de Cura') { it.linhas = [`Recupera ${2 + 2 * br}d8 PV.`]; it.usoDado = `${2 + 2 * br}d8`; it.usoAlvo = 'pv'; }
   if (nome === 'Poção de Mana') { it.linhas = [`Recupera ${2 + 2 * br}d6 PM.`]; it.usoDado = `${2 + 2 * br}d6`; it.usoAlvo = 'pm'; }
-  if (nome === 'Cristal de Mana') { it.qtd = d(6); it.mat = 'cristal'; }
+  if (nome === 'Cristal de Mana') it.mat = 'cristal';
   if (nome === 'Núcleo de Chefe') it.mat = 'nucleo';
   if (nome === 'Pergaminho de Habilidade') { const h = pick(HABILIDADES.filter(x => x.r === rank)); it.nome = `Pergaminho: ${h.n}`; it.linhas = [`Ensina ${h.n} (${ARV[h.t].nome}, Rank ${rank}) sem custo de aquisição.`]; it.ensina = h.id; }
   if (nome === 'Elixir de Despertar') { it.rar = 'Épico'; it.cor = '#b06cff'; }
@@ -691,14 +695,19 @@ const seloAberto = (it, nome) => it.selos.some((s0, i) => s0.n === nome && Numbe
 function gerarItem(rank, tipo, bonus) {
   if (tipo === 'aleatorio') { const t = d(20); tipo = t <= 8 ? 'arma' : t <= 11 ? 'armadura' : t === 12 ? 'escudo' : t <= 15 ? 'acessorio' : 'consumivel'; }
   if (tipo === 'consumivel') return rolarConsumivel(rank, bonus);
-  const br = RANKS[rank].br; const X = 1 + br; const v = d(100) + bonus;
-  const r = RARIDADES.find(z => v >= z.min && v <= z.max) || RARIDADES[RARIDADES.length - 1];
+  const v = d(100) + bonus; const r = RARIDADES.find(z => v >= z.min && v <= z.max) || RARIDADES[RARIDADES.length - 1];
+  const base = tipo === 'arma' ? pick(ARMAS).n : tipo === 'armadura' ? pick(ARMADURAS).tipo : tipo === 'escudo' ? 'Escudo' : pick(ACESSORIOS);
+  const it = montarItem(tipo, base, rank, r); it.rolRar = v; return it;
+}
+/* monta um equipamento de tipo, base, Rank e raridade definidos (saque e Loja); afixos e Selos sorteados */
+function montarItem(tipo, baseNome, rank, r) {
+  const br = RANKS[rank].br; const X = 1 + br;
   let it;
-  if (tipo === 'arma') { it = armaComum(pick(ARMAS).n, rank); if (br) it.linhas.push(`Bônus de Rank: +${br} no ataque e +${2 * br} no dano.`); }
-  else if (tipo === 'armadura') it = armaduraComum(pick(ARMADURAS).tipo, rank);
+  if (tipo === 'arma') { it = armaComum(baseNome, rank); if (br) it.linhas.push(`Bônus de Rank: +${br} no ataque e +${2 * br} no dano.`); }
+  else if (tipo === 'armadura') it = armaduraComum(baseNome, rank);
   else if (tipo === 'escudo') it = itemBase('escudo', 'Escudo', { base: 'Escudo', rank, reqAtr: 'FOR', maos: 1, linhas: [`Escudo · Defender +${2 + br} · RD ${br} · ocupa uma mão`] });
-  else { const b = pick(ACESSORIOS); it = itemBase('acessorio', b, { base: b, rank, linhas: ['Acessório (até 4 equipados: no máximo 2 anéis e 1 de cada outro tipo)'] }); }
-  Object.assign(it, { rar: r.n, cor: r.cor, rolRar: v, X });
+  else it = itemBase('acessorio', baseNome, { base: baseNome, rank, linhas: ['Acessório (até 4 equipados: no máximo 2 anéis e 1 de cada outro tipo)'] });
+  Object.assign(it, { rar: r.n, cor: r.cor, X });
   const cat = tipo === 'arma' ? 'arma' : tipo === 'acessorio' ? 'acessorio' : 'armadura';
   const afx = shuffle(AFIXOS[cat]).slice(0, r.afx + (tipo === 'acessorio' ? 1 : 0));
   const fx = t => fxX(t, X);
@@ -798,7 +807,7 @@ function empilhar(p, it) {
   p.itens.push(it); return it;
 }
 function guardarItem(p, it, opc = {}, depois) {
-  mudar(opc.msg || `Item obtido: ${it.nome}`, q => { const x = empilhar(q, it); if (opc.equipar && x === it) equiparMut(q, it.uid, true); }, p);
+  mudar(opc.msg || `Item obtido: ${it.nome}`, q => { if (opc.antes) opc.antes(q); const x = empilhar(q, it); if (opc.equipar && x === it) equiparMut(q, it.uid, true); }, p);
   if (p === P()) renderFichaDinamico();
   if (opc.notificar !== false) sistema(`${it.nome}${it.qtd > 1 ? ' ×' + it.qtd : ''}`, (opc.msg || 'Item obtido').toUpperCase());
   setTimeout(() => checarCapacidade(p, depois), 60);
@@ -906,7 +915,7 @@ function renderFicha() {
       ${numInp('pericias.' + pc.n, p.pericias[pc.n] || 0, { min: 0, max: c.periciaMax, cls: 'mini' })}<span class="t" data-stat="Perícia ${pc.n}" data-roll="${pc.n}"></span></div>`).join('')}</div>
   </div>
 
-  <div class="f-bloco">${h3t('INVENTÁRIO', 'inventario', '<span class="extra"><button class="btn mini" data-modal="item">⚒ Gerar item</button><button class="btn mini btn-sec" data-act="item-custom">＋ Item próprio</button></span>')}
+  <div class="f-bloco">${h3t('INVENTÁRIO', 'inventario', '<span class="extra"><button class="btn mini" data-modal="item">⚒ Gerar item</button><button class="btn mini btn-sec" data-act="loja">🛒 Loja</button><button class="btn mini btn-sec" data-act="item-custom">＋ Item próprio</button></span>')}
     <div class="slots" id="f-slots"></div>
     <div id="f-itens"></div>
   </div>
@@ -968,7 +977,7 @@ function renderFichaDinamico() {
   $('#f-desp').innerHTML = dsp ? `<div class="dica" style="margin-top:8px"><span style="color:${RARIDADE_DESPERTAR[dsp.rar].cor}">${dsp.rar}</span> · Afinidades: ${dsp.afin.map(a => ARV[a].nome).join(', ')} · níveis grátis por Rank: ${despGratis(p)}</div>
     <p style="font-size:13px;margin:6px 0"><b>Efeito:</b> ${esc(dsp.ef)}</p><p style="font-size:13px;margin:6px 0"><b>Por nível:</b> ${esc(dsp.esc)}</p>
     ${p.despertar.nv >= 3 ? `<p style="font-size:13px;margin:6px 0"><b>Nv3:</b> ${esc(dsp.m3)}</p>` : ''}${p.despertar.nv >= 5 ? `<p style="font-size:13px;margin:6px 0"><b>Nv5:</b> ${esc(dsp.m5)}</p>` : ''}
-    ${p.despertar.nv >= 5 && c.n >= 20 ? `<p class="forma" style="font-size:13px"><b>Forma Evoluída:</b> ${esc(dsp.forma)}</p>` : ''}` : '<p class="dica">Sem Despertar. Use o botão <b>✦ Despertar</b> no topo para rolar, ou escolha acima.</p>';
+    ${p.despertar.nv >= 5 && c.n >= 20 ? `<p class="forma" style="font-size:13px"><b>Forma Evoluída:</b> ${esc(dsp.forma)}</p>` : ''}${usosHTML(p)}` : '<p class="dica">Sem Despertar. Use o botão <b>✦ Despertar</b> no topo para rolar, ou escolha acima.</p>';
   const ordem = p.habs.filter(x => HAB[x.id]).sort((a, b) => RANK_ORDEM.indexOf(HAB[a.id].r) - RANK_ORDEM.indexOf(HAB[b.id].r) || HAB[a.id].t.localeCompare(HAB[b.id].t));
   $('#f-habs').innerHTML = ordem.length ? ordem.map(x => { const h = HAB[x.id]; const a = ARV[h.t];
     return `<div class="lin"><span class="rk rk-${h.r}">${h.r}</span>
@@ -1483,6 +1492,7 @@ function imprimirFicha() { if (modalAberto()) fecharModal(); abrirAba('ficha'); 
 function modalMais() {
   const p = P();
   const corpo = abrirModal(`⋯ ${p.nome || 'Ficha'}`, `<div class="mais-grade">
+    <button class="mais-op" data-mais="loja"><b>🛒 Loja do Sistema</b><span>Comprar e vender com Ouro, pelos preços do livro</span></button>
     <button class="mais-op" data-mais="hist"><b>📜 Histórico</b><span>Veja e desfaça mudanças recentes</span></button>
     <button class="mais-op" data-mais="link"><b>📤 Compartilhar ficha</b><span>Link, WhatsApp ou Telegram: o Mestre abre e vê</span></button>
     <button class="mais-op" data-mais="texto"><b>📄 Ficha em texto</b><span>Para copiar, guardar ou passar para o papel</span></button>
@@ -1491,7 +1501,149 @@ function modalMais() {
     <button class="mais-op" data-mais="fichas"><b>☰ Gerenciar fichas</b><span>Criar, duplicar, importar, exportar</span></button>
     <button class="mais-op" data-mais="instalar"><b>📲 Instalar aplicativo</b><span>Ícone na tela inicial e uso sem internet</span></button></div>`, [{ label: 'Fechar', cls: 'btn-sec' }]);
   corpo.addEventListener('click', e => { const b = e.target.closest('[data-mais]'); if (!b) return;
-    ({ hist: modalHist, link: () => compartilharFicha(P()), texto: modalTextoFicha, imprimir: imprimirFicha, guia: modalGuia, fichas: modalFichas, instalar: modalInstalar })[b.dataset.mais](); });
+    ({ loja: modalLoja, hist: modalHist, link: () => compartilharFicha(P()), texto: modalTextoFicha, imprimir: imprimirFicha, guia: modalGuia, fichas: modalFichas, instalar: modalInstalar })[b.dataset.mais](); });
+}
+
+/* ---------- Pagar custo em PM (com Exaustão de Mana e Hemomancia) ---------- */
+function opcoesPagamento(p, custo) {
+  const c = computar(p); const pm = p.pmAtual == null ? c.pmMax : p.pmAtual; const pv = p.pvAtual == null ? c.pvMax : p.pvAtual;
+  const ops = [];
+  if (custo <= 0) ops.push({ modo: 'livre', txt: 'Usar (sem custo)' });
+  else {
+    if (pm >= custo) ops.push({ modo: 'pm', txt: `Usar: −${custo} PM` });
+    else { const falta = custo - pm; ops.push(pv - 2 * falta > 0 ? { modo: 'exa', txt: `Exaustão de Mana: −${pm} PM e −${2 * falta} PV, e fica Exausto` } : { modo: 'nao', txt: `Faltam ${falta} PM e os PV não bastam para a Exaustão de Mana (precisa sobrar mais de 0 PV).` }); }
+    if (p.despertar.id === 'd28') ops.push(pv - custo > 0 ? { modo: 'pv', txt: `Hemomancia: −${custo} PV (sem ficar Exausto)` } : { modo: 'nao', txt: 'PV insuficientes para pagar com Hemomancia.' });
+  }
+  return { ops, pm, pv };
+}
+function pagarCusto(p, custo, rotulo, modo) {
+  const c = computar(p); const pm = p.pmAtual == null ? c.pmMax : p.pmAtual; const pv = p.pvAtual == null ? c.pvMax : p.pvAtual;
+  if (modo === 'livre') mudar(rotulo, () => {});
+  if (modo === 'pm') mudar(`${rotulo} (−${custo} PM)`, q => { q.pmAtual = pm - custo; });
+  if (modo === 'pv') mudar(`${rotulo} (−${custo} PV, Hemomancia)`, q => { q.pvAtual = pv - custo; });
+  if (modo === 'exa') {
+    const falta = custo - pm;
+    mudar(`${rotulo} (−${pm} PM e −${2 * falta} PV: Exaustão de Mana)`, q => {
+      q.pmAtual = 0; q.pvAtual = pv - 2 * falta;
+      if (!/Exausto/.test(q.condicoes || '')) q.condicoes = [(q.condicoes || '').trim(), 'Exausto (−2 em todos os testes, deslocamento pela metade; sai com descanso longo)'].filter(Boolean).join('\n');
+    });
+  }
+}
+
+/* ---------- Despertar: botão Usar ---------- */
+function usosDespertar(p) {
+  const dsp = DESP[p.despertar.id]; if (!dsp) return [];
+  const nv = p.despertar.nv, forma = nv >= 5 && (Number(p.nivel) || 1) >= 20;
+  return (USOS_DESP[dsp.id] || []).map((u, i) => ({ ...u, i, forma: !!u.forma, custo: u.pmRank ? null : (nv >= 5 && u.pm5 != null ? u.pm5 : u.pm),
+    acaoR: nv >= 5 && u.acao5 ? u.acao5 : u.acao, livre: (u.desde || 1) <= nv && (!u.forma || forma), temForma: forma }));
+}
+function usosHTML(p) {
+  if (!DESP[p.despertar.id]) return '';
+  const us = usosDespertar(p);
+  if (!us.length) return '<p class="dica" style="margin:6px 0 0">Este Despertar não tem uso ativo: os efeitos são passivos (a ficha já soma o que é número).</p>';
+  return `<div class="desp-usos">${us.map(u => {
+    const trava = u.livre ? '' : u.forma ? 'Libera com a Forma Evoluída (Despertar nv5 e Nível 20)' : `Libera no nv${u.desde} do Despertar`;
+    return `<button class="btn mini ${u.livre ? 'btn-ok' : 'btn-sec'}" data-act="desp-usar" data-i="${u.i}" ${u.livre ? '' : 'disabled'} title="${esc(trava || u.acaoR + ' · ' + u.freq)}">⚡ ${esc(u.n)} <span class="du-c">${u.pmRank ? (u.temForma ? '0 PM' : '2 PM/Rank') : u.custo + ' PM'}</span></button>`;
+  }).join('')}</div>`;
+}
+function usarDespertar(i) {
+  const p = P(); const u = usosDespertar(p).find(x => x.i === Number(i)); if (!u || !u.livre) return;
+  const custoRank = k => u.temForma ? 0 : 2 * (k + 1);
+  const corpo = abrirModal(`⚡ ${u.n}`, `<div class="intro"><p><b>Ação:</b> ${esc(u.acaoR)} · <b>Frequência:</b> ${esc(u.freq)}</p>
+    <p class="dica">O que o poder faz está no texto do Despertar (abaixo). A ficha desconta o custo e registra no histórico; a frequência e o efeito são aplicados na mesa.</p></div>
+    ${u.pmRank ? `<label class="campo" style="max-width:280px"><span>Rank da Sombra invocada</span><select id="du-rk">${RANK_ORDEM.map((r, k) => `<option value="${k}">${r} · ${custoRank(k)} PM</option>`).join('')}</select></label>` : ''}
+    <div id="du-pag" style="margin-top:10px"></div>
+    <details style="margin-top:10px"><summary class="dica">Texto do Despertar</summary>${despCard(DESP[p.despertar.id])}</details>`,
+    [{ label: 'Cancelar', cls: 'btn-sec' }], { ajuda: 'usarDesp' });
+  const custo = () => u.pmRank ? custoRank(Number($('#du-rk').value)) : u.custo;
+  const desenhar = () => {
+    const { ops, pm, pv } = opcoesPagamento(p, custo());
+    $('#du-pag').innerHTML = `<p class="dica">Custo: <b>${custo()} PM</b> · você tem ${pm} PM e ${pv} PV.</p>` +
+      ops.map(o => o.modo === 'nao' ? `<p class="no-ok">${esc(o.txt)}</p>` : `<button class="btn ${o.modo === 'pm' || o.modo === 'livre' ? 'btn-ok' : 'btn-sec'}" data-pagar="${o.modo}" style="margin:4px 6px 4px 0">${esc(o.txt)}</button>`).join('');
+  };
+  corpo.addEventListener('change', e => { if (e.target.id === 'du-rk') desenhar(); });
+  corpo.addEventListener('click', e => {
+    const b = e.target.closest('[data-pagar]'); if (!b) return;
+    const rot = `Usou ${u.n} (Despertar)${u.pmRank ? ' · Sombra Rank ' + RANK_ORDEM[Number($('#du-rk').value)] : ''}`;
+    pagarCusto(p, custo(), rot, b.dataset.pagar); fecharModal(); renderFichaDinamico(); sistema(u.n, 'DESPERTAR');
+  });
+  desenhar();
+}
+
+/* ---------- Loja do Sistema ---------- */
+const LOJA_CONS = ['Poção de Cura', 'Poção de Mana', 'Antídoto', 'Pedra de Retorno', 'Pó de Purificação', 'Pergaminho de Selo'];
+const LOJA_CATS = [['consumivel', '🧪 Consumíveis'], ['arma', '⚔ Armas'], ['armadura', '🛡 Armaduras e escudo'], ['acessorio', '💍 Acessórios']];
+const lojaEstado = { aba: 'comprar', cat: 'consumivel', rank: null };
+function lojaOfertas(cat) {
+  if (cat === 'consumivel') return LOJA_CONS.map(n => ({ cat, base: n, nome: n, sub: CONSUMIVEIS.find(c => c[0] === n)[1] }));
+  if (cat === 'arma') return ARMAS.map(a => ({ cat, base: a.n, nome: a.n, sub: `${a.dano} · ${a.a}${a.tags ? ' · ' + a.tags : ''}` }));
+  if (cat === 'armadura') return [...ARMADURAS.map(a => ({ cat: 'armadura', base: a.tipo, nome: a.n, sub: `${a.tipo} · Defender +${a.def}${a.esq ? ' · Esquivar ' + a.esq : ''}` })), { cat: 'escudo', base: 'Escudo', nome: 'Escudo', sub: 'Uma mão · Defender +2 + Bônus de Rank' }];
+  return ACESSORIOS.map(b => ({ cat: 'acessorio', base: b, nome: b, sub: 'Comum: 1 afixo sorteado · Incomum: 2 afixos sorteados' }));
+}
+const precoCompra = (cat, rank, rar) => cat === 'consumivel' ? Math.round(PRECO_BASE[rank] / 5) : PRECO_BASE[rank] * (rar === 'Incomum' ? 2 : 1);
+function precoVendaUn(it) {
+  if (it.mat === 'nucleo') return 0;
+  if (it.mat === 'cristal') return it.precoUn || Math.round(PRECO_BASE[it.rank] / 5); // cristais: valor cheio da tabela
+  if (it.precoUn) return Math.floor(it.precoUn / 2);
+  if (it.preco) return Math.floor(it.preco / 2);
+  if (EQUIPAVEL.includes(it.cat) && PRECO_BASE[it.rank]) { const r = RARIDADES.find(z => z.n === it.rar); return Math.floor(PRECO_BASE[it.rank] * (r ? r.mult : 1) / 2); }
+  if (it.cat === 'consumivel' && LOJA_CONS.some(n => it.nome.startsWith(n)) && PRECO_BASE[it.rank]) return Math.floor(PRECO_BASE[it.rank] / 10);
+  return 0;
+}
+function modalLoja() {
+  const p = P(); const rkMax = rankDoNivel(Number(p.nivel) || 1);
+  if (!lojaEstado.rank || RANK_ORDEM.indexOf(lojaEstado.rank) > RANK_ORDEM.indexOf(rkMax)) lojaEstado.rank = rkMax;
+  const corpo = abrirModal('🛒 Loja do Sistema', '<div id="lj"></div>', [{ label: 'Fechar', cls: 'btn-sec' }], { ajuda: 'loja', largo: true });
+  const ouro = () => Number(P().ouro) || 0;
+  const desenhar = () => {
+    const q = P(); const rk = lojaEstado.rank;
+    let h = `<div class="lj-topo"><span class="ah-ph">Ouro <b>${ouro().toLocaleString('pt-BR')}</b></span>
+      <span class="lj-abas"><button class="arv-btn ${lojaEstado.aba === 'comprar' ? 'ativo' : ''}" data-lj-aba="comprar">Comprar</button><button class="arv-btn ${lojaEstado.aba === 'vender' ? 'ativo' : ''}" data-lj-aba="vender">Vender</button></span></div>`;
+    if (lojaEstado.aba === 'comprar') {
+      h += `<div class="lj-filtro"><label class="campo"><span>Rank (até o seu: ${rkMax})</span><select id="lj-rk">${RANK_ORDEM.slice(0, RANK_ORDEM.indexOf(rkMax) + 1).map(r => `<option ${r === rk ? 'selected' : ''}>${r}</option>`).join('')}</select></label></div>
+        <div class="ah-tabs">${LOJA_CATS.map(([id, n]) => `<button class="arv-btn ${lojaEstado.cat === id ? 'ativo' : ''}" data-lj-cat="${id}">${n}</button>`).join('')}</div>
+        <div class="lj-lista">${lojaOfertas(lojaEstado.cat).map((o, k) => {
+          const pc = precoCompra(o.cat, rk, 'Comum'), pi = precoCompra(o.cat, rk, 'Incomum');
+          const bt = (rar, pr) => `<button class="btn mini ${ouro() >= pr ? 'btn-ok' : 'btn-sec'}" data-lj-comprar="${k}" data-rar="${rar}" ${ouro() >= pr ? '' : 'disabled'}>${rar} · ${pr.toLocaleString('pt-BR')}</button>`;
+          return `<div class="lj-l"><span class="lj-n"><b>${esc(o.nome)}</b> <span class="rk rk-${rk}">${rk}</span><span class="dica">${esc(o.sub)}</span></span><span class="lj-b">${o.cat === 'consumivel'
+            ? `${numInp('', 1, { min: 1, max: 99, id: 'lj-q' + k, cls: 'mini' })}<button class="btn mini ${ouro() >= pc ? 'btn-ok' : 'btn-sec'}" data-lj-comprar="${k}" data-rar="Comum" ${ouro() >= pc ? '' : 'disabled'}>Comprar · ${pc.toLocaleString('pt-BR')} cada</button>`
+            : bt('Comum', pc) + bt('Incomum', pi)}</span></div>`;
+        }).join('')}</div>
+        <p class="dica">Itens novos, com Refino +0. Afixos são sorteados na compra (acessórios têm 1 afixo a mais). Pergaminhos de Habilidade, Elixires, Núcleos, Chaves de Instância e Cristais não são vendidos.</p>`;
+    } else {
+      const lista = q.itens.filter(i => !i.equip);
+      h += lista.length ? `<div class="lj-lista">${lista.map(it => {
+        const un = precoVendaUn(it); const qt = Number(it.qtd) || 1;
+        return `<div class="lj-l"><span class="lj-n"><b style="color:${it.cor}">${esc(it.nome)}${qt > 1 ? ' ×' + qt : ''}</b><span class="dica">${it.rar} · Rank ${it.rank}${un ? ` · ${un.toLocaleString('pt-BR')} Ouro${qt > 1 ? ' cada' : ''}${it.mat === 'cristal' ? ' (valor da tabela)' : ' (metade do preço)'}` : ''}</span></span><span class="lj-b">${un
+          ? `${qt > 1 ? numInp('', qt, { min: 1, max: qt, id: 'lj-v' + it.uid, cls: 'mini' }) : ''}<button class="btn mini btn-ok" data-lj-vender="${it.uid}">Vender</button>`
+          : `<span class="dica">${it.mat === 'nucleo' ? 'Núcleos vão a leilão da Associação (com o Mestre)' : 'A Loja não compra este item'}</span>`}</span></div>`;
+      }).join('')}</div><p class="dica">Itens equipados não aparecem: desequipe antes de vender.</p>` : '<p class="vazio-msg">Nada no Inventário para vender.</p>';
+    }
+    $('#lj').innerHTML = h;
+  };
+  corpo.addEventListener('change', e => { if (e.target.id === 'lj-rk') { lojaEstado.rank = e.target.value; desenhar(); } });
+  corpo.addEventListener('click', e => {
+    const ab = e.target.closest('[data-lj-aba]'); if (ab) { lojaEstado.aba = ab.dataset.ljAba; desenhar(); return; }
+    const ct = e.target.closest('[data-lj-cat]'); if (ct) { lojaEstado.cat = ct.dataset.ljCat; desenhar(); return; }
+    const cb = e.target.closest('[data-lj-comprar]');
+    if (cb) {
+      const o = lojaOfertas(lojaEstado.cat)[Number(cb.dataset.ljComprar)]; const rk = lojaEstado.rank; const rar = cb.dataset.rar;
+      let it, total;
+      if (o.cat === 'consumivel') { const n = Math.max(1, Math.min(99, Number($('#lj-q' + cb.dataset.ljComprar).value) || 1)); it = consumivel(o.base, rk); it.qtd = n; total = precoCompra('consumivel', rk) * n; }
+      else { it = montarItem(o.cat, o.base, rk, RARIDADES.find(z => z.n === rar)); total = precoCompra(o.cat, rk, rar); }
+      if (ouro() < total) { toast('Ouro insuficiente.'); return; }
+      guardarItem(P(), it, { msg: `Comprou ${it.nome}${it.qtd > 1 ? ' ×' + it.qtd : ''} por ${total.toLocaleString('pt-BR')} Ouro`, antes: q => { q.ouro = (Number(q.ouro) || 0) - total; } });
+      desenhar(); return;
+    }
+    const vb = e.target.closest('[data-lj-vender]');
+    if (vb) {
+      const q = P(); const it = q.itens.find(i => i.uid === vb.dataset.ljVender); if (!it) return;
+      const qt = Number(it.qtd) || 1; const inp = $('#lj-v' + it.uid); const n = inp ? Math.max(1, Math.min(qt, Number(inp.value) || 1)) : 1; const total = precoVendaUn(it) * n;
+      mudar(`Vendeu ${it.nome} ×${n} por ${total.toLocaleString('pt-BR')} Ouro`, z => { const y = z.itens.find(i => i.uid === it.uid); if (n >= (Number(y.qtd) || 1)) z.itens = z.itens.filter(i => i !== y); else y.qtd = (Number(y.qtd) || 1) - n; z.ouro = (Number(z.ouro) || 0) + total; });
+      sistema(`+${total.toLocaleString('pt-BR')} Ouro`, 'VENDA'); renderFichaDinamico(); desenhar();
+    }
+  });
+  desenhar();
 }
 
 /* =========================================================
@@ -1841,6 +1993,8 @@ function ligar() {
     if (a === 'item-equip') alternarEquip(p, b.dataset.uid);
     if (a === 'item-usar') usarItem(b.dataset.uid);
     if (a === 'item-custom') modalItemProprio();
+    if (a === 'loja') modalLoja();
+    if (a === 'desp-usar') usarDespertar(b.dataset.i);
     if (a === 'ir') abrirAba(b.dataset.aba);
   });
 }

@@ -742,3 +742,16 @@ textarea { width: 100%; min-height: 84px; resize: vertical; }
 /* topo: instalar + PDF */
 .topo-acoes { display: flex; gap: 6px; align-items: center; }
 @media (display-mode: standalone) { .topo { padding-top: max(8px, env(safe-area-inset-top)); } }
+
+/* ---------- v3.2: Usar Despertar e Loja do Sistema ---------- */
+.desp-usos { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+.desp-usos .du-c { opacity: .75; font-size: 11px; margin-left: 2px; }
+.lj-topo { display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 8px; }
+.lj-abas { display: flex; gap: 6px; }
+.lj-filtro { max-width: 220px; margin-bottom: 6px; }
+.lj-lista { display: flex; flex-direction: column; }
+.lj-l { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--borda); flex-wrap: wrap; }
+.lj-n { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1 1 220px; }
+.lj-n .rk { align-self: flex-start; }
+.lj-b { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.lj-b .num-inp, .lj-b input { max-width: 70px; }
