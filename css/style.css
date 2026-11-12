@@ -755,3 +755,9 @@ textarea { width: 100%; min-height: 84px; resize: vertical; }
 .lj-n .rk { align-self: flex-start; }
 .lj-b { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
 .lj-b .num-inp, .lj-b input { max-width: 70px; }
+
+/* tabelas de afixos: uma embaixo da outra, largura total */
+.afixos-grade { display: block; }
+.afx-titulo { margin: 16px 0 6px; }
+.afx-tab .afx-nome { width: 30%; white-space: nowrap; }
+@media (max-width: 600px) { .afx-tab .afx-nome { white-space: normal; width: auto; } .afx-tab .afx-nome i { display: block; } }
