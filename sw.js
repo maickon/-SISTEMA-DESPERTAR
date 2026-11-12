@@ -1,7 +1,7 @@
 /* DESPERTAR — service worker
    Arquivos do site: rede primeiro (sempre a versão nova quando há internet) e cópia guardada quando está offline.
    Fontes do Google: cópia guardada primeiro. Outros domínios (como a API do Telegram) passam direto. */
-const VERSAO = 'despertar-v6';
+const VERSAO = 'despertar-v7';
 const ESSENCIAIS = ['./', 'index.html', 'css/style.css', 'js/data.js', 'js/app.js', 'manifest.webmanifest',
   'icons/icon-192.png', 'icons/icon-512.png', 'icons/icon-maskable-512.png', 'icons/apple-touch-icon.png', 'icons/favicon-32.png'];
 

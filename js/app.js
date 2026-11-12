@@ -560,6 +560,7 @@ function habDetalheHTML(id) {
     bts += `<button class="btn btn-ok" data-hacao="comprar" ${!reqs.every(r => r.ok) || disp < custo ? 'disabled' : ''}>Adquirir (${custo} PH)</button>`;
     bts += `<button class="btn btn-sec" data-hacao="gratis" title="Recebida pela Avaliação do Sistema, Pergaminho ou Missão">Receber grátis</button>`;
   } else {
+    if (h.tipo === 'Ativa') bts += `<button class="btn btn-ok" data-hacao="usar">⚡ Usar (${h.pm} PM)</button>`;
     if (x.nv < 5) bts += `<button class="btn btn-ok" data-hacao="subir" ${disp < custo ? 'disabled' : ''}>Evoluir para nv${x.nv + 1} (${custo} PH)</button>`;
     bts += `<button class="btn btn-sec" data-hacao="descer">${x.nv > 1 ? 'Reduzir nível' : 'Remover da ficha'}</button>`;
   }
@@ -573,6 +574,7 @@ function acaoHab(id, acao) {
     if (!reqOk(h, p)) return toast('Requisitos não cumpridos.');
     if (phDisp(p) < custoAquis(h, p)) return toast('PH insuficientes.');
     mudar(`Adquiriu ${h.n} (${custoAquis(h, p)} PH)`, q => { q.habs.push({ id, nv: 1, gratis: false }); }); sistema(`Habilidade adquirida: ${h.n}`, 'HABILIDADE');
+  } else if (acao === 'usar') { usarHabilidade(id); return;
   } else if (acao === 'gratis') {
     if (x) return toast('Você já possui esta habilidade.');
     mudar(`Recebeu ${h.n} de graça`, q => { q.habs.push({ id, nv: 1, gratis: true }); }); sistema(`Habilidade recebida: ${h.n}`, 'HABILIDADE');
@@ -982,7 +984,7 @@ function renderFichaDinamico() {
   $('#f-habs').innerHTML = ordem.length ? ordem.map(x => { const h = HAB[x.id]; const a = ARV[h.t];
     return `<div class="lin"><span class="rk rk-${h.r}">${h.r}</span>
       <span class="meio" data-act="hab-info" data-id="${x.id}" title="Ver detalhes"><span class="t1" style="color:${a.cor}">${a.icone} ${esc(h.n)}</span><span class="t2">${h.tipo}${h.acao !== '—' ? ' · ' + h.acao : ''}${h.pm ? ' · ' + h.pm + ' PM' : ''}${x.gratis ? ' · grátis' : ''} — ${esc(h.ef)}</span></span>
-      <span class="dir nv-ctl"><button class="btn-ghost" data-act="hab-menos" data-id="${x.id}" aria-label="Reduzir">−</button><b>nv${x.nv}</b><button class="btn-ghost" data-act="hab-mais" data-id="${x.id}" ${x.nv >= 5 ? 'disabled' : ''} aria-label="Evoluir">+</button><button class="btn-ghost" data-act="hab-info" data-id="${x.id}" aria-label="Detalhes">ⓘ</button></span></div>`; }).join('')
+      <span class="dir nv-ctl"><button class="btn-ghost" data-act="hab-menos" data-id="${x.id}" aria-label="Reduzir">−</button><b>nv${x.nv}</b><button class="btn-ghost" data-act="hab-mais" data-id="${x.id}" ${x.nv >= 5 ? 'disabled' : ''} aria-label="Evoluir">+</button>${h.tipo === 'Ativa' ? `<button class="btn-ghost hab-usar" data-act="hab-usar" data-id="${x.id}" aria-label="Usar" title="Usar ${esc(h.n)}">⚡</button>` : ''}<button class="btn-ghost" data-act="hab-info" data-id="${x.id}" aria-label="Detalhes">ⓘ</button></span></div>`; }).join('')
     : '<p class="vazio-msg">Nenhuma habilidade. Use <b>◈ Avaliação</b> no topo ou <b>＋ Adicionar habilidade</b>.</p>';
   renderInventario(p);
   const flat = achatar(c); flat['PV atual'] = pv; flat['PM atual'] = pm;
@@ -1530,6 +1532,39 @@ function pagarCusto(p, custo, rotulo, modo) {
   }
 }
 
+/* ---------- Habilidades: botão Usar ---------- */
+function formasUso(p, id) {
+  const h = HAB[id]; const x = possui(p, id); if (!h || !x || h.tipo !== 'Ativa') return [];
+  const alt = (USOS_HAB[id] || []).filter(u => x.nv >= u.desde);
+  let ops = alt.some(u => u.substitui) ? [] : [{ n: `${h.n} (${h.acao})`, pm: h.pm }];
+  ops = ops.concat(alt.map(u => ({ n: u.n, pm: u.pm })));
+  const enc = possui(p, 'ele7');
+  if (h.t === 'elementos' && id !== 'ele7' && enc) ops = ops.concat(ops.filter(o => o.pm > 0).map(o => ({ n: `${o.n} · com Encarnação Elemental ativa (metade)`, pm: Math.ceil(o.pm / 2) })));
+  return ops;
+}
+function usarHabilidade(id) {
+  const p = P(); const h = HAB[id]; const x = possui(p, id); const ops = formasUso(p, id); if (!ops.length) return;
+  const corpo = abrirModal(`⚡ ${h.n}`, `<div class="intro"><p><b>Ação:</b> ${esc(h.acao)} · <b>Frequência:</b> ${esc(h.freq || 'À vontade')} · nível ${x.nv}</p>
+    <p class="dica">A ficha desconta o custo e registra no histórico. O efeito e a frequência são aplicados na mesa (veja o texto abaixo).</p></div>
+    ${ops.length > 1 ? `<label class="campo" style="max-width:420px"><span>Forma de uso</span><select id="hu-op">${ops.map((o, k) => `<option value="${k}">${esc(o.n)} · ${o.pm} PM</option>`).join('')}</select></label>` : ''}
+    <div id="hu-pag" style="margin-top:10px"></div>
+    <details style="margin-top:10px"><summary class="dica">Texto da habilidade</summary>${habCard(h)}</details>`,
+    [{ label: 'Cancelar', cls: 'btn-sec' }], { ajuda: 'usarHab' });
+  const op = () => ops[ops.length > 1 ? Number($('#hu-op').value) : 0];
+  const desenhar = () => {
+    const { ops: pg, pm, pv } = opcoesPagamento(p, op().pm);
+    $('#hu-pag').innerHTML = `<p class="dica">Custo: <b>${op().pm} PM</b> · você tem ${pm} PM e ${pv} PV.</p>` +
+      pg.map(o => o.modo === 'nao' ? `<p class="no-ok">${esc(o.txt)}</p>` : `<button class="btn ${o.modo === 'pm' || o.modo === 'livre' ? 'btn-ok' : 'btn-sec'}" data-pagar="${o.modo}" style="margin:4px 6px 4px 0">${esc(o.txt)}</button>`).join('');
+  };
+  corpo.addEventListener('change', e => { if (e.target.id === 'hu-op') desenhar(); });
+  corpo.addEventListener('click', e => {
+    const b = e.target.closest('[data-pagar]'); if (!b) return;
+    const o = op(); pagarCusto(p, o.pm, `Usou ${o.n.startsWith(h.n + ' (') ? h.n : h.n + ': ' + o.n} (nv${x.nv})`, b.dataset.pagar);
+    fecharModal(); renderFichaDinamico(); sistema(h.n, 'HABILIDADE');
+  });
+  desenhar();
+}
+
 /* ---------- Despertar: botão Usar ---------- */
 function usosDespertar(p) {
   const dsp = DESP[p.despertar.id]; if (!dsp) return [];
@@ -1995,6 +2030,7 @@ function ligar() {
     if (a === 'item-custom') modalItemProprio();
     if (a === 'loja') modalLoja();
     if (a === 'desp-usar') usarDespertar(b.dataset.i);
+    if (a === 'hab-usar') usarHabilidade(b.dataset.id);
     if (a === 'ir') abrirAba(b.dataset.aba);
   });
 }

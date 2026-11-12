@@ -787,6 +787,23 @@ const USOS_DESP = {
 };
 
 /* ---------------------------------------------------------
+   CUSTOS ALTERNATIVOS DAS HABILIDADES (botão "Usar" da ficha)
+   Além do custo normal (pm), a partir do nível "desde" da habilidade.
+   substitui: o custo normal deixa de existir a partir desse nível.
+   --------------------------------------------------------- */
+const USOS_HAB = {
+  lam2: [{ n: 'Primeiro Corte Rápido da rodada', pm: 0, desde: 5 }],
+  pun2: [{ n: 'Primeiro Contra-Ataque da rodada', pm: 0, desde: 5 }],
+  bas5: [{ n: 'Primeiro Guardião da rodada', pm: 0, desde: 5 }],
+  res6: [{ n: 'Primeira Égide da rodada', pm: 0, desde: 5 }],
+  dom6: [{ n: 'Primeira Troca da rodada', pm: 0, desde: 5 }],
+  res1: [{ n: 'Cura como Ação de Movimento', pm: 6, desde: 3 }],
+  ele1: [{ n: 'Dois projéteis numa Ação Principal', pm: 4, desde: 5 }],
+  aur6: [{ n: 'Como Reação contra ataque à distância', pm: 24, desde: 3 }],
+  sen2: [{ n: 'Análise sem custo', pm: 0, desde: 5, substitui: true }]
+};
+
+/* ---------------------------------------------------------
    CONDIÇÕES
    --------------------------------------------------------- */
 const CONDICOES = [
@@ -1074,6 +1091,7 @@ const ENCONTROS = {
    liv = âncora da seção do livro com a regra completa.
    --------------------------------------------------------- */
 const AJUDA = {
+  usarHab: { t: 'Usar uma habilidade', liv: 'l-pm', txt: '<p>O botão ⚡ aparece nas habilidades <b>Ativas</b>. Escolha a forma de uso (algumas têm custo diferente a partir de certo nível) e pague: a ficha desconta os PM e registra no histórico.</p><p>Sem PM suficientes, vale a <b>Exaustão de Mana</b>: você gasta os PM que tem e paga a diferença em dobro com PV, e fica Exausto (não pode se levar a 0 PV ou menos). A frequência e o efeito são aplicados na mesa.</p>' },
   usarDesp: { t: 'Usar o Despertar', liv: 'l-pm', txt: '<p>Cada botão ⚡ é uma parte ativa do seu Despertar. Usar desconta o custo em PM e registra no histórico. Botões apagados liberam num nível maior do Despertar ou com a Forma Evoluída.</p><p>Sem PM suficientes, vale a <b>Exaustão de Mana</b>: você gasta os PM que tem e paga a diferença em dobro com PV, e fica Exausto (não pode se levar a 0 PV ou menos). A frequência (1× por rodada, por combate…) é controlada na mesa.</p>' },
   loja: { t: 'Loja do Sistema', liv: 'l-inventario', txt: '<p>A Loja do Sistema funciona de qualquer lugar. <b>Vende</b> consumíveis e equipamentos <b>Comuns e Incomuns</b> até o Rank do Jogador, pelos preços do livro: equipamento Comum = preço base do Rank, Incomum = 2 × o preço base, consumível = 1/5 do preço base. Os afixos são sorteados na compra.</p><p><b>Compra</b> itens por <b>metade do preço</b>, e Cristais de Mana pelo valor cheio da tabela. Não vende nem compra Núcleos, Pergaminhos de Habilidade, Elixires e Chaves de Instância. Não vende Cristais.</p>' },
   status: { t: 'Janela de Status', liv: 'c-criacao', txt: '<p>Os dados básicos do Caçador: nome, nível, XP, Ouro e o Título equipado. O <b>Rank</b> ao lado do título é calculado pelo nível (E 1–4, D 5–9, C 10–14, B 15–19, A 20–24, S 25+).</p>' },
